@@ -1,5 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+define("IN_PRODUCTION",TRUE);
+
 //-- Environment setup --------------------------------------------------------
 
 /**
@@ -104,8 +106,25 @@ if ( ! defined('SUPPRESS_REQUEST'))
 	 * Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
 	 * If no source is specified, the URI will be automatically detected.
 	 */
-	echo Request::instance()
-		->execute()
-		->send_headers()
-		->response;
+	try {
+		$request = Request::instance();
+		$request->execute();		
+	} catch (ReflectionException $e) {
+		
+        if (!IN_PRODUCTION)
+        {
+			throw $e;
+        }
+
+        $request->response = Request::factory('error/404')->execute();		
+	} catch (Exception $e) {
+		if (!IN_PRODUCTION)
+        {
+			throw $e;
+        }
+
+        $request->response = Request::factory('error/500')->execute();
+	}
+	
+	echo $request->send_headers()->response;
 }

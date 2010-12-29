@@ -3,21 +3,12 @@
 	font-weight: bold;
 }
 </style>
-<? if ( ! $preview) { ?>
-
-<h2>Post viewer!</h2>
-
-<p>Here's what the sorry sap had to say about what they posted..</p>
-
-<hr />
-
-<? } ?>
 <h1><?=$post_title ?></h1>
 <hr />
-<p>Some quick details: <br />
-<span class="bold">Price: </span><?=$post_price ?><br />
-<span class="bold">Condition: </span><?=$post_condition ?><br />
-</p>
+<table>
+<tr><td>Price:</td><td><?=$post_price?></td></tr>
+<tr><td>Condition:</td><td><?=$post_condition?></td></tr>
+</table>
 
 <p><span class="bold">Description of item:</span><br />
 <?=$post_description ?>

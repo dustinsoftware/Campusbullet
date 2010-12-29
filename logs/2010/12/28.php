@@ -6,3 +6,4 @@
 2010-12-28 01:50:23 --- ERROR: ErrorException [ 8 ]: Undefined variable: errors ~ APPPATH\views\account_newpost.php [ 4 ]
 2010-12-28 01:58:10 --- ERROR: ReflectionException [ -1 ]: Class controller_unknown_error does not exist ~ SYSPATH\classes\kohana\request.php [ 1094 ]
 2010-12-28 02:00:04 --- ERROR: ErrorException [ 2 ]: mail() [function.mail]: SMTP server response: 550 Delivery is not allowed to this address. ~ C:\xampplite\htdocs\include\system_email.php [ 8 ]
+2010-12-28 03:35:14 --- ERROR: ErrorException [ 1 ]: Class 'ORM' not found ~ MODPATH\auth\classes\model\auth\role.php [ 10 ]

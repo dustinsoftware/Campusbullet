@@ -2,6 +2,8 @@
 
 class Controller_Home extends Controller_Layout {
 
+	protected $auth_required = false;
+	
 	public function action_index()
 	{
 		$content = View::factory('home');
@@ -57,7 +59,12 @@ class Controller_Home extends Controller_Layout {
 			$content->is_owner = ($post['owner'] == $user_id);
 			$content->preview = false;
 			$content->post_title = $post['name'];
-			$content->post_price = $post['price'];
+			$post_price = $post['price'];
+			if ($post_price == 0)
+				$content->post_price = "Free!";
+			else
+				$content->post_price = "$$post_price";
+			
 			$content->post_description = $post['description'];
 			$content->post_image = "";
 			$content->post_condition = $post['condition'];

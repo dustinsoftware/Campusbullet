@@ -15,6 +15,14 @@ class Controller_Layout extends Controller_Template {
 			$path = Request::instance()->uri();
 			Request::instance()->redirect("login?redir=$path");
 		}		
+		
+		$this->template->styles = array();
+		$this->template->scripts = array();
+		$this->template->sidebar = "";
+		$this->template->url_base = URL::base();
+		$this->template->title = "";
+		
+		array_push($this->template->styles, 'styles/global.css');
 	}
 	
 	public function after() {

@@ -8,7 +8,7 @@ class Controller_Login extends Controller_Layout {
 	{
 		$auth = Auth::instance();
 		$redir = @($_GET['redir']);
-		$content = View::factory('login');
+		$content = View::factory('notemplate_login');
 		$content->error = "";
 		$post_user = @($_POST['user']);
 		$post_pass = @($_POST['asdf']);
@@ -27,11 +27,11 @@ class Controller_Login extends Controller_Layout {
 				Request::instance()->redirect($redir);
 			} else {
 				$hash = $auth->hash($post_pass);
-				$content->error = "There was a problem logging in with your credentials.&nbsp; Please try again.&nbsp; $hash";
+				$content->error = "Sorry, that username and password didn't work.";
 			}
 		}
 		
-		$this->template->content = $content;
+		$this->template = $content;
 	}
 	
 	public function action_logout() {
@@ -39,7 +39,7 @@ class Controller_Login extends Controller_Layout {
 		$auth = Auth::instance();
 		
 		if ($auth->logged_in())
-			$auth->logout();
+			$auth->logout(true);
 			
 		Request::instance()->redirect($redir);			
 	}
