@@ -108,6 +108,10 @@ class Controller_Account extends Controller_Layout {
 				$content->errors = array();
 				$content->message_class = "info";
 				
+				$categories_rows = DB::select('id','name','prettyname')->from('categories')->where('disabled','=','0')->execute()->as_array();
+				$content->categories = $categories_rows;
+		
+				
 				if ($_POST) {					
 					//get the data
 					$title = @(htmlspecialchars($_POST["title"]));
