@@ -22,7 +22,7 @@ class Controller_Layout extends Controller_Template {
 		$this->template->url_base = URL::base();
 		$this->template->title = "";
 		
-		array_push($this->template->styles, 'styles/global.css');
+		array_push($this->template->styles, 'global');
 	}
 	
 	public function after() {

@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-define("IN_PRODUCTION",TRUE);
+define("IN_PRODUCTION",FALSE);
 
 //-- Environment setup --------------------------------------------------------
 

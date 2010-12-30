@@ -11,13 +11,15 @@ class Controller_Account extends Controller_Layout {
 		$this->template->content = $content;
 	}
 	
-	public function action_newpost() {
+	public function action_newpost($starting_category_name = null) {
+		
 		$content = View::factory('account_newpost');
 		$content->url_base = URL::base();
 		$content->post_title = "";
 		$content->post_price = "";
 		$content->post_condition = "";
 		$content->post_description = "";
+		$content->post_category = "";
 		$content->show_form = true;
 		$content->editmode = false;
 		$content->disabled = false;
@@ -25,11 +27,23 @@ class Controller_Account extends Controller_Layout {
 		$content->errors = array();
 		$content->message_class = "info";
 		
+		$categories_rows = DB::select('id','name','prettyname')->from('categories')->where('disabled','=','0')->execute()->as_array();
+		$content->categories = $categories_rows;
+		
+		
+		if ($starting_category_name) {
+			$category_row = DB::select('id')->from('categories')->where('name','=',$starting_category_name)->execute()->current();
+			if ($category_row)
+				$content->post_category = $category_row['id'];
+		}
+			
+		
 		if ($_POST) {
 			$title = @(htmlspecialchars($_POST["title"]));
-			$condition = @(htmlspecialchars($_POST["condition"])) or $condition = "N/A";
-			$price = @($_POST["price"]) or $price = 0;
+			$condition = @(htmlspecialchars($_POST["condition"]));
+			$price = @($_POST["price"]);
 			$description = @(htmlspecialchars($_POST["description"]));
+			$category = @($_POST["category"]);
 			$owner_id = Session::instance()->get('user_id');
 			
 			$confirmed = @($_POST["confirmed"]);
@@ -40,8 +54,9 @@ class Controller_Account extends Controller_Layout {
 			$content->post_price = $price;
 			$content->post_condition = $condition;
 			$content->post_description = $description;
+			$content->post_category = $category;
 			
-			$errors = $this->validatepost($title, $price, $condition, $description);
+			$errors = $this->validatepost($title, $price, $condition, $description, null, $category);
 			
 			if ($edit) {
 				//do nothing, just show the form.
@@ -55,13 +70,13 @@ class Controller_Account extends Controller_Layout {
 				if ($confirmed) {
 					//create the post, and report a success						
 					DB::insert('posts')
-						->columns(array('owner','name','price','condition','description'))
-						->values(array($owner_id, $title, $price, $condition, $description))->execute();
+						->columns(array('owner','name','price','condition','description','category'))
+						->values(array($owner_id, $title, $price, $condition, $description, $category))->execute();
 						
 					$content = View::factory('account_newpost_success')->set('url_base',URL::base());
 					
 				} else {
-					$content = $this->previewpost($title,$price,$condition,$description);
+					$content = $this->previewpost($title,$price,$condition,$description,$category);
 					
 				}
 			}
@@ -74,7 +89,7 @@ class Controller_Account extends Controller_Layout {
 		$user_id = Session::instance()->get('user_id');
 		
 		if ($id) {
-			$post_row = DB::select('name','price','condition','description','disabled')->from('posts')
+			$post_row = DB::select('name','price','condition','description','disabled','category')->from('posts')
 				->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
 			$disabled = $post_row['disabled'];
 			
@@ -85,6 +100,7 @@ class Controller_Account extends Controller_Layout {
 				$content->url_base = URL::base();
 				$content->post_title = $post_row['name'];
 				$content->post_condition = $post_row['condition'];
+				$content->post_category = $post_row['category'];
 				$content->post_price = $post_row['price'];
 				$content->post_description = $post_row['description'];
 				$content->disabled = $disabled;
@@ -95,14 +111,16 @@ class Controller_Account extends Controller_Layout {
 				if ($_POST) {					
 					//get the data
 					$title = @(htmlspecialchars($_POST["title"]));
-					$condition = @(htmlspecialchars($_POST["condition"])) or $condition = "N/A";
-					$price = @($_POST["price"]) or $price = 0;
+					$condition = @(htmlspecialchars($_POST["condition"]));
+					$price = @($_POST["price"]);
 					$description = @(htmlspecialchars($_POST["description"]));
 					$edit = @($_POST["edit"]);
 					$confirmed = @($_POST["confirmed"]);
 					$disable = @($_POST["disable"]);
+					$category = @($_POST["category"]);
 					
 					if ($disable && ! $edit) {
+						//if we're going to disable the post, do a check to see if the user confirmed
 						if ($confirmed) {
 							//disable the post if teh post has not been banned
 							if ($disabled == 0) { //if the post is active
@@ -121,14 +139,16 @@ class Controller_Account extends Controller_Layout {
 								'disable'=>'yes');
 							$content->action = "post_disable";
 						}					
-					} else {											
+					} else {					
+						//we're doing a real post, so
 						//fill the form with data
 						$content->post_title = $title;
 						$content->post_price = $price;
 						$content->post_condition = $condition;
 						$content->post_description = $description;
+						$content->post_category = $category;
 						
-						$errors = $this->validatepost($title,$price,$condition,$description,$id);
+						$errors = $this->validatepost($title,$price,$condition,$description,$id,$category);
 						
 						if ($edit) {	
 							//do nothing, just show the form!
@@ -137,7 +157,7 @@ class Controller_Account extends Controller_Layout {
 							$content->message = "There was a problem creating the post.";
 							$content->errors = $errors;
 						} else {
-							//the data is good, preview the change.
+							//the data is good, preview the change (or submit if confirmed)
 							if ($confirmed) {							
 								if ($disabled == 1)
 									DB::update('posts')->set(array('disabled' => 0))->where('id','=',$id)->execute(); //re-enable the post
@@ -146,12 +166,13 @@ class Controller_Account extends Controller_Layout {
 									'name'=>$title,
 									'price'=>$price,
 									'condition'=>$condition,
+									'category'=>$category,
 									'description'=>$description))->where('id','=',$id)->execute();
 							
 								$content->message = "Update submitted!";							
 								$content->show_form = false;
 							} else {
-								$content = $this->previewpost($title,$price,$condition,$description);
+								$content = $this->previewpost($title,$price,$condition,$description,$category);
 							}						
 						}
 					}
@@ -173,8 +194,10 @@ class Controller_Account extends Controller_Layout {
 		}
 	}
 	
-	private function validatepost($title, $price, $condition, $description, $originalpostid = null) {
+	private function validatepost($title, $price, $condition, $description, $originalpostid, $categoryid) {
 		$errors = array();
+		
+		$category_row = DB::select('id')->from('categories')->where('disabled','=','0')->and_where('id','=',$categoryid)->execute()->current();
 		
 		if (strlen($title) < 5)
 			array_push($errors, "Title too short!  Make it at least 5 characters long.");
@@ -182,11 +205,17 @@ class Controller_Account extends Controller_Layout {
 		if (strlen($title) > 100)
 			array_push($errors, "Title too long!  Don't make it longer than 100 characters.");
 		
-		if (strlen($condition) > 20)
+		if (strlen($condition) == 0)
+			array_push($errors, "Please enter a condition.");
+			
+		if (strlen($condition) > 50)
 			array_push($errors, "Condition too long!  Make it something short, like 'used' or 'new'.");
 		
+		if ( ! $category_row)
+			array_push($errors, "Please select a category.");
+		
 		if ( ! is_numeric($price) || $price < 0)
-			array_push($errors, "Invalid price.");
+			array_push($errors, "Invalid price.  Please enter a number, without the dollar sign.");
 		
 		if (strlen($description) < 20)
 			array_push($errors, "Description too short.&nbsp; Must be at least 20 characters long.");
@@ -194,6 +223,7 @@ class Controller_Account extends Controller_Layout {
 		if (strlen($description) > 500)
 			array_push($errors, "Description too long.&nbsp; Must be under 500 characters.");
 					
+			
 		//check for double post
 		$previous_post = DB::select('id')->from('posts')
 			->where('name','=',$title)
@@ -210,17 +240,18 @@ class Controller_Account extends Controller_Layout {
 		return $errors;
 	}
 	
-	private function previewpost($title,$price,$condition,$description) {
+	private function previewpost($title,$price,$condition,$description,$category) {
 		
 		$content = View::factory('account_newpost_preview');
 		$content->post_title = $title;
 		$content->post_price = $price;
 		$content->post_condition = $condition;					
 		$content->post_description = $description;
+		$content->post_category = $category;
 		
 		$post_preview = View::factory('home_post_view');
 		$post_preview->post_title = $title;
-		$post_preview->post_price = $price;
+		$post_preview->post_price = "$$price";
 		$post_preview->post_condition = $condition;
 		$post_preview->post_description = $description;		
 		$post_preview->preview = true;

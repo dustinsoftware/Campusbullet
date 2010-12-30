@@ -14,7 +14,7 @@
 	color: black;
 }
 </style>
-<? foreach ($styles as $file) echo HTML::style($file), "\n"; ?>
+<? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
 <? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>
 </head>
 
@@ -34,7 +34,6 @@
 <div id="header_menu">
 <ul>
 <li><a href="<?= $url_base ?>account/newpost">new post</a></li>
-<li><a href="<?= $url_base ?>categories">categories</a></li>
 <li><a href="<?= $url_base ?>account">my account</a></li>
 <li><a href="<?= $url_base ?>help/faq">faq</a></li>
 

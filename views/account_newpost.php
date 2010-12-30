@@ -32,8 +32,21 @@
 	<td><input type="textbox" name="condition" value="<?=$post_condition?>" /></td>
 </tr>
 <tr>
-	<th>Asking price:</th>
-	<td>$<input type="textbox" name="price" value="<?=$post_price?>" />(0 if the item is free)</td>
+	<th>Category:</th>
+	<td><select name="category" style="width: 200px">
+	<?foreach ($categories as $category) {		
+		if ($post_category == $category['id']) {
+			echo "<option selected=\"selected\" value=\"$category[id]\">$category[prettyname]</option>\r\n";
+		} else {
+			echo "<option value=\"$category[id]\">$category[prettyname]</option>\r\n";
+		}
+			
+	} ?>	
+	</select>
+</tr>
+<tr>
+	<th>Asking price: ($)</th>
+	<td><input type="textbox" name="price" value="<?=$post_price?>" />(0 if the item is free)</td>
 </tr>
 <tr>
 	<th>Describe the item:</th>

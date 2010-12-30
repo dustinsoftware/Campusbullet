@@ -11,7 +11,7 @@
 </table>
 
 <p><span class="bold">Description of item:</span><br />
-<?=$post_description ?>
+<pre><?=$post_description ?></pre>
 </p>
 
 <? if ( ! $preview) { ?>

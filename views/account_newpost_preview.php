@@ -12,7 +12,7 @@
 	<input type="hidden" name="condition" value="<?=$post_condition?>" />
 	<input type="hidden" name="price" value="<?=$post_price?>" />
 	<input type="hidden" name="description" value="<?=$post_description?>" />
-	
+	<input type="hidden" name="category" value="<?=$post_category?>" />
 	<input type="submit" name="confirmed" value="      CREATE THE POST!      " />
 	<input type="submit" name="edit" value="I messed up, let me make some changes."  />
 </form>
