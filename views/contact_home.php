@@ -1,1 +1,0 @@
-<h1>Contact center</h1><ul><li><a href="<?=$base?>contact/message">Contact a seller</a></li><li><a href="<?=$base?>contact/message/ml_bug_report">Report a bug/Suggest a feature</a></li><li><a href="<?=$base?>contact/message/ml_abuse">Report abuse</a></li></ul>
