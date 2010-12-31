@@ -34,25 +34,29 @@ class Controller_Home extends Controller_Layout {
 				));
 			
 			
-			$current_posts = DB::select('id','name','timestamp')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->order_by('timestamp','DESC')
+			$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->order_by('timestamp','DESC')
 				->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();
 						
 			$dategroups = array();
 			
 			foreach($current_posts as $post) {
 				$date = date("m-d-Y", strtotime($post['timestamp']));
-				
+				if ($post['price'])
+					$post_title = "$post[name] ($$post[price])";
+				else
+					$post_title = "$post[name] (FREE!)";
+					
 				//if we have a dategroup, add this to the current one
 				if (array_key_exists($date, $dategroups)) {
 					array_push($dategroups[$date], array(
 						'id' => $post['id'], 
-						'title' => $post['name']));
+						'title' => $post_title));
 				} else {
 					$dategroups = $dategroups + array(
 						$date => array(
 							array(
 								'id' => $post['id'], 
-								'title' => $post['name'])
+								'title' => $post_title)
 							)
 						);
 				}
@@ -93,6 +97,7 @@ class Controller_Home extends Controller_Layout {
 			$content->post_description = $post['description'];
 			$content->post_image = "";
 			$content->post_condition = $post['condition'];
+			$content->post_isbn = $post['isbn'];
 			$content->link_want = $base . "contact/want/" . $id;
 			$content->link_report = $base . "contact/message/ml_abuse?postid=" . $id;
 			$content->link_prev = $base . "home";

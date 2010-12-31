@@ -8,6 +8,12 @@
 <table>
 <tr><td>Price:</td><td><?=$post_price?></td></tr>
 <tr><td>Condition:</td><td><?=$post_condition?></td></tr>
+<? if ($post_isbn) {
+	if (strlen($post_isbn) == 13) {
+		$post_isbn = substr($post_isbn,0,3) . "-" . substr($post_isbn,3,1) . "-" . substr($post_isbn,4,5) . "-" . substr($post_isbn,9,3) . "-" . substr($post_isbn,12,1);
+	}
+	echo "<tr><td>ISBN:</td><td>$post_isbn</td></tr>\r\n";
+} ?>
 </table>
 
 <p><span class="bold">Description of item:</span><br />

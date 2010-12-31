@@ -20,6 +20,7 @@ class Controller_Account extends Controller_Layout {
 		$content->post_condition = "";
 		$content->post_description = "";
 		$content->post_category = "";
+		$content->post_isbn = "";
 		$content->show_form = true;
 		$content->editmode = false;
 		$content->disabled = false;
@@ -45,7 +46,11 @@ class Controller_Account extends Controller_Layout {
 			$description = @(htmlspecialchars($_POST["description"]));
 			$category = @($_POST["category"]);
 			$owner_id = Session::instance()->get('user_id');
-			
+			if ($category == 2) //only fill in the isbn if we need it
+				$isbn = @(htmlspecialchars($_POST["isbn"]));
+			else
+				$isbn = null;
+				
 			$confirmed = @($_POST["confirmed"]);
 			$edit = @($_POST["edit"]);
 			
@@ -55,8 +60,15 @@ class Controller_Account extends Controller_Layout {
 			$content->post_condition = $condition;
 			$content->post_description = $description;
 			$content->post_category = $category;
+			$content->post_isbn = $isbn;
 			
-			$errors = $this->validatepost($title, $price, $condition, $description, null, $category);
+			$errors = $this->validatepost(array(
+				'title' => $title, 
+				'price' => $price,
+				'condition' => $condition,
+				'description' => $description, 
+				'category' => $category, 
+				'isbn' => $isbn));
 			
 			if ($edit) {
 				//do nothing, just show the form.
@@ -70,13 +82,19 @@ class Controller_Account extends Controller_Layout {
 				if ($confirmed) {
 					//create the post, and report a success						
 					DB::insert('posts')
-						->columns(array('owner','name','price','condition','description','category'))
-						->values(array($owner_id, $title, $price, $condition, $description, $category))->execute();
+						->columns(array('owner','name','price','condition','description','category','isbn'))
+						->values(array($owner_id, $title, $price, $condition, $description, $category,$isbn))->execute();
 						
 					$content = View::factory('account_newpost_success')->set('url_base',URL::base());
 					
 				} else {
-					$content = $this->previewpost($title,$price,$condition,$description,$category);
+					$content = $this->previewpost(array(
+						'title' => $title, 
+						'price' => $price,
+						'condition' => $condition,
+						'category' => $category,
+						'description' => $description, 
+						'isbn' => $isbn));
 					
 				}
 			}
@@ -89,7 +107,7 @@ class Controller_Account extends Controller_Layout {
 		$user_id = Session::instance()->get('user_id');
 		
 		if ($id) {
-			$post_row = DB::select('name','price','condition','description','disabled','category')->from('posts')
+			$post_row = DB::select('name','price','condition','description','disabled','category','isbn')->from('posts')
 				->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
 			$disabled = $post_row['disabled'];
 			
@@ -103,6 +121,7 @@ class Controller_Account extends Controller_Layout {
 				$content->post_category = $post_row['category'];
 				$content->post_price = $post_row['price'];
 				$content->post_description = $post_row['description'];
+				$content->post_isbn = $post_row['isbn'];
 				$content->disabled = $disabled;
 				$content->editmode = true;
 				$content->errors = array();
@@ -122,6 +141,12 @@ class Controller_Account extends Controller_Layout {
 					$confirmed = @($_POST["confirmed"]);
 					$disable = @($_POST["disable"]);
 					$category = @($_POST["category"]);
+					if ($category == 2) {
+						$isbn = @(htmlspecialchars($_POST["isbn"]));
+					} else {
+						$isbn = null;
+					}
+					
 					
 					if ($disable && ! $edit) {
 						//if we're going to disable the post, do a check to see if the user confirmed
@@ -135,12 +160,7 @@ class Controller_Account extends Controller_Layout {
 							}
 						} else {
 							$content = View::factory('form_confirm');
-							$content->form_items = array(
-								'title'=>$title,
-								'condition'=>$condition,
-								'price'=>$price,
-								'description'=>$description,
-								'disable'=>'yes');
+							$content->form_items = array();								
 							$content->action = "post_disable";
 						}					
 					} else {					
@@ -151,8 +171,16 @@ class Controller_Account extends Controller_Layout {
 						$content->post_condition = $condition;
 						$content->post_description = $description;
 						$content->post_category = $category;
+						$content->post_isbn = $isbn;
 						
-						$errors = $this->validatepost($title,$price,$condition,$description,$id,$category);
+						$errors = $this->validatepost(array(
+							'title' => $title,
+							'price' => $price,
+							'condition' => $condition,
+							'description' => $description,
+							'originalpostid' => $id,	
+							'isbn' => $isbn,
+							'category' => $category));
 						
 						if ($edit) {	
 							//do nothing, just show the form!
@@ -171,12 +199,19 @@ class Controller_Account extends Controller_Layout {
 									'price'=>$price,
 									'condition'=>$condition,
 									'category'=>$category,
+									'isbn'=>$isbn,
 									'description'=>$description))->where('id','=',$id)->execute();
 							
 								$content->message = "Update submitted!";							
 								$content->show_form = false;
 							} else {
-								$content = $this->previewpost($title,$price,$condition,$description,$category);
+								$content = $this->previewpost(array(
+									'title' => $title,
+									'price' =>$price,
+									'condition' => $condition,
+									'description' => $description,
+									'category' => $category,
+									'isbn' => $isbn));
 							}						
 						}
 					}
@@ -198,68 +233,84 @@ class Controller_Account extends Controller_Layout {
 		}
 	}
 	
-	private function validatepost($title, $price, $condition, $description, $originalpostid, $categoryid) {
+	private function validatepost($fields) {	
 		$errors = array();
 		
-		$category_row = DB::select('id')->from('categories')->where('disabled','=','0')->and_where('id','=',$categoryid)->execute()->current();
+		$category_row = DB::select('id')->from('categories')->where('disabled','=','0')->and_where('id','=',$fields['category'])->execute()->current();
 		
-		if (strlen($title) < 5)
+		if (strlen($fields['title']) < 5)
 			array_push($errors, "Title too short!  Make it at least 5 characters long.");
 			
-		if (strlen($title) > 100)
+		if (strlen($fields['title']) > 100)
 			array_push($errors, "Title too long!  Don't make it longer than 100 characters.");
 		
-		if (strlen($condition) == 0)
+		if (strlen($fields['condition']) == 0)
 			array_push($errors, "Please enter a condition.");
 			
-		if (strlen($condition) > 50)
+		if (strlen($fields['condition']) > 50)
 			array_push($errors, "Condition too long!  Make it something short, like 'used' or 'new'.");
 		
 		if ( ! $category_row)
 			array_push($errors, "Please select a category.");
 		
-		if ( ! is_numeric($price) || $price < 0)
+		if ( ! is_numeric($fields['price']) || $fields['price'] < 0)
 			array_push($errors, "Invalid price.  Please enter a number, without the dollar sign.");
 		
-		if (strlen($description) < 20)
+		if (strlen($fields['description']) < 20)
 			array_push($errors, "Description too short.&nbsp; Must be at least 20 characters long.");
 		
-		if (strlen($description) > 500)
+		if (strlen($fields['description']) > 500)
 			array_push($errors, "Description too long.&nbsp; Must be under 500 characters.");
 					
+		//check extra fields		
+		try {
+			if ($fields['category'] == 2) {
+				//if this is a book
+				if ((strlen($fields['isbn']) != 10 && strlen($fields['isbn']) != 13) || ! is_numeric($fields['isbn'])) {
+					array_push($errors, "Invalid 10 or 13-digit ISBN.  Please make sure you enter the ISBN without the dashes.");
+				}				
+			}
+			
+		} catch (Exception $e) {
+			array_push($errors, "Extra information missing.  " . $e->getMessage());
+		}	
 			
 		//check for double post
-		$previous_post = DB::select('id')->from('posts')
-			->where('name','=',$title)
-			->and_where('price','=',$price)
-			->and_where('condition','=',$condition)
-			->and_where('description','=',$description)
-			->and_where('disabled','=','0')
-			->and_where('id','!=',$originalpostid)
-			->execute()->current();
-		
-		if ($previous_post)
-			array_push($errors, "Double post detected.&nbsp; Double post detected.");
+		if (isset($fields['originalpostid'])) {			
+			$previous_post = DB::select('id')->from('posts')
+				->where('name','=',$fields['title'])
+				->and_where('price','=',$fields['price'])
+				->and_where('condition','=',$fields['condition'])
+				->and_where('description','=',$fields['description'])
+				->and_where('disabled','=','0')
+				->and_where('id','!=',$fields['originalpostid'])
+				->execute()->current();
 			
+			if ($previous_post)
+				array_push($errors, "Double post detected.&nbsp; Double post detected.");
+		}	
+		
 		return $errors;
 	}
 	
-	private function previewpost($title,$price,$condition,$description,$category) {
+	private function previewpost($fields) {
 		
 		$content = View::factory('account_newpost_preview');
-		$content->post_title = $title;
-		$content->post_price = $price;
-		$content->post_condition = $condition;					
-		$content->post_description = $description;
-		$content->post_category = $category;
-		
+		$content->post_title = $fields['title'];
+		$content->post_price = $fields['price'];
+		$content->post_condition = $fields['condition'];					
+		$content->post_description = $fields['description'];
+		$content->post_category = $fields['category'];
+		$content->post_isbn = $fields['isbn'];
+				
 		$post_preview = View::factory('home_post_view');
-		$post_preview->post_title = $title;
-		$post_preview->post_price = "$$price";
-		$post_preview->post_condition = $condition;
-		$post_preview->post_description = $description;		
+		$post_preview->post_title = $fields['title'];
+		$post_preview->post_price = "$$fields[price]";
+		$post_preview->post_condition = $fields['condition'];
+		$post_preview->post_isbn = $fields['isbn'];
+		$post_preview->post_description = $fields['description'];		
 		$post_preview->preview = true;
-		
+				
 		$content->post_preview = $post_preview;
 		
 		return $content;

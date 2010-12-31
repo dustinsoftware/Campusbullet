@@ -44,6 +44,10 @@
 	} ?>	
 	</select>
 </tr>
+<tr class="hidden" id="books">
+	<th>ISBN:</th>
+	<td><input type="textbox" name="isbn" value="<?=$post_isbn?>" /></td>
+</tr>
 <tr>
 	<th>Asking price: ($)</th>
 	<td><input type="textbox" name="price" value="<?=$post_price?>" />(0 if the item is free)</td>
