@@ -1,0 +1,148 @@
+﻿/* Generic Defs ########################################################### */
+body {
+	background-color: #1C3753;
+	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+	color:white;
+	padding:0;
+	margin:0;
+}
+a {
+	text-decoration: none;
+	color: #AECBFB;
+}
+img {
+	border:0;
+}
+ul {
+	list-style: none outside;
+}
+a:hover{
+	text-decoration:underline;
+}
+h1 {
+	margin-top: 0;
+}
+/* Text formatting defs ########################################################### */ 
+.smalltitle {
+	font-weight:bold;
+}
+
+/* Container Defs ########################################################### */
+#mainContainer {
+	clear: both;
+	color: white;
+	margin-bottom:50px;
+}
+
+/* Header Defs ########################################################### */ 
+#header {
+	height: 100px;
+/*	background-color: #E3DAB5;*/
+	background-color: white;
+	color:black;
+}
+#header a, #content_info a {
+	color: #0944A8;
+}
+#header_shadow {
+	height:27px;
+	background-image:url('../images/shadow.png');
+}
+#sitelogo {
+	position:relative;
+	float:left;
+}
+
+#header_right {
+	float:right;
+	height:100px;
+	overflow:hidden;
+}
+
+#header_login {
+	position:absolute;
+	top:15px;
+	right:25px;
+}
+#header_menu {
+	position:relative;
+	margin-top:61px;
+	margin-right:30px;
+}
+
+#header_menu ul {
+	list-style:none;
+}
+#header_menu ul li {
+	display: inline;
+	margin:5px;
+}
+#header_menu a{
+	padding:20px;
+	height:50px;
+	color:black;
+}
+#header_menu a:hover{
+	text-decoration: none;
+	background:#DBDCDD
+}
+/* Sidebar defs ########################################################### */
+#sidebar {
+	float:right;
+	margin-top:10px;
+	width:250px;
+	background:white;
+	color:black;
+	margin-right:40px;
+}
+#sidebar_inner {	
+	margin:5px;
+}
+.sidebar_header {
+	text-decoration: underline;
+	font-weight: bold;
+	font-size: large;
+	text-align: center;
+}
+
+/* Content defs ########################################################### */
+#content {
+	padding:10px 30px 0px 30px;
+	margin-right:300px;
+}
+
+#content_header {
+	font-size: xx-large;
+	font-weight: bold;
+	margin-bottom:10px;
+}
+#content_info {
+	background:white;
+	color:black;
+	padding:20px;
+}
+#content_info img {
+	width:320px;	
+	height:240px;
+	float:left;
+}
+#content_actionbuttons {
+	text-align:center;
+	margin-top:50px;
+	margin-bottom:20px;
+}
+#content_actionbuttons li {
+	display:inline;
+}
+#content_actionbuttons li a {
+	padding:20px;
+	background:#CFCFCF;
+	color:black;
+}
+#content_actionbuttons li a:hover {
+	
+}
+
+.centered {
+	text-align:center;
+}

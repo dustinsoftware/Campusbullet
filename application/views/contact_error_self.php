@@ -1,0 +1,1 @@
+<h1>Send error</h1><p class="error">You cannot send a message to yourself!</p>

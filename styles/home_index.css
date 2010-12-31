@@ -1,0 +1,20 @@
+﻿/* Home Page Stylesheet */
+
+#categories {
+
+}
+
+.button {
+	width: 202px;
+	background: white;
+	margin:10px;
+	text-align:center;	
+	display:inline-block;
+	height: 180px;
+	overflow:hidden;
+	padding:10px;
+
+}
+.button a {
+	color:black;	
+}
