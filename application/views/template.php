@@ -28,7 +28,7 @@
 	<? if ($user) { ?>
 	You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a>?
 	<? } else { ?>
-	You're not logged in.  <a href="<?= $url_base ?>login">Login here.</a>
+	You're not logged in.  <a href="<?= $url_base ?>login">Login</a> or <a href="<?=$url_base?>register">register!</a>
 	<? } ?>
 </div>
 <div id="header_menu">
@@ -36,7 +36,7 @@
 <li><a href="<?= $url_base ?>account/newpost">new post</a></li>
 <li><a href="<?= $url_base ?>account">my account</a></li>
 <li><a href="<?= $url_base ?>search">search</a></li>
-<li><a href="<?= $url_base ?>help/faq">faq</a></li>
+<li><a href="<?= $url_base ?>help">help</a></li>
 
 </ul>
 </div>

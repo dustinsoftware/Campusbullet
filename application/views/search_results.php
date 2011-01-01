@@ -6,7 +6,7 @@
 <? if ($posts) { ?>
 <ul>
 <? foreach($posts as $post) { 
-	echo "<li><a href=\"$url_base/home/view/$post[id]\">$post[name]</a></li>\r\n";
+	echo "<li><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a></li>\r\n";
 } ?>
 </ul>
 
