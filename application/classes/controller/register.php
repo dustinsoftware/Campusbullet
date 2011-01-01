@@ -6,7 +6,8 @@ class Controller_Register extends Controller_Layout {
 	
 	public function action_index() {
 		$content = View::factory('notemplate_register');
-		
+		$content->error = "Registrations are disabled at this time.&nbsp; Please register for a beta account <a href=\"http://beta.dustinsoftware.com/masterlist-beta\">here</a>.";
+
 		$this->template = $content;
 	}
 	

@@ -26,7 +26,7 @@ will take social skills.&nbsp; You have been warned.</p>
 <p>To begin, enter your @letu.edu address below.&nbsp; We&#39;ll send you a quick 
 email so you can verify you own that email account.</p>
 
-
+<? if ($error) { ?><p class="error"><?=$error?></p><? } ?>
 <p class="center">Your LETU Email Address: <input name="email" type="text" style="width: 285px" />&nbsp;<input name="submit" type="submit" value="Submit, foo!" /></p>
 
 	

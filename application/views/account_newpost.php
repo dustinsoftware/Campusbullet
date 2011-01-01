@@ -1,3 +1,11 @@
+<script type="text/javascript">
+function showuploader() {
+	document.getElementById("uploader").className = "";
+	document.getElementById("uploader_info").className = "";
+	document.getElementById("uploader_hidden").className = "hidden";
+}
+</script>
+
 <? if ($editmode) $title = "Edit your post!"; else $title = "Post something new!"; ?>
 <h1><?=$title?></h1>
 
@@ -16,12 +24,12 @@
 	<li>Make sure you have a quick look over the <a href="<?=$url_base?>help/terms">terms and conditions</a>.&nbsp; Don't worry, it's short :)</li>	
 </ul>
 </p>
-<? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; If you commit a change to this post, it will be re-enabled and posted to the site.</p><? } ?>
+<? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; To enable it, just hit "Preview this Post" and confirm you want to post it.</p><? } ?>
 <? if ($disabled == 2) { ?><p class="error">This post has been flagged.&nbsp; It cannot be re-enabled.</p><? } ?>
 <? } ?>
 
 <? if ($show_form || $editmode) { ?>
-<form action="" method="POST">
+<form action="" method="POST" >
 <table>
 <tr>
 	<th>Post title:</th>
@@ -50,7 +58,7 @@
 </tr>
 <tr>
 	<th>Asking price: ($)</th>
-	<td><input type="textbox" name="price" value="<?=$post_price?>" />(0 if the item is free)</td>
+	<td><input type="textbox" name="price" value="<?=$post_price?>" /> (0 if the item is free)</td>
 </tr>
 <tr>
 	<th>Describe the item:</th>

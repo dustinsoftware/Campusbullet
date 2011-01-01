@@ -85,6 +85,8 @@ class Controller_Home extends Controller_Layout {
 		$post = DB::select('*')->from('posts')->where('id','=',$id)->and_where('disabled','=','0')->execute()->current();
 		
 		if ($post) {
+			$category_row = DB::select('name')->from('categories')->where('id','=',$post['category'])->execute()->current();
+			
 			$content->is_owner = ($post['owner'] == $user_id);
 			$content->preview = false;
 			$content->post_title = $post['name'];
@@ -94,14 +96,21 @@ class Controller_Home extends Controller_Layout {
 			else
 				$content->post_price = "$$post_price";
 			
-			$content->post_description = $post['description'];
-			$content->post_image = "";
+			$content->post_description = $post['description'];			
+			$content->post_category_name = $category_row['name'];
 			$content->post_condition = $post['condition'];
 			$content->post_isbn = $post['isbn'];
+			$content->url_base = $base;
 			$content->link_want = $base . "contact/want/" . $id;
 			$content->link_report = $base . "contact/message/ml_abuse?postid=" . $id;
 			$content->link_prev = $base . "home";
 			$content->link_edit = $base . "account/posts/" . $id;
+			$content->link_image = $base . "image/post/$id";
+			
+			if ($post['image'])
+				$content->post_image = $base . "images/posts/$id.jpg";
+			else
+				$content->post_image = "";
 			
 			
 			$this->template->content = $content; 

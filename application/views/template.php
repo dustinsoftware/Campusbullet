@@ -35,6 +35,7 @@
 <ul>
 <li><a href="<?= $url_base ?>account/newpost">new post</a></li>
 <li><a href="<?= $url_base ?>account">my account</a></li>
+<li><a href="<?= $url_base ?>search">search</a></li>
 <li><a href="<?= $url_base ?>help/faq">faq</a></li>
 
 </ul>

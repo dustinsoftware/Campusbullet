@@ -26,6 +26,9 @@ h1 {
 .smalltitle {
 	font-weight:bold;
 }
+.hidden {
+	display: none;
+}
 
 /* Container Defs ########################################################### */
 #mainContainer {

@@ -2,6 +2,7 @@
 
 include 'is_email.php';
 
+
 class Controller_Account extends Controller_Layout {
 
 	
@@ -12,6 +13,9 @@ class Controller_Account extends Controller_Layout {
 	}
 	
 	public function action_newpost($starting_category_name = null) {
+		$user_id = Session::instance()->get('user_id');		
+		$config = Kohana::config('masterlist');
+		$masterlist_root = $config['root'];
 		
 		$content = View::factory('account_newpost');
 		$content->url_base = URL::base();
@@ -27,7 +31,7 @@ class Controller_Account extends Controller_Layout {
 		$content->message = "";
 		$content->errors = array();
 		$content->message_class = "info";
-		
+		$content->file_uploaded = false;
 		$categories_rows = DB::select('id','name','prettyname')->from('categories')->where('disabled','=','0')->execute()->as_array();
 		$content->categories = $categories_rows;
 		
@@ -68,7 +72,8 @@ class Controller_Account extends Controller_Layout {
 				'condition' => $condition,
 				'description' => $description, 
 				'category' => $category, 
-				'isbn' => $isbn));
+				'isbn' => $isbn,));
+			
 			
 			if ($edit) {
 				//do nothing, just show the form.
@@ -77,7 +82,7 @@ class Controller_Account extends Controller_Layout {
 				$content->message_class = "error";
 				$content->message = "There was a problem creating the post.";
 				$content->errors = $errors;
-			} else {
+			} else {				
 				$content->show_form = false;
 				if ($confirmed) {
 					//create the post, and report a success						
@@ -85,7 +90,10 @@ class Controller_Account extends Controller_Layout {
 						->columns(array('owner','name','price','condition','description','category','isbn'))
 						->values(array($owner_id, $title, $price, $condition, $description, $category,$isbn))->execute();
 						
-					$content = View::factory('account_newpost_success')->set('url_base',URL::base());
+					//now that we've crated the post, get the new id and redirect to the image upload page
+					$post_row = DB::select('id')->from('posts')->where('owner','=',$owner_id)->order_by('timestamp','DESC')->execute()->current();
+					
+					Request::instance()->redirect("image/post/$post_row[id]?postcreated=true");
 					
 				} else {
 					$content = $this->previewpost(array(
@@ -148,7 +156,7 @@ class Controller_Account extends Controller_Layout {
 					}
 					
 					
-					if ($disable && ! $edit) {
+					if ($disable && ! $edit) {						
 						//if we're going to disable the post, do a check to see if the user confirmed
 						if ($confirmed) {
 							//disable the post if teh post has not been banned
@@ -160,7 +168,7 @@ class Controller_Account extends Controller_Layout {
 							}
 						} else {
 							$content = View::factory('form_confirm');
-							$content->form_items = array();								
+							$content->form_items = array('disable' => 'yes');								
 							$content->action = "post_disable";
 						}					
 					} else {					
@@ -202,7 +210,7 @@ class Controller_Account extends Controller_Layout {
 									'isbn'=>$isbn,
 									'description'=>$description))->where('id','=',$id)->execute();
 							
-								$content->message = "Update submitted!";							
+								Request::instance()->redirect("home/view/$id");
 								$content->show_form = false;
 							} else {
 								$content = $this->previewpost(array(
@@ -239,61 +247,63 @@ class Controller_Account extends Controller_Layout {
 		$category_row = DB::select('id')->from('categories')->where('disabled','=','0')->and_where('id','=',$fields['category'])->execute()->current();
 		
 		if (strlen($fields['title']) < 5)
-			array_push($errors, "Title too short!  Make it at least 5 characters long.");
+			$errors += array("title" => "Title too short!  Make it at least 5 characters long.");
 			
 		if (strlen($fields['title']) > 100)
-			array_push($errors, "Title too long!  Don't make it longer than 100 characters.");
+			$errors += array("title" => "Title too long!  Don't make it longer than 100 characters.");
 		
 		if (strlen($fields['condition']) == 0)
-			array_push($errors, "Please enter a condition.");
+			$errors += array("condition" => "Please enter a condition.");
 			
 		if (strlen($fields['condition']) > 50)
-			array_push($errors, "Condition too long!  Make it something short, like 'used' or 'new'.");
+			$errors += array("condition" => "Condition too long!  Make it something short, like 'used' or 'new'.");
 		
 		if ( ! $category_row)
-			array_push($errors, "Please select a category.");
+			$errors += array("category" => "Please select a category.");
 		
 		if ( ! is_numeric($fields['price']) || $fields['price'] < 0)
-			array_push($errors, "Invalid price.  Please enter a number, without the dollar sign.");
+			$errors += array("price" => "Invalid price.  Please enter a number, without the dollar sign.");
 		
 		if (strlen($fields['description']) < 20)
-			array_push($errors, "Description too short.&nbsp; Must be at least 20 characters long.");
+			$errors += array("description" => "Description too short.&nbsp; Must be at least 20 characters long.");
 		
 		if (strlen($fields['description']) > 500)
-			array_push($errors, "Description too long.&nbsp; Must be under 500 characters.");
+			$errors += array("description" => "Description too long.&nbsp; Must be under 500 characters.");
 					
 		//check extra fields		
 		try {
 			if ($fields['category'] == 2) {
 				//if this is a book
 				if ((strlen($fields['isbn']) != 10 && strlen($fields['isbn']) != 13) || ! is_numeric($fields['isbn'])) {
-					array_push($errors, "Invalid 10 or 13-digit ISBN.  Please make sure you enter the ISBN without the dashes.");
+					$errors += array("isbn" => "Invalid 10 or 13-digit ISBN.  Please make sure you enter the ISBN without the dashes.");
 				}				
 			}
 			
 		} catch (Exception $e) {
-			array_push($errors, "Extra information missing.  " . $e->getMessage());
+			$errors += array("fields" => "Extra information missing.  " . $e->getMessage());
 		}	
 			
 		//check for double post
-		if (isset($fields['originalpostid'])) {			
-			$previous_post = DB::select('id')->from('posts')
-				->where('name','=',$fields['title'])
-				->and_where('price','=',$fields['price'])
-				->and_where('condition','=',$fields['condition'])
-				->and_where('description','=',$fields['description'])
-				->and_where('disabled','=','0')
-				->and_where('id','!=',$fields['originalpostid'])
-				->execute()->current();
-			
-			if ($previous_post)
-				array_push($errors, "Double post detected.&nbsp; Double post detected.");
+		$originalpostid = @($fields['originalpostid']);
+		$previous_post = DB::select('id')->from('posts')
+			->where('name','=',$fields['title'])
+			->and_where('price','=',$fields['price'])
+			->and_where('condition','=',$fields['condition'])
+			->and_where('description','=',$fields['description'])
+			->and_where('disabled','=','0')
+			->and_where('id','!=',$originalpostid)
+			->execute()->current();
+		
+		if ($previous_post) {		
+			$errors += array("doublepost" => "Double post detected.&nbsp; Double post detected.");
 		}	
 		
 		return $errors;
 	}
 	
 	private function previewpost($fields) {
+		
+		$category_row = DB::select('name')->from('categories')->where('id','=',$fields['category'])->execute()->current();
 		
 		$content = View::factory('account_newpost_preview');
 		$content->post_title = $fields['title'];
@@ -310,7 +320,10 @@ class Controller_Account extends Controller_Layout {
 		$post_preview->post_isbn = $fields['isbn'];
 		$post_preview->post_description = $fields['description'];		
 		$post_preview->preview = true;
-				
+		$post_preview->url_base = URL::base();
+		$post_preview->post_category_name = $category_row['name'];
+		$post_preview->post_image = "";
+		
 		$content->post_preview = $post_preview;
 		
 		return $content;
