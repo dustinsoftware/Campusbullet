@@ -27,16 +27,14 @@
 <? if ($is_owner) { ?>
 <p>You are the owner of this post.</p>
 <ul>
-	<li><a href="<?= $link_edit ?>">Edit or disable this post</a></li>
-	<li><a href="<?= $link_image ?>">Attach or remove a picture to this post</a></li>
-	<li><a href="<?= $link_prev ?>">Go back to the post viewer</a></li>
+	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit or disable this post</a></li>
+	<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	
 </ul>
 <? } else { ?>
 <p>What next? </br>
 <ul>
-	<li><a href="<?= $link_want ?>">I want this item!</a></li>
-	<li><a href="<?= $link_report ?>">Report this item..</a></li>
-	<li><a href="<?= $link_prev ?>">Go back to the post viewer</a></li>
+	<li><a href="<?= $url_base ?>contact/want/<?=$post_id?>">I want this item!</a></li>
+	<li><a href="<?= $url_base ?>contact/message/ml_abuse?postid=<?=$post_id?>">Report this item..</a></li>	
 </ul>
 </p>
 <? } ?>

@@ -11,7 +11,7 @@
 <? foreach ($my_posts as $post) {
 	echo "<tr>";
 	echo "<td>$post[id]</td>";
-	echo "<td><a href=\"" . $url_base . "account/posts/$post[id]\">$post[name]</a></td>";
+	echo "<td><a href=\"" . $url_base . "post/edit/$post[id]\">$post[name]</a></td>";
 	echo "<td>$post[timestamp]</td>";
 	if ($post['disabled'] == 0)
 		echo "<td>Active!</td>";

@@ -101,11 +101,7 @@ class Controller_Home extends Controller_Layout {
 			$content->post_condition = $post['condition'];
 			$content->post_isbn = $post['isbn'];
 			$content->url_base = $base;
-			$content->link_want = $base . "contact/want/" . $id;
-			$content->link_report = $base . "contact/message/ml_abuse?postid=" . $id;
-			$content->link_prev = $base . "home";
-			$content->link_edit = $base . "account/posts/" . $id;
-			$content->link_image = $base . "image/post/$id";
+			$content->post_id = $id;
 			
 			if ($post['image'])
 				$content->post_image = $base . "images/posts/$id.jpg";
