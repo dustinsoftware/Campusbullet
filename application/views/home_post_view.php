@@ -4,7 +4,6 @@
 }
 </style>
 <h1><?=$post_title ?></h1>
-<hr />
 <table>
 <tr><td>Posted in:</td><td><a href="<?=$url_base?>home/category/<?=$post_category_name?>"><?=$post_category_name?></a></td></tr>
 <tr><td>Price:</td><td><?=$post_price?></td></tr>

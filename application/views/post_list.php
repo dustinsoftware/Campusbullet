@@ -1,5 +1,11 @@
-<h1>Your posts!</h1>
+<script type="text/javascript" >
+function createpost() {
+	location.href = "<?=$url_base?>post/new";
+}
+</script>
 
+<h1>Your posts!</h1>
+<p><input type="button" value="Create a new post" onclick="createpost()" /></p>
 <? if ($my_posts) { ?>
 <table>
 <tr>
@@ -30,5 +36,5 @@
 </table>
 
 <? } else { ?>
-<p>Hey, you don't have any posts!&nbsp; Why don't you <a href="<?=$url_base?>account/newpost">go post something!</a></p>
+<p>Hey, you don't have any posts!&nbsp; Why don't you <a href="<?=$url_base?>post/new">go post something!</a></p>
 <? } ?>

@@ -1,5 +1,4 @@
 <h1>Manage your account</h1>
-<p>To manage your current posts, <a href="<?=$url_base?>post/edit">click here</a>.</p>
 <? if ($message) { ?>
 <p class="info"><?=$message?></p>
 <? } ?>

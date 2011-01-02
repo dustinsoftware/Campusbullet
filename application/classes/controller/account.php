@@ -1,10 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-include 'is_email.php';
-
-
 class Controller_Account extends Controller_Layout {
-
 	
 	public function action_index() {
 		$content = View::factory('account_home');
@@ -44,9 +40,14 @@ class Controller_Account extends Controller_Layout {
 			}
 			
 			elseif ($change_email) {
+				$validate = Validate::factory(array(
+					'email' => $email_address));
+				$validate->rule('email','email')
+					->rule('email','not_empty');
+				
 				$email_inuse_row = DB::select('id')->from('users')->where('email','=',$email_address)->execute()->current();
 				
-				if (is_email($email_address, false, E_WARNING) > 0)
+				if ( ! $validate->check())
 					array_push($errors,"Please enter a valid email address.");			
 				elseif ($email_inuse_row) {
 					if ($email_inuse_row['id'] == $user_id) {
@@ -65,8 +66,7 @@ class Controller_Account extends Controller_Layout {
 					
 					$secretkey = sha1(rand(0,1000) . $email_address);
 					DB::insert('verification_keys')->columns(array('id','key','email'))->values(array($user_id,$secretkey,$email_address))->execute();
-				
-							
+					
 					$body = View::factory('email_confirm_emailchange')
 						->set('key',$secretkey)
 						->set('base',URL::base(true,true))

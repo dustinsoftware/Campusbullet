@@ -24,7 +24,6 @@ class Controller_Post extends Controller_Layout {
 		$content->disabled = false;
 		$content->message = "";
 		$content->errors = array();
-		$content->message_class = "info";
 		$content->file_uploaded = false;
 		$categories_rows = DB::select('id','name','prettyname')->from('categories')->where('disabled','=','0')->execute()->as_array();
 		$content->categories = $categories_rows;
@@ -73,8 +72,6 @@ class Controller_Post extends Controller_Layout {
 				//do nothing, just show the form.
 			}
 			elseif ($errors) {
-				$content->message_class = "error";
-				$content->message = "There was a problem creating the post.";
 				$content->errors = $errors;
 			} else {				
 				$content->show_form = false;
@@ -127,7 +124,6 @@ class Controller_Post extends Controller_Layout {
 				$content->disabled = $disabled;
 				$content->editmode = true;
 				$content->errors = array();
-				$content->message_class = "info";
 				
 				$categories_rows = DB::select('id','name','prettyname')->from('categories')->where('disabled','=','0')->execute()->as_array();
 				$content->categories = $categories_rows;
@@ -187,8 +183,6 @@ class Controller_Post extends Controller_Layout {
 						if ($edit) {	
 							//do nothing, just show the form!
 						} elseif ($errors) {
-							$content->message_class = "error";
-							$content->message = "There was a problem creating the post.";
 							$content->errors = $errors;
 						} else {
 							//the data is good, preview the change (or submit if confirmed)
@@ -227,7 +221,8 @@ class Controller_Post extends Controller_Layout {
 			$content = View::factory('post_list');
 			$user_id = Session::instance()->get('user_id');
 
-			$my_posts = DB::select('id','name','timestamp','disabled')->from('posts')->where('owner','=',$user_id)->order_by('timestamp','DESC')->execute()->as_array();
+			$my_posts = DB::select('id','name','timestamp','disabled')->from('posts')->where('owner','=',$user_id)
+				->order_by('timestamp','DESC')->order_by('id','DESC')->execute()->as_array();
 			
 			$content->my_posts = $my_posts;		
 			$content->url_base = URL::base();

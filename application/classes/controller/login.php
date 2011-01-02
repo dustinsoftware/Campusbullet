@@ -38,7 +38,7 @@ class Controller_Login extends Controller_Layout {
 			if ($auth->login($post_user, $post_pass)) {
 				Request::instance()->redirect($redir);
 			} else {				
-				$content->error = "Sorry, that username and password didn't work.";
+				$content->error = "Sorry, that username and password didn't work.<br />If you forgot your password, <a href=\"" . URL::base() . "register/forgotpassword\">click here to reset it</a>.";
 				if ($failures_row) {
 					DB::update('login_failures')->set(array(
 						'failures' => $failures_row['failures'] + 1))

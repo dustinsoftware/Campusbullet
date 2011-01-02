@@ -7,9 +7,9 @@ class Controller_Help extends Controller_Layout {
 	public function action_index($page = null) {
 		try {		
 			if ($page) {
-				$this->template->content = View::factory("help_$page");
+				$this->template->content = View::factory("help_$page")->set('url_base',URL::base());
 			} else {
-				$this->template->content = View::factory('help_home');
+				$this->template->content = View::factory('help_home')->set('url_base',URL::base());
 			}
 			
 		} catch (Exception $e) {

@@ -1,5 +1,4 @@
 <h1><?=$category_prettyname?></h1>
-<hr />
 
 <? if ($dategroups) { ?>
 <div id="hp_posts">
@@ -22,7 +21,7 @@
 
 
 <? } else { ?>
-<p>Sorry, I couldn't find any posts in this category.&nbsp; You should <a href="<?=$url_base?>account/newpost/<?=$category_name?>">post something</a>!</p>
+<p>Sorry, I couldn't find any posts in this category.&nbsp; You should <a href="<?=$url_base?>post/new/<?=$category_name?>">post something</a>!</p>
 <ul>
 <li><a href="<?=$url_base?>">Go back home</a></li>
 </ul>

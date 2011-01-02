@@ -4,16 +4,6 @@
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>The MasterList<? if ($title) echo " - $title"; ?></title>
-<style type="text/css">
-.error {
-	background: red;
-	color: white;
-}
-.info {
-	background: Yellow;
-	color: black;
-}
-</style>
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
 <? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>
 </head>
@@ -33,8 +23,8 @@
 </div>
 <div id="header_menu">
 <ul>
-<li><a href="<?= $url_base ?>account/newpost">new post</a></li>
-<li><a href="<?= $url_base ?>account">my account</a></li>
+<li><a href="<?= $url_base ?>post/edit">manage posts</a></li>
+<li><a href="<?= $url_base ?>account">account</a></li>
 <li><a href="<?= $url_base ?>search">search</a></li>
 <li><a href="<?= $url_base ?>help">help</a></li>
 
@@ -47,17 +37,6 @@
 <div id="mainContainer">
 <div id="header_shadow"></div>
 
-<!-- sidebar start -->
-<? if ($sidebar) { ?>
-<div id="sidebar">
-	<div id="sidebar_inner">
-		<? echo $sidebar; ?>
-	</div>
-</div>
-
-<? } ?>
-
-<!-- sidebar end -->
 
 <div id="content">
 

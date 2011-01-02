@@ -3,14 +3,7 @@
 class Controller_Contact extends Controller_Layout {
 
 	public function action_index() {
-		$content = View::factory('contact_home');
-		$content->form_to = "";
-		$content->form_message = "";
-		$content->show_form = true;
-		$content->message = "";
-		$content->base = URL::base();
-		
-		$this->template->content = $content;
+		Request::instance()->redirect('help');
 	}
 	
 	public function action_message($recipient_name = null) {
@@ -46,7 +39,9 @@ class Controller_Contact extends Controller_Layout {
 			$recipient_row = DB::select('id','role','email','username')->from('users')->where('username','=',$recipient)->execute()->current();
 			if ( ! $recipient_row) 
 				array_push($validation_errors, "Invalid recipient.");
-			
+			if (strtolower(substr($recipient,0,3)) != "ml_") {
+				array_push($validation_errors, "Only MasterList staff can be messaged.");
+			}
 			//get our id
 			$session = Session::instance();
 			$user_id = $session->get("user_id");
@@ -94,6 +89,8 @@ class Controller_Contact extends Controller_Layout {
 		$post_row = DB::select('name','owner')->from('posts')->where('id','=',$id)->and_where('disabled','=','0')->execute()->current();
 		$post_owner_row = @(DB::select('email')->from('users')->where('id','=',$post_row['owner'])->and_where('disabled','=','0')->execute()->current());	
 		$user_id = Session::instance()->get('user_id');
+		$user_row = DB::select('email')->from('users')->where('id','=',$user_id)->execute()->current();
+		
 		if ($post_row && $post_owner_row) {						
 		
 			$content = View::factory('contact_want');
@@ -129,7 +126,7 @@ class Controller_Contact extends Controller_Layout {
 					$body->username = Auth::instance()->get_user();
 					$body->post_name = $post_row['name'];
 					$body->id = $id;
-					$body->sender_email = $post_owner_row['email'];
+					$body->sender_email = $user_row['email'];
 					$body->base = URL::base();
 									
 					send_email($email, $subject, $body, $body->sender_email);

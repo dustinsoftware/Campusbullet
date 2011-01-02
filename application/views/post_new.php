@@ -1,21 +1,11 @@
-<script type="text/javascript">
-function showuploader() {
-	document.getElementById("uploader").className = "";
-	document.getElementById("uploader_info").className = "";
-	document.getElementById("uploader_hidden").className = "hidden";
-}
-</script>
-
 <? if ($editmode) $title = "Edit your post!"; else $title = "Post something new!"; ?>
 <h1><?=$title?></h1>
 
 <? if ($message) { ?>
-	<div class="<?=$message_class?>">
-	<p><?=$message?></p>
-	<? if ($errors) { ?><ul>
-	<? foreach ($errors as $error) { ?><li><?=$error?></li><? } ?>
-	</ul><? } ?>
-	</div>
+	<p class="info"><?=$message?></p>
+<? } ?>
+<? if ($errors) { ?><ul class="error">
+<? foreach ($errors as $error) { ?><li><?=$error?></li><? } ?></ul>
 <? } else { ?>
 <p>Hey, you want to post something to sell or give away?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:
 <ul>
@@ -41,7 +31,7 @@ function showuploader() {
 </tr>
 <tr>
 	<th>Category:</th>
-	<td><select name="category" style="width: 200px">
+	<td><select name="category" style="width: 200px" onchange="showhide()">
 	<?foreach ($categories as $category) {		
 		if ($post_category == $category['id']) {
 			echo "<option selected=\"selected\" value=\"$category[id]\">$category[prettyname]</option>\r\n";
@@ -82,3 +72,15 @@ function showuploader() {
 <? } else { ?>
 <a href="<?=$url_base?>">Go back home</a>
 <? } ?>
+
+<script type="text/javascript">
+function showhide() {
+	document.getElementById("books").className = "hidden";
+	
+	if (document.getElementsByName("category")[0].value == 2) {
+		document.getElementById("books").className = "";
+	}
+}
+
+showhide();
+</script>

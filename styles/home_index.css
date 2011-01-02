@@ -13,8 +13,11 @@
 	height: 180px;
 	overflow:hidden;
 	padding:10px;
-
+	color:black;
+	opacity:1;
 }
-.button a {
-	color:black;	
+.button:hover {
+	opacity:.8;
+	text-decoration:none;
 }
+.button
