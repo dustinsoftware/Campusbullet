@@ -2,6 +2,20 @@
 <? if ($message) { ?>
 <p class="info"><?=$message?></p>
 <? } ?>
+<? if ($errors) { ?>
+<ul class="error">
+<? foreach ($errors as $error) { echo "<li>$error</li>\r\n"; } ?>
+</ul> <? } ?>
+
+<form action="" method="POST">
+<h2>Change password</h2>
+<table>
+<tr><td>Current password:</td><td><input type="password" name="currentpw" /></td></tr>
+<tr><td>New password:</td><td><input type="password" name="newpw" /></td></tr>
+<tr><td>Re-enter the password:</td><td><input type="password" name="verifypw" /></td></tr>
+<tr><td></td><td><input type="submit" name="changepw" value="Change my password"/></td></tr>
+</table>
+</form>
 
 <form action="" method="POST">
 <h2>Change email</h2>

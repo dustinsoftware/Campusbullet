@@ -16,7 +16,7 @@ class Controller_Confirm extends Controller_Layout {
 				
 			DB::delete('verification_keys')->where('id','=',$verify_row['id'])->execute();
 			
-			Request::instance()->redirect('account/manage');
+			Request::instance()->redirect('account/manage?confirmed');
 		} else {
 			Request::instance()->redirect('home');
 		}

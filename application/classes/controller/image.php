@@ -2,6 +2,10 @@
 
 class Controller_Image extends Controller_Layout {
 
+	public function action_index() {
+		Request::instance()->redirect('home');
+	}
+	
 	public function action_post($id) {
 		$user_id = Session::instance()->get('user_id');
 		$post_row = DB::select('id','name','image')->from('posts')->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();

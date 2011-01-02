@@ -73,9 +73,14 @@ class Kohana_Auth_Db extends Auth {
 	 * @return  string
 	 */
 	public function password($username)
-	{			
-		//return Arr::get($this->_users, $username, FALSE);
-		return false; // not supported!
+	{		
+		$user_row = DB::select('userhash')->from('users')->where('username','=',$username)->execute()->current();
+		
+		if ($user_row ) {			
+			return $user_row['userhash'];			
+		}
+		
+		return false; // not found!
 	}
 
 	/**
@@ -85,17 +90,29 @@ class Kohana_Auth_Db extends Auth {
 	 * @return  boolean
 	 */
 	public function check_password($password)
-	{
-		return false; // not supported!
+	{			
+		$salt = $this->find_salt($this->password($this->get_user()));
+		
+		$verifypw = $this->hash_password($password,$salt);
 		
 		$username = $this->get_user();
-
+		
 		if ($username === FALSE)
 		{
 			return FALSE;
 		}
 
-		return ($password === $this->password($username));
+		return ($verifypw == $this->password($username));
+	}
+	
+	public function change_password($new_pw) {
+		$user_id = Session::instance()->get('user_id');
+		
+		//passwords matched, update the row and return successful
+		if (DB::update('users')->set(array('userhash' => $this->hash_password($new_pw)))->where('id','=',$user_id)->execute()) 
+			return true;	
+		else
+			return false;
 	}
 
 } // End Auth File
