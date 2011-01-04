@@ -1,6 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 class Controller_Account extends Controller_Layout {
+	public function before() {
+		parent::before();
+		
+		array_push($this->template->styles, "account");
+	}
 	
 	public function action_index() {
 		$content = View::factory('account_home');

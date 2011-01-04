@@ -23,6 +23,7 @@
 </div>
 <div id="header_menu">
 <ul>
+<li><a href="<?= $url_base ?>contact/message/ml_bug_report">report a bug!</li>
 <li><a href="<?= $url_base ?>post/edit">manage posts</a></li>
 <li><a href="<?= $url_base ?>account">account</a></li>
 <li><a href="<?= $url_base ?>search">search</a></li>
@@ -50,6 +51,7 @@
 
 
 </div>
+
 
 </body>
 

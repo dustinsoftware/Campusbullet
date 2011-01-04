@@ -14,11 +14,10 @@
 	<li>Make sure you have a quick look over the <a href="<?=$url_base?>help/terms">terms and conditions</a>.&nbsp; Don't worry, it's short :)</li>	
 </ul>
 </p>
-<? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; To enable it, just hit "Preview this Post" and confirm you want to post it.</p><? } ?>
+<? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; To repost it, just hit "Preview this Post".</p><? } ?>
 <? if ($disabled == 2) { ?><p class="error">This post has been flagged.&nbsp; It cannot be re-enabled.</p><? } ?>
 <? } ?>
 
-<? if ($show_form || $editmode) { ?>
 <form action="" method="POST" >
 <table>
 <tr>
@@ -68,10 +67,6 @@
 </table>
 
 </form>
-
-<? } else { ?>
-<a href="<?=$url_base?>">Go back home</a>
-<? } ?>
 
 <script type="text/javascript">
 function showhide() {

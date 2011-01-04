@@ -82,13 +82,17 @@ class Controller_Home extends Controller_Layout {
 		$user_id = Session::instance()->get('user_id');
 		$base = URL::base();
 		
-		$post = DB::select('*')->from('posts')->where('id','=',$id)->and_where('disabled','=','0')->execute()->current();
-		
+		$post = DB::select('*')->from('posts')->where('id','=',$id)->execute()->current();
+			
 		if ($post) {
+			if ($post['disabled'] != 0 && $post['owner'] != $user_id) {
+				Request::instance()->redirect('home');
+			}
 			$category_row = DB::select('name')->from('categories')->where('id','=',$post['category'])->execute()->current();
 			
 			$content->is_owner = ($post['owner'] == $user_id);
 			$content->preview = false;
+			$content->post_disabled = $post['disabled'];
 			$content->post_title = $post['name'];
 			$post_price = $post['price'];
 			if ($post_price == 0)

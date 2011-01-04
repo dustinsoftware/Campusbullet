@@ -19,7 +19,6 @@ class Controller_Post extends Controller_Layout {
 		$content->post_description = "";
 		$content->post_category = "";
 		$content->post_isbn = "";
-		$content->show_form = true;
 		$content->editmode = false;
 		$content->disabled = false;
 		$content->message = "";
@@ -106,13 +105,13 @@ class Controller_Post extends Controller_Layout {
 		$user_id = Session::instance()->get('user_id');
 		
 		if ($id) {
-			$post_row = DB::select('name','price','condition','description','disabled','category','isbn')->from('posts')
+			$post_row = DB::select('name','price','condition','description','disabled','category','isbn','timestamp')->from('posts')
 				->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
-			$disabled = $post_row['disabled'];
 			
 			if ($post_row) {
+				$disabled = $post_row['disabled'];
+				
 				$content = View::factory('post_new');
-				$content->show_form = true;
 				$content->message = "";
 				$content->url_base = URL::base();
 				$content->post_title = $post_row['name'];
@@ -123,13 +122,26 @@ class Controller_Post extends Controller_Layout {
 				$content->post_isbn = $post_row['isbn'];
 				$content->disabled = $disabled;
 				$content->editmode = true;
-				$content->errors = array();
+				$content->errors = array();				
+				
+				if (Date::span(strtotime($post_row['timestamp']),null,'days') <= 7 && $disabled == 1) {
+					array_push($content->errors, "This post was disabled less than a week ago.&nbsp; It cannot be re-enabled yet.");
+					$repost_too_soon = true;
+				} else
+					$repost_too_soon = false;
+				
+				if ($disabled == 2) {
+					Request::instance()->redirect("home/view/$id");
+				} elseif ($disabled == 1) {
+					
+				}
+				
 				
 				$categories_rows = DB::select('id','name','prettyname')->from('categories')->where('disabled','=','0')->execute()->as_array();
 				$content->categories = $categories_rows;
-		
 				
-				if ($_POST) {					
+				
+				if ($_POST && ! $repost_too_soon) {					
 					//get the data
 					$title = @(htmlspecialchars($_POST["title"]));
 					$condition = @(htmlspecialchars($_POST["condition"]));
@@ -152,7 +164,7 @@ class Controller_Post extends Controller_Layout {
 							//disable the post if teh post has not been banned
 							if ($disabled == 0) { //if the post is active
 								DB::update('posts')->set(array('disabled' => '1'))->where('id','=',$id)->execute();							
-								Request::instance()->redirect('account/posts');
+								Request::instance()->redirect('post/edit');
 							} else {
 								$content->message = "That post is either already active or flagged.";
 							}
@@ -187,9 +199,9 @@ class Controller_Post extends Controller_Layout {
 						} else {
 							//the data is good, preview the change (or submit if confirmed)
 							if ($confirmed) {							
-								if ($disabled == 1)
-									DB::update('posts')->set(array('disabled' => 0))->where('id','=',$id)->execute(); //re-enable the post
-										
+								if ($disabled == 1) {								
+									DB::update('posts')->set(array('disabled' => 0, 'timestamp' => Date::formatted_time()))->where('id','=',$id)->execute(); //re-enable the post									
+								}		
 								DB::update('posts')->set(array(
 									'name'=>$title,
 									'price'=>$price,
@@ -312,6 +324,7 @@ class Controller_Post extends Controller_Layout {
 		$post_preview->url_base = URL::base();
 		$post_preview->post_category_name = $category_row['name'];
 		$post_preview->post_image = "";
+		$post_preview->post_disabled = 0;
 		
 		$content->post_preview = $post_preview;
 		

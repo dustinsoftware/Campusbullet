@@ -17,7 +17,10 @@ function createpost() {
 <? foreach ($my_posts as $post) {
 	echo "<tr>";
 	echo "<td>$post[id]</td>";
-	echo "<td><a href=\"" . $url_base . "post/edit/$post[id]\">$post[name]</a></td>";
+	if ($post['disabled'] == 2)
+		echo "<td><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a></td>";
+	else
+		echo "<td><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a> (<a href=\"" . $url_base . "post/edit/$post[id]\">edit</a>)</td>";
 	echo "<td>$post[timestamp]</td>";
 	if ($post['disabled'] == 0)
 		echo "<td>Active!</td>";

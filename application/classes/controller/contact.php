@@ -12,6 +12,7 @@ class Controller_Contact extends Controller_Layout {
 		$content->form_message = "";
 		$content->show_form = true;
 		$content->message = "";
+		$content->errors = array();
 		if ($recipient_name)
 			$content->fixed_recipient = true;
 		else
@@ -23,10 +24,8 @@ class Controller_Contact extends Controller_Layout {
 		}
 		
 		if ($_POST) {
-			$errors = array();
-			$action = @(htmlspecialchars($_POST["action"])) or array_push($errors, "No action");
-			$message = @(htmlspecialchars($_POST["message"])) or array_push($errors, "No message");
-			$recipient = @(htmlspecialchars($_POST["to"])) or array_push($errors, "No recipient");
+			$message = @(htmlspecialchars($_POST["message"]));
+			$recipient = @(htmlspecialchars($_POST["to"]));
 			
 			//fill form data
 			$content->form_to = $recipient;
@@ -47,18 +46,16 @@ class Controller_Contact extends Controller_Layout {
 			$user_id = $session->get("user_id");
 			
 			//strip the message- TODO FIX TAGS
-			if ( ! $message)
-				array_push($validation_errors, "No message.");
+			if (empty($message))
+				array_push($validation_errors, "No message was entered!");
 			
 			
 			//check for self sender
 			if ($user_id == $recipient_row['id'])
 				array_push($validation_errors, "You can't send a message to yourself.");
 			
-			if ($errors) {				
-				$content->message = "I didn't get the data required to send a message.  " . implode(",", $errors) . ".";								
-			} elseif ($validation_errors) {
-				$content->message = "There was a problem with your message.  " . implode(",", $validation_errors);				
+			if ($validation_errors) {
+				$content->errors = $validation_errors;
 			} else {
 				//we're good, send the message!
 				$content->show_form = false;

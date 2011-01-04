@@ -4,6 +4,16 @@
 }
 </style>
 <h1><?=$post_title ?></h1>
+<? if ($post_disabled) {
+	echo "<p class=\"error\">";
+	if ($post_disabled == 1) {
+		echo "Your post is inactive, so right now you're the only one that can view it.&nbsp; To enable it, use the edit link below.";
+	} elseif ($post_disabled == 2) {
+		echo "Your post has been flagged because it contained either inappropriate content, was miscategorized, or violates the terms of use.&nbsp; It cannot be re-enabled or edited.&nbsp; ";
+		echo "If you feel that this was a mistake, please <a href=\"" . $url_base . "contact/message/ml_abuse?postid=$post_id\">contact us by clicking here</a>.";
+	}
+	echo "</p>\r\n";
+} ?>
 <table>
 <tr><td>Posted in:</td><td><a href="<?=$url_base?>home/category/<?=$post_category_name?>"><?=$post_category_name?></a></td></tr>
 <tr><td>Price:</td><td><?=$post_price?></td></tr>
