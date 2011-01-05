@@ -30,12 +30,12 @@ class Kohana_Auth_Db extends Auth {
 	protected function _login($username, $password, $remember)
 	{		
 		//check the user database for the user
-		$user_row = DB::select('id','disabled')->from('users')->where('username','=',$username)->and_where('userhash','=',$password)->execute()->current();
+		$user_row = DB::select('id','disabled','role')->from('users')->where('username','=',$username)->and_where('userhash','=',$password)->execute()->current();
 		
 		if ($user_row) {
-			if ($user_row['disabled'] == 1) {
+			if ($user_row['disabled']) {
 				//the user has been disabled by a mod. deny the login.	
-				return false;
+				return "disabled";
 			} else {
 				//the user is clear to log in
 				
@@ -44,9 +44,17 @@ class Kohana_Auth_Db extends Auth {
 					DB::update('users')->set(array(
 						'disabled' => 0))->where('id','=',$user_row['id'])->execute();
 				}
-				
+				if ($user_row['role'] == "admin" || $user_row['role'] == "mod")
+					$this->_session->set('moderator',TRUE);
 				$this->_session->set("user_id", $user_row['id']);
-				return $this->complete_login($username);
+				
+				//log the login
+				DB::update('users')->set(array(
+					'last_login' => Date::formatted_time(),
+					'last_ip' => $_SERVER["REMOTE_ADDR"]))->where('id','=',$user_row['id'])->execute();
+				
+				$this->complete_login($username);
+				return "success";
 			}
 		}
 		
