@@ -73,7 +73,7 @@ class Controller_Contact extends Controller_Layout {
 				
 				//send a message
 				$email = $recipient_row['email'];
-				$subject = "masterslist: Message from " . Auth::instance()->get_user();
+				$subject = "The Campus Bullet: Message from " . Auth::instance()->get_user();
 				$body = View::factory('email_template');
 				$body->message = $message;
 				$body->username = Auth::instance()->get_user();
@@ -123,7 +123,7 @@ class Controller_Contact extends Controller_Layout {
 					
 					//send a message
 					$email = $post_owner_row['email'];
-					$subject = "masterslist: " . Auth::instance()->get_user() .  " wants your item!";
+					$subject = "The Campus Bullet: " . Auth::instance()->get_user() .  " wants your item!";
 					$body = View::factory('email_want');
 					$body->message = $message;
 					$body->username = Auth::instance()->get_user();

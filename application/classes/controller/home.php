@@ -95,6 +95,7 @@ class Controller_Home extends Controller_Layout {
 			$category_row = DB::select('name')->from('categories')->where('id','=',$post['category'])->execute()->current();
 			
 			$content->is_owner = ($post['owner'] == $user_id);
+			$content->is_moderator = Session::instance()->get('moderator');
 			$content->preview = false;
 			$content->post_disabled = $post['disabled'];
 			$content->post_title = $post['name'];

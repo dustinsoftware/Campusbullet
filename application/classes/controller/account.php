@@ -77,7 +77,7 @@ class Controller_Account extends Controller_Layout {
 						->set('base',URL::base(true,true))
 						->set('user', Auth::instance()->get_user());
 					
-					send_email($email_address, "masterslist - Email Confirmation", $body);
+					send_email($email_address, "The Campus Bullet - Email Confirmation", $body);
 					
 					$content->message = "A verification email has been sent to $email_address.&nbsp; Please click the link in the email to confirm the change.";
 				}

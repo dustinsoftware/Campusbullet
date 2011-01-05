@@ -104,10 +104,15 @@ class Controller_Post extends Controller_Layout {
 	
 	public function action_edit($id = null) {
 		$user_id = Session::instance()->get('user_id');
+		$is_moderator = Session::instance()->get('moderator');
 		
 		if ($id) {
-			$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image')->from('posts')
-				->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
+			if ($is_moderator)
+				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image')->from('posts')
+					->where('id','=',$id)->execute()->current();			
+			else			
+				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image')->from('posts')
+					->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
 			
 			if ($post_row) {
 				$disabled = $post_row['disabled'];

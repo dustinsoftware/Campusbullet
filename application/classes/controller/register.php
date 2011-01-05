@@ -49,7 +49,7 @@ class Controller_Register extends Controller_Layout {
 				$body = View::factory('email_thanks');				
 				$body->link_register = URL::base(true,true) . "confirm/register/$secretkey";
 				
-				send_email($email, "masterslist - Thanks for signing up!", $body);		
+				send_email($email, "The Campus Bullet - Thanks for signing up!", $body);		
 				$content = View::factory('register_checkemail')->set('email',$email);
 			}
 			
@@ -207,7 +207,7 @@ class Controller_Register extends Controller_Layout {
 					->set('url_base',URL::base(true,true))
 					->set('key',$secretkey);
 					
-				send_email($email, "masterslist - Password reset", $body);
+				send_email($email, "The Campus Bullet - Password reset", $body);
 				$content = View::factory('register_forgotpassword_checkemail');
 			} else {
 				array_push($errors,"Sorry, that email address hasn't been registered in the system.");

@@ -35,10 +35,22 @@ class Controller_Login extends Controller_Layout {
 		
 		//check credentials and redirect if successful
 		if ($post_user && $post_pass && ! $content->error) {
-			if ($auth->login($post_user, $post_pass)) {
+			$result = $auth->login($post_user, $post_pass);
+			if ($result == "success") {
 				Request::instance()->redirect($redir);
 			} else {				
-				$content->error = "Sorry, that username and password didn't work.<br />If you forgot your password, <a href=\"" . URL::base() . "register/forgotpassword\">click here to reset it</a>.";
+				if ($result == "disabled") {
+					$log_row = DB::select('key')->from('logs')->where('regarding_user','=',$post_user)
+						->and_where('log_type','=','user_disabled')->order_by('timestamp','DESC')->execute()->current();
+					if ($log_row)
+						$content->error = "Aw, bummer!&nbsp; Your account has been disabled.<br />Please read <a href=\"" . URL::base() . "log/userdisabled/$log_row[key]\">this report</a> for more information.";
+					else
+						$content->error = "Aw, bummer!&nbsp; Your account has been disabled.<br />Please read <a href=\"" . URL::base() . "log/userdisabled/\">this help document</a> for more information.";
+				}		
+					
+				else
+					$content->error = "Sorry, that username and password didn't work.<br />If you forgot your password, <a href=\"" . URL::base() . "register/forgotpassword\">click here to reset it</a>.";
+					
 				if ($failures_row) {
 					DB::update('login_failures')->set(array(
 						'failures' => $failures_row['failures'] + 1))
