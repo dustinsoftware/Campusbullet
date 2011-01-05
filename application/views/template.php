@@ -3,7 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>masterslist<? if ($title) echo " | $title"; ?></title>
+<title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
 <? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>
 </head>
@@ -11,12 +11,12 @@
 <body>
 <div id="header">
 <a href="<?= $url_base ?>">
-<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="masterslist" style="left: 20px; top: 24px" /></a>
+<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The Campus Bullet" style="left: 20px; top: 24px" /></a>
 
 <div id="header_right">
 <div id="header_login">
-	<? if ($user) { ?>
-	You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a>?
+	<? if ($user) { ?>		
+	You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a><? if ($moderator) echo " or <a href=\"" . $url_base . "moderator\">moderate</a>"; ?>?
 	<? } else { ?>
 	You're not logged in.  <a href="<?= $url_base ?>login">Login</a> or <a href="<?=$url_base?>register">register!</a>
 	<? } ?>

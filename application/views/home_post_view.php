@@ -34,8 +34,9 @@
 <? if ($post_image) { ?> <p><img src="<?=$post_image?>" alt="" /></p><? } ?>
 
 <? if ( ! $preview) { ?>
-<? if ($is_owner) { ?>
-<p>You are the owner of this post.</p>
+<? if ($is_owner || $is_moderator) { ?>
+	<? if ($is_moderator) echo "<p>You are not the owner of this post, but you can moderate it.</p>";
+		else echo "<p>You are the owner of this post.</p>"; ?>
 <ul>
 	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit or disable this post</a></li>
 	<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	

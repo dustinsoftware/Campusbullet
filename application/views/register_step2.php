@@ -1,5 +1,5 @@
 <form action="" method="post">
-<h1 class="center">Register for masterslist</h1>
+<h1 class="center">Register for The Campus Bullet</h1>
 <p>Cool, your email address has been verified!&nbsp; You can now choose a username and password.</p>	
 <? if ($errors) { ?><ul class="error"><? foreach ($errors as $error) echo "<li>$error</li>\r\n"; ?></ul><? } ?>
 <table>
