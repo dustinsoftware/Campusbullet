@@ -3,7 +3,8 @@
 	font-weight: bold;
 }
 </style>
-<h1><?=$post_title ?></h1>
+<h1><?=$post_title ?><? if ($post_date) { ?><span class="datestamp"><?=$post_date?></span><? } ?></h1>
+
 <? if ($post_disabled) {
 	echo "<p class=\"error\">";
 	if ($post_disabled == 1) {

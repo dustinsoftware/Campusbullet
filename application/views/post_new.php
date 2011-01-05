@@ -9,14 +9,21 @@
 <? } else { ?>
 <p>Hey, you want to post something to sell or give away?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:
 <ul>
-	<li>Nothing illegal</li>
-	<li>No reposts more often than once every 7 days</li>
+	
+	<li>When your post is at least a week old, you will have the option of reposting it to the top.&nbsp; Please don't create duplicate posts.</li>
 	<li>Make sure you have a quick look over the <a href="<?=$url_base?>help/terms">terms and conditions</a>.&nbsp; Don't worry, it's short :)</li>	
 </ul>
 </p>
 <? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; To repost it, just hit "Preview this Post".</p><? } ?>
 <? if ($disabled == 2) { ?><p class="error">This post has been flagged.&nbsp; It cannot be re-enabled.</p><? } ?>
 <? } ?>
+
+<? if ($editmode) { 
+	echo "<p><a href=\"" . $url_base . "image/post/$post_id\">";
+	if ($image_attached) echo "Click here to change or remove the attached image.";
+	else echo "Click here to attach a picture to this post.";
+	echo "</a></p>\r\n";
+} ?>
 
 <form action="" method="POST" >
 <table>
@@ -56,6 +63,7 @@
 <tr>
 	<th></th>
 	<td><? if ( ! ($disabled == 2))  { ?><input type="submit" name="submit" value="Preview the post" /><? } ?>
+	<? if ($allow_repost) { ?><input type="submit" name="repost" value="Repost this to the top of the list" /><? } ?>
 	<? if ($editmode) { 
 		if ( ! $disabled) {			
 			?>  <input type="submit" name="disable" value="Disable this post" /> <?

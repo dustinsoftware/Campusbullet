@@ -1,8 +1,8 @@
 <form action="" method="post">
-<h1 class="center">Register for the MasterList</h1>
-<p>Hey, awesome!&nbsp; We&#39;re glad you want to post stuff on the MasterList.&nbsp; 
+<h1 class="center">Register for masterslist</h1>
+<p>Hey, awesome!&nbsp; We&#39;re glad you want to post stuff on masterslist.&nbsp; 
 Before you sign up, there are a few things you should know:</p>
-<p><span style="font-weight: bold">What is the MasterList?</span>&nbsp; The MasterList is a craigslist-style bulletin board system
+<p><span style="font-weight: bold">What is masterslist?</span>&nbsp; masterslist is a craigslist-style bulletin board system
 for posting up stuff you want to sell to other students, like textbooks for example.&nbsp; It's totally free and pretty simple to use.</p>
 
 <p><span style="font-weight: bold">How does it work?</span>&nbsp; Post an item up by entering a few short details.&nbsp; After posting the item and

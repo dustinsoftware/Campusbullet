@@ -3,7 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>The MasterList | Please log in</title>
+<title>masterslist | Please log in</title>
 <link type="text/css" href="<?=$url_base?>styles/login.css" rel="stylesheet" />
 
 </head>
@@ -11,7 +11,7 @@
 <body onload="document.forms[0].elements[0].focus();">
 <div id="loginform" >
 <form  action="" method="post">
-<h1 class="center">Log in to the MasterList</h1>
+<h1 class="center">Log in to masterslist</h1>
 	<? if ($error) { ?>
 	<p class="center error"><?=$error?></p>
 	<? } else { ?>

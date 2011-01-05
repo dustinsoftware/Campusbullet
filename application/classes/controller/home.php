@@ -19,14 +19,17 @@ class Controller_Home extends Controller_Layout {
 	
 	public function action_category($category_request) {
 		$content = View::factory('home_category_view');
+		array_push($this->template->styles, "category_view");
+		
 		
 		//since i can't remember how to do string concatenation without leaving this vulnerable to an sql injection,
 		//we'll just get the string name from the categories table
-		$category_row = DB::select('id','name','prettyname','description')->from('categories')->where('name','=',$category_request)->execute()->current();
+		$category_row = DB::select('id','name','prettyname','description')->from('categories')->where('name','=',$category_request)->and_where('disabled','=',0)->execute()->current();
 		
 		if ($category_row) {		
-			$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[name]'")->execute()->current();
+			$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]'")->execute()->current();
 			$current_count = $current_count['count'];
+			
 			
 			$pagination = new Pagination(array(
 				'total_items' => $current_count,
@@ -65,7 +68,7 @@ class Controller_Home extends Controller_Layout {
 			$content->dategroups = $dategroups;
 			$content->category_prettyname = $category_row['prettyname'];
 			$content->category_name = $category_row['name'];
-			$content->postbase = URL::base() . 'home/view/';
+			$content->postbase = URL::base() . 'home/view/';			
 			$content->pagination = $pagination;
 			$content->url_base = URL::base();
 			$content->category_description = $category_row['description'];
@@ -78,6 +81,7 @@ class Controller_Home extends Controller_Layout {
 	}
 	
 	public function action_view($id) {
+		array_push($this->template->styles, "post_view");
 		$content = View::factory('home_post_view');
 		$user_id = Session::instance()->get('user_id');
 		$base = URL::base();
@@ -106,6 +110,7 @@ class Controller_Home extends Controller_Layout {
 			$content->post_isbn = $post['isbn'];
 			$content->url_base = $base;
 			$content->post_id = $id;
+			$content->post_date = date("M d, Y",strtotime($post['timestamp']));
 			
 			if ($post['image'])
 				$content->post_image = $base . "images/posts/$id.jpg";

@@ -1,0 +1,10 @@
+﻿/* Post List - post/edit - Shows the list of all the posts */
+
+table {
+}
+th {
+	border-bottom: 1px white solid;
+}
+td {
+	padding: 5px 10px 5px 10px;
+}

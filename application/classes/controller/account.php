@@ -77,7 +77,7 @@ class Controller_Account extends Controller_Layout {
 						->set('base',URL::base(true,true))
 						->set('user', Auth::instance()->get_user());
 					
-					send_email($email_address, "The MasterList - Email Confirmation", $body);
+					send_email($email_address, "masterslist - Email Confirmation", $body);
 					
 					$content->message = "A verification email has been sent to $email_address.&nbsp; Please click the link in the email to confirm the change.";
 				}
@@ -89,26 +89,35 @@ class Controller_Account extends Controller_Layout {
 				$new_pw = @($_POST['newpw']);
 				$verify_pw = @($_POST['verifypw']);
 				
+				$validate = Validate::factory(array(
+					'pw1' => $new_pw,
+					'pw2' => $verify_pw));
+				
+				$validate->rule('pw1','not_empty')
+					->rule('pw2','matches', array('pw1'))
+					->rule('pw1','min_length', array(5))
+					->rule('pw1','max_length', array(20));					
+					
+				
 				if (! $current_pw) {
 					array_push($errors, "Please enter your current password.");
-				}
-				if (! $new_pw) {
-					array_push($errors, "Please enter a new password.");
-				}
-				if (! $verify_pw) {
-					array_push($errors, "Please re-enter your current password.");
-				}
-				if (empty($errors)) {
-					if ($new_pw != $verify_pw) {
-						array_push($errors, "The passwords you entered don't match.");
-					} elseif ( ! Auth::instance()->check_password($current_pw)) {
+				}				
+				if (empty($errors) && $validate->check()) {					
+					if ( ! Auth::instance()->check_password($current_pw)) {
 						array_push($errors, "Your current password was incorrect.");
 					} elseif (Auth::instance()->change_password($new_pw)) {
 						$content->message = "Your password was changed successfully.";						
 					} else {
 						array_push($errors, "An unknown error occurred while changing your password.");
+					}									
+				} elseif ( ! $validate->check()) {
+					$validate_errors = $validate->errors();
+					if (array_key_exists('pw1',$validate_errors)) {
+						array_push($errors, "Please enter a password that's between 5-20 characters.");						
+					}
+					if (array_key_exists('pw2',$validate_errors)) {
+						array_push($errors, "The passwords you entered don't match!&nbsp; Please try again.");
 					}				
-					
 				}
 				
 				

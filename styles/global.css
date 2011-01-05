@@ -124,6 +124,13 @@ h1 {
 	color:black;
 	margin-right:40px;
 }
+#sidebar p {
+	margin-bottom:5px;
+	margin-top:5px;
+}
+#sidebar a {
+	color:#000066;	
+}
 #sidebar_inner {	
 	margin:5px;
 }
@@ -132,6 +139,7 @@ h1 {
 	font-weight: bold;
 	font-size: large;
 	text-align: center;
+	margin:0;
 }
 
 /* Content defs ########################################################### */

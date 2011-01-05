@@ -3,7 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>The MasterList<? if ($title) echo " - $title"; ?></title>
+<title>masterslist<? if ($title) echo " | $title"; ?></title>
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
 <? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>
 </head>
@@ -11,7 +11,7 @@
 <body>
 <div id="header">
 <a href="<?= $url_base ?>">
-<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The MasterList" style="left: 20px; top: 24px" /></a>
+<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="masterslist" style="left: 20px; top: 24px" /></a>
 
 <div id="header_right">
 <div id="header_login">

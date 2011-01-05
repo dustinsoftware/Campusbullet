@@ -1,4 +1,4 @@
-<h1>Hi from the MasterList!</h1>
+<h1>Hi from masterslist!</h1>
 
 <p>The user <strong><?=$user?></strong> requested that their contact email be changed to this address.</p>
 
@@ -8,4 +8,4 @@
 
 <p>If you did NOT request this change, please forward this email to ml_abuse@dustinsoftware.com.</p>
 
-<p>Thanks for using the MasterList!</p>
+<p>Thanks for using masterslist!</p>

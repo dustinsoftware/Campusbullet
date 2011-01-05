@@ -3,7 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>The MasterList | Register for an account!</title>
+<title>masterslist | Register for an account!</title>
 <link type="text/css" href="<?=$url_base?>styles/register.css" rel="stylesheet" />
 
 </head>

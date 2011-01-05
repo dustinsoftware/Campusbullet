@@ -10,10 +10,10 @@
 
 
 <? if ($errors) { ?>
-<div class="error"><ul>
+<ul class="error">
 	<? foreach ($errors as $error) {
 		echo "<li>$error</li>\r\n";		
-	} ?></ul></div>
+	} ?></ul>
 <? } else { ?>
 <p>Use this tool to attach a picture to your post.&nbsp; The file must be a JPEG and under 2 MB in size.&nbsp; 
 After you've uploaded it, we'll resize it to fit the page.</p>
@@ -26,6 +26,9 @@ After you've uploaded it, we'll resize it to fit the page.</p>
 	<td><input type="submit" name="submit" value="Upload the picture!" /></td>
 </tr>
 </table>
-<p></p>
+<p>What next?</p><ul>
+<li><a href="<?=$url_base?>home/view/<?=$post_id?>">View your post</a></li>
+<li><a href="<?=$url_base?>post/edit/<?=$post_id?>">Edit your post</a></li>
+</ul>
 </form>
 

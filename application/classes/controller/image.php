@@ -16,8 +16,10 @@ class Controller_Image extends Controller_Layout {
 			$content = View::factory('image_uploader');
 			$content->errors = array();
 			$content->message = "";
+			$content->url_base = URL::base();
 			$content->post_name = $post_row['name'];
 			$content->post_link = URL::base() . "home/view/$id";
+			$content->post_id = $post_row['id'];
 			
 			if (@($_GET['postcreated']) && ! $_POST) {
 				$content->message = "Your post was created successfully.&nbsp; If you want, you can also attach a picture to it!";
@@ -60,7 +62,7 @@ class Controller_Image extends Controller_Layout {
 			}
 			$this->template->content = $content;
 		} else {
-			Request::instance()->redirect('account/posts');
+			Request::instance()->redirect('post/edit');
 		}		
 	}
 	

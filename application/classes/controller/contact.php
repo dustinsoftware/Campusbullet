@@ -13,6 +13,8 @@ class Controller_Contact extends Controller_Layout {
 		$content->show_form = true;
 		$content->message = "";
 		$content->errors = array();
+		
+		
 		if ($recipient_name)
 			$content->fixed_recipient = true;
 		else
@@ -20,8 +22,12 @@ class Controller_Contact extends Controller_Layout {
 		$content->base = URL::base();
 		
 		if (isset($_GET['postid'])) {
-			$content->form_message = "Regarding post id: " . $_GET['postid'];
+			$content->form_message = "Regarding post id: " . $_GET['postid'] . "\r\n\r\n";
+		} elseif ($recipient_name == 'ml_bug_report' && isset($_SERVER['HTTP_REFERER'])) {
+			$content->form_message = "The page I was on: " . $_SERVER['HTTP_REFERER'] . "\r\n\r\n";
 		}
+		
+		
 		
 		if ($_POST) {
 			$message = @(htmlspecialchars($_POST["message"]));
@@ -67,11 +73,11 @@ class Controller_Contact extends Controller_Layout {
 				
 				//send a message
 				$email = $recipient_row['email'];
-				$subject = "The MasterList: Message from " . Auth::instance()->get_user();
+				$subject = "masterslist: Message from " . Auth::instance()->get_user();
 				$body = View::factory('email_template');
 				$body->message = $message;
 				$body->username = Auth::instance()->get_user();
-				$body->base = URL::base();
+				$body->base = URL::base(true,true);
 								
 				send_email($email, $subject, $body);
 				
@@ -117,14 +123,14 @@ class Controller_Contact extends Controller_Layout {
 					
 					//send a message
 					$email = $post_owner_row['email'];
-					$subject = "The MasterList: " . Auth::instance()->get_user() .  " wants your item!";
+					$subject = "masterslist: " . Auth::instance()->get_user() .  " wants your item!";
 					$body = View::factory('email_want');
 					$body->message = $message;
 					$body->username = Auth::instance()->get_user();
 					$body->post_name = $post_row['name'];
 					$body->id = $id;
 					$body->sender_email = $user_row['email'];
-					$body->base = URL::base();
+					$body->base = URL::base(true,true);
 									
 					send_email($email, $subject, $body, $body->sender_email);
 					

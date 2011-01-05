@@ -49,7 +49,7 @@ class Controller_Register extends Controller_Layout {
 				$body = View::factory('email_thanks');				
 				$body->link_register = URL::base(true,true) . "confirm/register/$secretkey";
 				
-				send_email($email, "The MasterList - Thanks for signing up!", $body);		
+				send_email($email, "masterslist - Thanks for signing up!", $body);		
 				$content = View::factory('register_checkemail')->set('email',$email);
 			}
 			
@@ -66,20 +66,27 @@ class Controller_Register extends Controller_Layout {
 		if ($email) {
 			$content = View::factory('register_step2');
 			$content->email = $email;
+			$content->url_base = URL::base();
 			$emailexploded = explode("@",$email);
 			$content->user = $emailexploded[0];
 			$content->errors = array();
 			
-			if ($_POST) {				
+			if (DB::select('id')->from('users')->where('email','=',$email)->execute()->current()) {
+				Request::instance()->redirect('home');
+			}
+			
+			elseif ($_POST) {				
 				$username = @($_POST['user']);
 				$pw1 = @($_POST['pw1']);
 				$pw2 = @($_POST['pw2']);
+				$terms_accepted = @($_POST['terms']);
 				$errors = array();
 				
 				$validate = Validate::factory(array(
 					'username' => $username,
 					'pw1' => $pw1,		
 					'pw2' => $pw2,
+					'terms' => $terms_accepted,
 					));
 					
 				$validate->rule('username','not_empty')
@@ -89,7 +96,8 @@ class Controller_Register extends Controller_Layout {
 					->rule('username','max_length', array(20))
 					->rule('pw2','matches', array('pw1'))
 					->rule('pw1','min_length', array(5))
-					->rule('pw1','max_length', array(12));
+					->rule('pw1','max_length', array(20))
+					->rule('terms','not_empty');
 								
 				$dupe_user_row = DB::select('id')->from('users')->where('username','=',$username)->execute()->current();
 				if ($dupe_user_row) {
@@ -116,9 +124,11 @@ class Controller_Register extends Controller_Layout {
 					if (array_key_exists("username",$formerrors))
 						array_push($errors,"Please enter a username with only letters, numbers, dashes, and underscores and between 5-20 characters.");
 					if (array_key_exists("pw1",$formerrors))
-						array_push($errors,"Please enter a password between 5-12 characters.");
+						array_push($errors,"Please enter a password between 5-20 characters.");
 					if (array_key_exists("pw2",$formerrors))
 						array_push($errors,"The password you entered didn't match!&nbsp; Please try again.");
+					if (array_key_exists("terms",$formerrors))
+						array_push($errors,"You must accept to the terms of use before you can use the service.");
 					$content->errors = $errors;
 				}
 			}
@@ -151,9 +161,10 @@ class Controller_Register extends Controller_Layout {
 				$validate->rule('pw1','not_empty')
 					->rule('pw2','matches', array('pw1'))
 					->rule('pw1','min_length', array(5))
-					->rule('pw1','max_length', array(12));
+					->rule('pw1','max_length', array(20));					
 					
 				if ($validate->check()) {
+					
 					DB::delete('verification_keys')->where('email','=',$verified_email)->execute();
 					DB::update('users')->set(array('userhash' => $auth->hash_password($pw1)))->where('email','=',$verified_email)->execute();
 					
@@ -167,7 +178,7 @@ class Controller_Register extends Controller_Layout {
 				} else {
 					$validate_errors = $validate->errors();
 					if (array_key_exists('pw1',$validate_errors)) {
-						array_push($errors, "Please enter a password between 5-12 characters.");						
+						array_push($errors, "Please enter a password that's between 5-20 characters.");						
 					}
 					if (array_key_exists('pw2',$validate_errors)) {
 						array_push($errors, "The passwords you entered don't match!&nbsp; Please try again.");
@@ -196,7 +207,7 @@ class Controller_Register extends Controller_Layout {
 					->set('url_base',URL::base(true,true))
 					->set('key',$secretkey);
 					
-				send_email($email, "The MasterList - Password reset", $body);
+				send_email($email, "masterslist - Password reset", $body);
 				$content = View::factory('register_forgotpassword_checkemail');
 			} else {
 				array_push($errors,"Sorry, that email address hasn't been registered in the system.");
