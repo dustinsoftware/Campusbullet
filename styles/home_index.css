@@ -6,15 +6,15 @@
 
 .button {
 	width: 202px;
-	background: white;
-	margin:10px;
-	text-align:center;	
-	display:inline-block;
+	background: black;
+	margin: 10px;
+	text-align: center;
+	display: inline-block;
 	height: 180px;
-	overflow:hidden;
-	padding:10px;
-	color:black;
-	opacity:1;
+	overflow: hidden;
+	padding: 10px;
+	color: white;
+	opacity: 1;
 }
 .button:hover {
 	opacity:.8;

@@ -1,0 +1,14 @@
+﻿/* Moderator Styles */
+
+td {
+	width: 50%;	
+	vertical-align:top;
+	padding: 10px;
+}
+table {
+	width: 100%;
+}
+h2 {
+	margin:0;
+}
+
