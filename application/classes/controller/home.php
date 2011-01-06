@@ -44,7 +44,7 @@ class Controller_Home extends Controller_Layout {
 			
 			foreach($current_posts as $post) {
 				$date = date("m-d-Y", strtotime($post['timestamp']));
-				if ($post['price'])
+				if ($post['price'] > 0)
 					$post_title = "$post[name] ($$post[price])";
 				else
 					$post_title = "$post[name] (FREE!)";

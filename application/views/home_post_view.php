@@ -41,7 +41,7 @@
 	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit or disable this post</a></li>
 	<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	
 </ul>
-<? } else { ?>
+<? } if ( ! $is_owner) { ?>
 <p>What next? </br>
 <ul>
 	<li><a href="<?= $url_base ?>contact/want/<?=$post_id?>">I want this item!</a></li>

@@ -7,6 +7,8 @@ class Controller_Contact extends Controller_Layout {
 	}
 	
 	public function action_message($recipient_name = null) {
+		$is_moderator = Session::instance()->get('moderator');
+		
 		$content = View::factory('contact_message');
 		$content->form_to = $recipient_name;
 		$content->form_message = "";
@@ -44,14 +46,14 @@ class Controller_Contact extends Controller_Layout {
 			$recipient_row = DB::select('id','role','email','username')->from('users')->where('username','=',$recipient)->execute()->current();
 			if ( ! $recipient_row) 
 				array_push($validation_errors, "Invalid recipient.");
-			if (strtolower(substr($recipient,0,3)) != "ml_") {
+			if (strtolower(substr($recipient,0,3)) != "ml_" && ! $is_moderator) {
 				array_push($validation_errors, "Only MasterList staff can be messaged.");
 			}
 			//get our id
 			$session = Session::instance();
 			$user_id = $session->get("user_id");
 			
-			//strip the message- TODO FIX TAGS
+			//strip the message
 			if (empty($message))
 				array_push($validation_errors, "No message was entered!");
 			
