@@ -337,7 +337,7 @@ class Controller_Post extends Controller_Layout {
 		$post_preview->post_price = "$$fields[price]";
 		$post_preview->post_condition = $fields['condition'];
 		$post_preview->post_isbn = $fields['isbn'];
-		$post_preview->post_description = $fields['description'];		
+		$post_preview->post_description = wordwrap($fields['description'],100,"\r\n",true);		
 		$post_preview->preview = true;
 		$post_preview->url_base = URL::base();
 		$post_preview->post_category_name = $category_row['name'];

@@ -105,7 +105,7 @@ class Controller_Home extends Controller_Layout {
 			else
 				$content->post_price = "$$post_price";
 			
-			$content->post_description = $post['description'];			
+			$content->post_description = wordwrap($post['description'],100,"\r\n",true);			
 			$content->post_category_name = $category_row['name'];
 			$content->post_condition = $post['condition'];
 			$content->post_isbn = $post['isbn'];
