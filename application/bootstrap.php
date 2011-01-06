@@ -119,7 +119,13 @@ if ( ! defined('SUPPRESS_REQUEST'))
 			throw $e;
         }
 
-        $request->response = Request::factory('error/404')->execute();		
+        $request->response = Request::factory('error/404')->execute();	
+	} catch (Database_Exception $e) {
+		if (!IN_PRODUCTION) {
+			throw $e;
+        } else {
+			$request->response = Request::factory('error/dbdown')->execute();
+        }		
 	} catch (Exception $e) {
 		if (!IN_PRODUCTION)
         {

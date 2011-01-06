@@ -2,7 +2,7 @@
 body {
 	padding: 0;
 	margin: 0;
-	background-color: #1A4359;
+	background-color: #244369;
 	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 	color: white;
 }
@@ -58,7 +58,10 @@ h1 {
 #mainContainer {
 	clear: both;
 	padding-bottom:50px;
-
+}
+#horizontal_sizer {
+	width: 1000px;
+	height: 1px;
 }
 
 /* Header Defs ########################################################### */ 
@@ -66,10 +69,9 @@ h1 {
 	height: 100px;
 /*	background-color: #E3DAB5;*/
 	background-color: white;
-	color:black;
 }
-#header a, #content_info a {
-	color: #B36517;
+#header_right a, #content_info a {
+	color: #8A1C02;
 }
 #header_shadow {
 	height:27px;
@@ -79,11 +81,19 @@ h1 {
 	position:relative;
 	float:left;
 }
+#header_logo {
+	position:absolute;
+	top:20px;
+	left:10px;		
+}
 
 #header_right {
-	float:right;
+	position:absolute;
+	right: 0;
+	top: 0;
 	height:100px;
 	overflow:hidden;
+	color:black;
 }
 
 #header_login {
@@ -93,8 +103,9 @@ h1 {
 }
 #header_menu {
 	position:relative;
-	margin-top:61px;
-	margin-right:30px;
+	margin-top:67px;
+	margin-right:10px;
+	font-size:16px;
 }
 
 #header_menu ul {
@@ -102,16 +113,15 @@ h1 {
 }
 #header_menu ul li {
 	display: inline;
-	margin:5px;
 }
 #header_menu a{
-	padding:20px;
-	height:50px;
+	padding: 15px;
 	color:black;
 }
 #header_menu a:hover{
 	text-decoration: none;
-	background:#DBDCDD
+	background: #2D2D2D;
+	color: white;
 }
 /* Sidebar defs ########################################################### */
 #sidebar {

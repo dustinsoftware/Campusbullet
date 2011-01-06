@@ -11,6 +11,10 @@ class Controller_Error extends Controller_Layout {
 	public function action_500() {	
 		$this->template->content = View::factory('error_500');		
 	}
+	
+	public function action_dbdown() {
+		$this->template->content = View::factory('error_db');
+	}
 
 	
 }

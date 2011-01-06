@@ -9,9 +9,10 @@
 </head>
 
 <body>
-<div id="header">
+<div id="header_logo">
 <a href="<?= $url_base ?>">
-<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The Campus Bullet" style="left: 20px; top: 24px" /></a>
+<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The Campus Bullet" /></a>
+</div>
 
 <div id="header_right">
 <div id="header_login">
@@ -23,7 +24,7 @@
 </div>
 <div id="header_menu">
 <ul>
-<li><a href="<?= $url_base ?>contact/message/ml_bug_report">report a bug!</li>
+<li><a href="<?= $url_base ?>contact/message/ml_bug_report">report a bug!</a></li>
 <li><a href="<?= $url_base ?>post/edit">manage posts</a></li>
 <li><a href="<?= $url_base ?>account">account</a></li>
 <li><a href="<?= $url_base ?>search">search</a></li>
@@ -34,6 +35,9 @@
 
 </div>
 
+
+<div id="header">
+<div id="horizontal_sizer">&nbsp;</div>
 </div>
 <div id="mainContainer">
 <div id="header_shadow"></div>
