@@ -6,6 +6,20 @@
 <title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
 <? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20605781-1']);
+  _gaq.push(['_setDomainName', '.campusbullet.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </head>
 
 <body>
@@ -24,7 +38,7 @@
 </div>
 <div id="header_menu">
 <ul>
-<li><a href="<?= $url_base ?>contact/message/ml_bug_report">report a bug!</a></li>
+<li><a href="<?= $url_base ?>">home</a></li>
 <li><a href="<?= $url_base ?>post/edit">manage posts</a></li>
 <li><a href="<?= $url_base ?>account">account</a></li>
 <li><a href="<?= $url_base ?>search">search</a></li>
@@ -41,12 +55,11 @@
 </div>
 <div id="mainContainer">
 <div id="header_shadow"></div>
-
+<div id="betatesters"><a href="<?=$url_base?>contact/message/ml_bug_report">Report a bug</a></div>
 
 <div id="content">
 
 <!--content start -->
-
 <? echo $content; ?>
 
 </div>
