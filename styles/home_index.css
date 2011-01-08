@@ -1,7 +1,19 @@
 ﻿/* Home Page Stylesheet */
 
-#categories {
+#homecontainer {
+	margin-right: 300px;
+}
 
+#newposts {
+	width: 250px;	
+	float:right;
+
+}
+#newposts a{
+
+}
+#newposts h1 {
+	text-align:center;
 }
 
 .button {
@@ -20,4 +32,3 @@
 	opacity:.8;
 	text-decoration:none;
 }
-.button

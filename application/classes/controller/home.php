@@ -14,6 +14,10 @@ class Controller_Home extends Controller_Layout {
 		$content->categories = $categories_rows;
 		$content->url_base = URL::base();
 		
+		// get the 5 most recent posts
+		$recent_post_rows = DB::select('id','name')->from('posts')->where('disabled','=','0')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
+		$content->newposts = $recent_post_rows;
+		
 		$this->template->content = $content;
 	}
 	
