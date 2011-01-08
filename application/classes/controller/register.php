@@ -19,7 +19,7 @@ class Controller_Register extends Controller_Layout {
 		}
 		
 		$content = View::factory('register_home');
-		$content->errors = array("Sorry, The Campus Bullet is currently beta testing and registrations are not allowed yet.&nbsp; Go sign up for a beta account <a href=\"http://beta.dustinsoftware.com/masterlist-beta\">here</a>!");
+		$content->errors = array();
 		
 		if ($_POST && empty($content->errors)) {
 			$errors = array();
