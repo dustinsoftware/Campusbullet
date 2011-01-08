@@ -11,14 +11,14 @@ MySQL running on Apache 2.2 on a linux box in a closet somewhere.</p>
 <p>Site Credits:</p>
 <ul>
 	<li>Dustin Masters - Site design and programming</li>
-	<li>David Nemati - Legal/senate advisor</li>
 	<li>Becca Masters - Category icons/site logo (and general artistic advisor)</li>
+	<li>David Nemati - Legal/senate advisor</li>	
 </ul>
 <p>Beta Testers:</p>
 <ul>
 	<li>Katie Masters</li>
 	<li>Alan Masters</li>
-	<li>usernames listed here</li>
+	<? foreach ($beta_testers as $user) echo "<li>$user[username]</li>\r\n"; ?>
 </ul>
 <p>Thanks for using The Campus Bullet!</p>
 
