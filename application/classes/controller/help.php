@@ -5,10 +5,12 @@ class Controller_Help extends Controller_Layout {
 	protected $auth_required = false;
 	
 	public function action_index($page = null) {
+		$config = Kohana::config('masterlist');
 		try {		
 			if ($page == 'about') {
 				$content = View::factory('help_about');
 				$content->url_base = URL::base();
+				$content->version = $config['version'];
 				$content->beta_testers = DB::select('username')->from('users')->where('role','=','user')->and_where('disabled','=','0')->execute()->as_array();
 				$this->template->content = $content;
 			} elseif ($page) {

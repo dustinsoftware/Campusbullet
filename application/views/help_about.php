@@ -1,4 +1,4 @@
-<h1>About The Campus Bullet</h1>
+<h1>About The Campus Bullet (v<?=$version?>)</h1>
 
 <p>The Campus Bullet was started in August 2010, when it was time to start 
 purchasing textbooks.&nbsp; I wanted to look for used textbooks to buy from 

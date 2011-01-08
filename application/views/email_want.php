@@ -3,7 +3,11 @@
 
 <h1>Hi from The Campus Bullet!</h1>
 
+<? if ($wanted) { ?>
+<p><span style="font-weight:bold"><?= $username ?></span> wants to sell their <span style="font-weight:bold"><?=$post_name?></span> to you!  They said: </p>
+<? } else { ?>
 <p><span style="font-weight:bold"><?= $username ?></span> wants to buy your <span style="font-weight:bold"><?=$post_name?></span>!  They said: </p>
+<? } ?>
 
 <p><pre><?= $message ?></pre></p>
 

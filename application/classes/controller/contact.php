@@ -91,16 +91,17 @@ class Controller_Contact extends Controller_Layout {
 	}
 	
 	public function action_want($id = null) { 
-		$post_row = DB::select('name','owner')->from('posts')->where('id','=',$id)->and_where('disabled','=','0')->execute()->current();
-		$post_owner_row = @(DB::select('email')->from('users')->where('id','=',$post_row['owner'])->and_where('disabled','=','0')->execute()->current());	
+		$post_row = DB::select('name','owner','wanted')->from('posts')->where('id','=',$id)->and_where('disabled','=','0')->execute()->current();
+		$post_owner_row = @(DB::select('email','id')->from('users')->where('id','=',$post_row['owner'])->and_where('disabled','=','0')->execute()->current());	
 		$user_id = Session::instance()->get('user_id');
 		$user_row = DB::select('email')->from('users')->where('id','=',$user_id)->execute()->current();
 		
 		if ($post_row && $post_owner_row) {						
-		
+			$wanted = $post_row['wanted'];
 			$content = View::factory('contact_want');
 			$content->show_form = true;
 			$content->message = "";
+			$content->wanted = $wanted;
 			$content->post_name = $post_row['name'];
 			$content->id = $id;
 			$content->base = URL::base();
@@ -115,18 +116,30 @@ class Controller_Contact extends Controller_Layout {
 				
 				//fill form data
 				$content->form_message = $message;
-			
-				//todo: validate the textbox!
 				
 				if ($errors) {
 					$content->message = "Sorry, there was a problem.&nbsp; " . implode(",",$errors);
 				} else {
 					$content->show_form = false;
 					
+					//log the send, but don't log the message!
+					$log_row = DB::select('count')->from('message_log')->where('sender','=',$user_id)->and_where('recipient','=',$post_owner_row['id'])->execute()->current();
+					if ($log_row)
+						DB::update('message_log')->set(array('count' => $log_row['count'] + 1))->where('sender','=',$user_id)->and_where('recipient','=',$post_owner_row['id'])->execute();
+					else
+						DB::insert('message_log')->columns(array('count','sender','recipient'))->values(array('1',$user_id,$post_owner_row['id']))->execute();
+						
 					//send a message
 					$email = $post_owner_row['email'];
-					$subject = "The Campus Bullet: " . Auth::instance()->get_user() .  " wants your item!";
 					$body = View::factory('email_want');
+					
+					if ($wanted) {
+						$body->wanted = true;
+						$subject = "The Campus Bullet: " . Auth::instance()->get_user() .  " has your item!";
+					} else {
+						$body->wanted = false;
+						$subject = "The Campus Bullet: " . Auth::instance()->get_user() .  " wants your item!";
+					}
 					$body->message = $message;
 					$body->username = Auth::instance()->get_user();
 					$body->post_name = $post_row['name'];

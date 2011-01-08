@@ -8,6 +8,7 @@ class Controller_Home extends Controller_Layout {
 	{
 		array_push($this->template->styles, 'home_index'); //styles for the home page
 		$content = View::factory('home');
+		$config = Kohana::config('masterlist');
 		
 		$categories_rows = DB::select('name','prettyname')->from('categories')->where('disabled','=','0')->order_by('sort_order','ASC')->execute()->as_array();
 		
@@ -15,9 +16,12 @@ class Controller_Home extends Controller_Layout {
 		$content->url_base = URL::base();
 		
 		// get the 5 most recent posts
-		$recent_post_rows = DB::select('id','name')->from('posts')->where('disabled','=','0')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
+		$recent_post_rows = DB::select('id','name')->from('posts')->where('disabled','=','0')->and_where('wanted','=','0')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
+		$wanted_post_rows = DB::select('id','name')->from('posts')->where('disabled','=','0')->and_where('wanted','!=','0')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
 		$content->newposts = $recent_post_rows;
+		$content->wantedposts = $wanted_post_rows;
 		
+		$content->version = $config['version'];
 		$this->template->content = $content;
 	}
 	
@@ -31,18 +35,28 @@ class Controller_Home extends Controller_Layout {
 		$category_row = DB::select('id','name','prettyname','description')->from('categories')->where('name','=',$category_request)->and_where('disabled','=',0)->execute()->current();
 		
 		if ($category_row) {		
-			$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]'")->execute()->current();
+			if (isset($_GET['wanted'])) {
+				$content->wanted = true;
+				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]' and wanted != 0")->execute()->current();
+			} else {
+				$content->wanted = false;
+				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]' and wanted=0")->execute()->current();
+			}
 			$current_count = $current_count['count'];
 			
-			
+			//set up pagination
 			$pagination = new Pagination(array(
 				'total_items' => $current_count,
 				'items_per_page' => 30,			
 				));
 			
-			
-			$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->order_by('timestamp','DESC')
-				->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();
+			if (isset($_GET['wanted'])) {
+				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','!=','0')->order_by('timestamp','DESC')
+					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
+			} else {
+				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=','0')->order_by('timestamp','DESC')
+					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
+			}
 						
 			$dategroups = array();
 			
@@ -103,6 +117,7 @@ class Controller_Home extends Controller_Layout {
 			$content->preview = false;
 			$content->post_disabled = $post['disabled'];
 			$content->post_title = $post['name'];
+			$content->wanted = $post['wanted'];
 			$post_price = $post['price'];
 			if ($post_price == 0)
 				$content->post_price = "Free!";

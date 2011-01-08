@@ -3,7 +3,7 @@
 	font-weight: bold;
 }
 </style>
-<h1><?=$post_title ?><? if ($post_date) { ?><span class="datestamp"><?=$post_date?></span><? } ?></h1>
+<h1><? if ($wanted) echo "Wanted: "; ?><?=$post_title ?><? if ($post_date) { ?><span class="datestamp"><?=$post_date?></span><? } ?></h1>
 
 <? if ($post_disabled) {
 	echo "<p class=\"error\">";
@@ -35,7 +35,7 @@
 
 <? if ( ! $preview) { ?>
 <? if ($is_owner || $is_moderator) { ?>
-	<? if ($is_moderator) echo "<p>You are not the owner of this post, but you can moderate it.</p>";
+	<? if ( ! $is_owner) echo "<p>You are not the owner of this post, but you can moderate it.</p>";
 		else echo "<p>You are the owner of this post.</p>"; ?>
 <ul>
 	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit or disable this post</a></li>
@@ -43,8 +43,8 @@
 </ul>
 <? } if ( ! $is_owner) { ?>
 <p>What next? </br>
-<ul>
-	<li><a href="<?= $url_base ?>contact/want/<?=$post_id?>">I want this item!</a></li>
+<ul>	
+	<li><a href="<?= $url_base ?>contact/want/<?=$post_id?>"><? if ($wanted) echo "I have this item!"; else echo "I want this item!"; ?></a></li>
 	<li><a href="<?= $url_base ?>contact/message/ml_abuse?postid=<?=$post_id?>">Report this item..</a></li>	
 </ul>
 </p>

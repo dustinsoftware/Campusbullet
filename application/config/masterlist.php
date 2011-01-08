@@ -2,4 +2,5 @@
 
 return array(
 	'root' => "/xampplite/htdocs/kohana",
+	'version' => "1.2 beta",
 );

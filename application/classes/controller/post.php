@@ -7,6 +7,12 @@ class Controller_Post extends Controller_Layout {
 	}
 		
 	public function action_new($starting_category_name = null) {
+		array_push($this->template->styles, 'post_new');
+		if (isset($_GET['wanted'])) {
+			$wanted = true;			
+		} else {
+			$wanted = false;
+		}
 		$user_id = Session::instance()->get('user_id');		
 		$config = Kohana::config('masterlist');
 		$masterlist_root = $config['root'];
@@ -19,6 +25,7 @@ class Controller_Post extends Controller_Layout {
 		$content->post_description = "";
 		$content->post_category = "";
 		$content->post_isbn = "";
+		$content->wanted = $wanted;
 		$content->allow_repost = false;
 		$content->editmode = false;
 		$content->disabled = false;
@@ -78,8 +85,8 @@ class Controller_Post extends Controller_Layout {
 				if ($confirmed) {
 					//create the post, and report a success						
 					DB::insert('posts')
-						->columns(array('owner','name','price','condition','description','category','isbn'))
-						->values(array($owner_id, $title, $price, $condition, $description, $category,$isbn))->execute();
+						->columns(array('owner','name','price','condition','description','category','isbn','wanted'))
+						->values(array($owner_id, $title, $price, $condition, $description, $category,$isbn,$wanted))->execute();
 						
 					//now that we've crated the post, get the new id and redirect to the image upload page
 					$post_row = DB::select('id')->from('posts')->where('owner','=',$owner_id)->order_by('timestamp','DESC')->execute()->current();
@@ -93,7 +100,8 @@ class Controller_Post extends Controller_Layout {
 						'condition' => $condition,
 						'category' => $category,
 						'description' => $description, 
-						'isbn' => $isbn));
+						'isbn' => $isbn,
+						'wanted' => $wanted));
 					
 				}
 			}
@@ -107,16 +115,17 @@ class Controller_Post extends Controller_Layout {
 		$is_moderator = Session::instance()->get('moderator');
 		
 		if ($id) {
+			array_push($this->template->styles, 'post_new');
 			if ($is_moderator)
-				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image')->from('posts')
+				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted')->from('posts')
 					->where('id','=',$id)->execute()->current();			
 			else			
-				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image')->from('posts')
+				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted')->from('posts')
 					->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
 			
 			if ($post_row) {
 				$disabled = $post_row['disabled'];
-				
+				$wanted = $post_row['wanted'];
 				$content = View::factory('post_new');
 				$content->message = "";
 				$content->url_base = URL::base();
@@ -124,6 +133,7 @@ class Controller_Post extends Controller_Layout {
 				$content->post_condition = $post_row['condition'];
 				$content->post_category = $post_row['category'];
 				$content->post_id = $post_row['id'];
+				$content->wanted = $wanted;
 				$content->post_price = $post_row['price'];
 				$content->post_description = $post_row['description'];
 				$content->post_isbn = $post_row['isbn'];
@@ -236,7 +246,8 @@ class Controller_Post extends Controller_Layout {
 									'condition' => $condition,
 									'description' => $description,
 									'category' => $category,
-									'isbn' => $isbn));
+									'isbn' => $isbn,
+									'wanted' => $wanted));
 							}						
 						}
 					}
@@ -339,6 +350,7 @@ class Controller_Post extends Controller_Layout {
 		$post_preview->post_isbn = $fields['isbn'];
 		$post_preview->post_description = wordwrap($fields['description'],100,"\r\n",true);		
 		$post_preview->preview = true;
+		$post_preview->wanted = $fields['wanted'];
 		$post_preview->url_base = URL::base();
 		$post_preview->post_category_name = $category_row['name'];
 		$post_preview->post_image = "";

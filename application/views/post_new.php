@@ -1,4 +1,7 @@
-<? if ($editmode) $title = "Edit your post!"; else $title = "Post something new!"; ?>
+<? if ($editmode && $wanted) $title = "Edit Your Wanted Ad!"; 
+	elseif ($editmode && ! $wanted) $title = "Edit Your Post!";
+	elseif ($wanted) $title = "Post a New Wanted Ad!"; 
+	else $title = "Post Something New!"; ?>
 <h1><?=$title?></h1>
 
 <? if ($message) { ?>
@@ -6,14 +9,18 @@
 <? } ?>
 <? if ($errors) { ?><ul class="error">
 <? foreach ($errors as $error) { ?><li><?=$error?></li><? } ?></ul>
-<? } else { ?>
-<p>Hey, you want to post something to sell or give away?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:
-<ul>
-	
-	<li>When your post is at least a week old, you will have the option of reposting it to the top.&nbsp; Please don't create duplicate posts.</li>
-	<li>Make sure you have a quick look over the <a href="<?=$url_base?>help/terms">terms and conditions</a>.&nbsp; Don't worry, it's short :)</li>	
-</ul>
-</p>
+<? } else { 
+	if ($wanted) { 
+		echo "<p>Looking for an item that's not listed here?&nbsp; Maybe by posting one of these wanted ads, you'll find what you're looking for.&nbsp; Please remember that there are a few rules:";
+	} else { 
+		echo "<p>Hey, you want to post something to sell or give away?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:";
+	} ?>
+	<ul>		
+		<li>When your post is at least a week old, you will have the option of reposting it to the top.&nbsp; Please don't create duplicate posts.</li>
+		<li>Make sure you have a quick look over the <a href="<?=$url_base?>help/terms">terms and conditions</a>.&nbsp; Don't worry, it's short :)</li>	
+	</ul>
+	</p>
+
 <? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; To repost it, just hit "Preview this Post".</p><? } ?>
 <? if ($disabled == 2) { ?><p class="error">This post has been flagged.&nbsp; It cannot be re-enabled.</p><? } ?>
 <? } ?>
@@ -26,7 +33,7 @@
 } ?>
 
 <form action="" method="POST" >
-<table>
+<table class="editor">
 <tr>
 	<th>Post title:</th>
 	<td><input type="textbox" name="title" value="<?=$post_title?>" /></td>
@@ -53,11 +60,11 @@
 	<td><input type="textbox" name="isbn" value="<?=$post_isbn?>" /></td>
 </tr>
 <tr>
-	<th>Asking price: ($)</th>
+	<th><? if ($wanted) echo "Suggested asking price: ($)"; else echo "Asking price: ($)"; ?></th>
 	<td><input type="textbox" name="price" value="<?=$post_price?>" /> (0 if the item is free)</td>
 </tr>
 <tr>
-	<th>Describe the item:</th>
+	<th><? if ($wanted) echo "Describe what you're looking for:"; else echo "Describe the item:"; ?></th>
 	<td><textarea name="description" style="width:500px; height: 200px;"><?=$post_description ?></textarea></td>
 </tr>
 <tr>
