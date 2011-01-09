@@ -53,13 +53,28 @@ class Controller_Image extends Controller_Layout {
 					array_push($errors, "There was an error uploading the file.&nbsp; Please try again.");
 				elseif ($file['size'] > 2000000)
 					array_push($errors, "The image is too big!&nbsp; Please take one that's under 2 MB.");
-				elseif ($file['type'] != "image/jpeg")
-					array_push($errors, "The file must be a JPEG file.");
-				else {
-					Upload::save($file, "$id.jpg", "$masterlist_root/images/posts");
-					DB::update('posts')->set(array('image' => '-1'))->where('id','=',$id)->execute();
-					$content->message = "The image was successfully uploaded!";
-					$content->image = URL::base() . "images/posts/$id.jpg";
+				else {					
+					try {					
+						$filepath = "$masterlist_root/images/posts";
+						Upload::save($file, "$id.tmp", "$filepath");
+						
+						$image = $this->image_from_file($filepath . "/$id.tmp");
+						if ($image) {
+							imagejpeg($image, $filepath . "/$id.jpg");
+						
+							unlink($filepath . "/$id.tmp");
+							imagedestroy($image);
+							
+							DB::update('posts')->set(array('image' => '-1'))->where('id','=',$id)->execute();
+							$content->message = "The image was successfully uploaded!";
+							$content->image = URL::base() . "images/posts/$id.jpg";
+						} else {
+							throw (new Exception("invalid file"));
+						}
+						
+					} catch (Exception $e) {
+						array_push($errors, "The file must be a PNG, JPG, or GIF file.&nbsp; Try uploading the picture again.");
+					}
 				}
 				
 				$content->errors = $errors;
@@ -68,6 +83,34 @@ class Controller_Image extends Controller_Layout {
 		} else {
 			Request::instance()->redirect('post/edit');
 		}		
+	}
+	
+	private function image_from_file($path) {
+		//http://www.php.net/manual/en/function.imagecreate.php
+		$info = @getimagesize($path);
+	   
+		if(!$info)
+		{
+			return false;
+		}
+	   
+		$functions = array(
+			IMAGETYPE_GIF => 'imagecreatefromgif',
+			IMAGETYPE_JPEG => 'imagecreatefromjpeg',
+			IMAGETYPE_PNG => 'imagecreatefrompng',			
+			);
+	   
+		if(!$functions[$info[2]])
+		{
+			return false;
+		}
+	   
+		if(!function_exists($functions[$info[2]]))
+		{
+			return false;
+		}
+	   
+		return $functions[$info[2]]($path);
 	}
 	
 }

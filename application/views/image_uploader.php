@@ -15,7 +15,7 @@
 		echo "<li>$error</li>\r\n";		
 	} ?></ul>
 <? } else { ?>
-<p>Use this tool to attach a picture to your post.&nbsp; The file must be a JPEG and under 2 MB in size.&nbsp; 
+<p>Use this tool to attach a picture to your post.&nbsp; The file must be a PNG, JPEG, or GIF type file and under 2 MB in size.&nbsp; 
 After you've uploaded it, we'll resize it to fit the page.</p>
 <? } ?>
 
