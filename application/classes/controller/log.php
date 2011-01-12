@@ -2,6 +2,11 @@
 
 class Controller_Log extends Controller_Layout {
 	protected $auth_required = false;
+
+	public function before() {
+		parent::before();
+		$this->template->title = "Log Viewer";
+	}
 	
 	public function action_index() {
 		Request::instance()->redirect('home');

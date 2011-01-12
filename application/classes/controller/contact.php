@@ -2,6 +2,10 @@
 
 class Controller_Contact extends Controller_Layout {
 
+	public function before() {
+		parent::before();
+		$this->template->title = "Contact";
+	}
 	public function action_index() {
 		Request::instance()->redirect('help');
 	}

@@ -33,7 +33,7 @@ class Kohana_Auth_Db extends Auth {
 		$user_row = DB::select('id','disabled','role')->from('users')->where('username','=',$username)->and_where('userhash','=',$password)->execute()->current();
 		
 		if ($user_row) {
-			if ($user_row['disabled']) {
+			if ($user_row['disabled'] == 1) {
 				//the user has been disabled by a mod. deny the login.	
 				return "disabled";
 			} else {

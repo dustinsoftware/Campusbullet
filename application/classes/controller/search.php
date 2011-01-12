@@ -1,6 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 class Controller_Search extends Controller_Layout {
+	public function before() {
+		parent::before();
+		$this->template->title = "Search";
+	}
 
 	protected $auth_required = false;
 	

@@ -149,6 +149,9 @@ h1 {
 	color:black;
 	margin-right:40px;
 }
+#sidebar img {
+	background:black;
+}
 #sidebar p {
 	margin-bottom:5px;
 	margin-top:5px;

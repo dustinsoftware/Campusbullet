@@ -5,6 +5,7 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="the campus bullet" name="keywords" />
 <meta content="A fancy site for LETU students to sell their junk on." name="description" />
+<link type="image/x-icon" href="<?=$url_base?>images/favicon.gif" rel="shortcut icon">
 <title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
 <? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>

@@ -1,5 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+include_once 'wordwrap.php';
+
 class Controller_Home extends Controller_Layout {
 
 	protected $auth_required = false;
@@ -114,6 +116,7 @@ class Controller_Home extends Controller_Layout {
 			
 			$content->is_owner = ($post['owner'] == $user_id);
 			$content->is_moderator = Session::instance()->get('moderator');
+			$content->poster_id = $post['owner'];
 			$content->preview = false;
 			$content->post_disabled = $post['disabled'];
 			$content->post_title = $post['name'];
@@ -124,7 +127,7 @@ class Controller_Home extends Controller_Layout {
 			else
 				$content->post_price = "$$post_price";
 			
-			$content->post_description = wordwrap($post['description'],100,"\r\n",true);			
+			$content->post_description = dpmwordwrap($post['description']);			
 			$content->post_category_name = $category_row['name'];
 			$content->post_condition = $post['condition'];
 			$content->post_isbn = $post['isbn'];

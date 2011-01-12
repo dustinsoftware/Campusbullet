@@ -1,6 +1,4 @@
-<? if ($editmode && $wanted) $title = "Edit Your Wanted Ad!"; 
-	elseif ($editmode && ! $wanted) $title = "Edit Your Post!";
-	elseif ($wanted) $title = "Post a New Wanted Ad!"; 
+<?	if ($editmode) $title = "Edit Your Post!";
 	else $title = "Post Something New!"; ?>
 <h1><?=$title?></h1>
 
@@ -10,11 +8,8 @@
 <? if ($errors) { ?><ul class="error">
 <? foreach ($errors as $error) { ?><li><?=$error?></li><? } ?></ul>
 <? } else { 
-	if ($wanted) { 
-		echo "<p>Looking for an item that's not listed here?&nbsp; Maybe by posting one of these wanted ads, you'll find what you're looking for.&nbsp; Please remember that there are a few rules:";
-	} else { 
-		echo "<p>Hey, you want to post something to sell or give away?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:";
-	} ?>
+		echo "<p>Want to create a new post?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:";
+	?>
 	<ul>		
 		<li>When your post is at least a week old, you will have the option of reposting it to the top.&nbsp; Please don't create duplicate posts.</li>
 		<li>Make sure you have a quick look over the <a href="<?=$url_base?>help/terms">terms and conditions</a>.&nbsp; Don't worry, it's short :)</li>	
@@ -34,6 +29,13 @@
 
 <form action="" method="POST" >
 <table class="editor">
+<tr>
+	<th>Kind of post:</th>
+	<td><select name="wanted"><?
+		if ($wanted) echo "<option value=\"0\">Selling</option><option selected=\"selected\" value=\"1\">Wanted</option>\r\n";
+		else echo "<option selected=\"selected\" value=\"0\">Selling</option><option value=\"1\">Wanted</option>\r\n";
+	?></select></td>
+</tr>
 <tr>
 	<th>Post title:</th>
 	<td><input type="textbox" name="title" value="<?=$post_title?>" /></td>

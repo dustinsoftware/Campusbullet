@@ -33,20 +33,27 @@
 
 <? if ($post_image) { ?> <p><img src="<?=$post_image?>" alt="" /></p><? } ?>
 
-<? if ( ! $preview) { ?>
-<? if ($is_owner || $is_moderator) { ?>
-	<? if ( ! $is_owner) echo "<p>You are not the owner of this post, but you can moderate it.</p>";
-		else echo "<p>You are the owner of this post.</p>"; ?>
+<? if ( ! $preview) : ?>
+<? if ( ! $is_owner && $is_moderator): ?>
+<p>Moderator tools:</p>
+<ul>
+	<li><a href="<?=$url_base?>moderator/post/<?=$post_id?>">Flag this post</a></li>
+	<li><a href="<?=$url_base?>moderator/user/<?=$poster_id?>">Check out the poster's account</a></li>
+</ul>
+<? endif; ?>
+
+<? if ($is_owner) : ?>
+<p>You are the owner of this post.</p>
 <ul>
 	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit or disable this post</a></li>
 	<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	
 </ul>
-<? } if ( ! $is_owner) { ?>
+<? else: ?>
 <p>What next? </br>
 <ul>	
 	<li><a href="<?= $url_base ?>contact/want/<?=$post_id?>"><? if ($wanted) echo "I have this item!"; else echo "I want this item!"; ?></a></li>
 	<li><a href="<?= $url_base ?>contact/message/ml_abuse?postid=<?=$post_id?>">Report this item..</a></li>	
 </ul>
 </p>
-<? } ?>
-<? } ?>
+<? endif; ?>
+<? endif; ?>

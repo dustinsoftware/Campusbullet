@@ -5,6 +5,7 @@ class Controller_Account extends Controller_Layout {
 		parent::before();
 		
 		array_push($this->template->styles, "account");
+		$this->template->title = "Account Management";
 	}
 	
 	public function action_index() {
@@ -38,7 +39,7 @@ class Controller_Account extends Controller_Layout {
 					'disabled' => 2))->where('id','=',$user_id)->execute();
 				
 				//log out the user
-				Auth::instance()->logout();
+				Auth::instance()->logout(true);
 				
 				//and redirect to the home page.
 				Request::instance()->redirect('home');

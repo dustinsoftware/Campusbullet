@@ -1,4 +1,10 @@
 <h1><? if ($wanted) echo "Wanted "; ?><?=$category_prettyname?></h1>
+<? if ($wanted) { ?>
+<p class="info">You are viewing wanted items.&nbsp; <a href="<?=$url_base?>home/category/<?=$category_name?>">Click here to view posted items.</a></p>
+<? } else { ?>
+<p class="info">You are viewing posted items.&nbsp; <a href="<?=$url_base?>home/category/<?=$category_name?>?wanted">Click here to view wanted items.</a></p>
+<? } ?>
+
 <div id="sidebar">
 	<div id="sidebar_inner">
 		<p class="sidebar_header">About this category</p>
@@ -15,11 +21,6 @@
 	</div>
 </div>
 
-<? if ($wanted) { ?>
-<p>You are viewing wanted items.&nbsp; <a href="<?=$url_base?>home/category/<?=$category_name?>">Click here to view posted items.</a></p>
-<? } else { ?>
-<p>You are viewing posted items.&nbsp; <a href="<?=$url_base?>home/category/<?=$category_name?>?wanted">Click here to view wanted items.</a></p>
-<? } ?>
 
 <? if ($dategroups) { ?>
 

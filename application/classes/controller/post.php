@@ -1,6 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+include_once 'wordwrap.php';
+
 class Controller_Post extends Controller_Layout {
+	public function before() {
+		parent::before();
+		$this->template->title = "Post Editor";
+	}
 
 	public function action_index() {
 		Request::instance()->redirect('home');
@@ -8,6 +14,8 @@ class Controller_Post extends Controller_Layout {
 		
 	public function action_new($starting_category_name = null) {
 		array_push($this->template->styles, 'post_new');
+		$this->template->title = "New Post";
+		
 		if (isset($_GET['wanted'])) {
 			$wanted = true;			
 		} else {
@@ -49,6 +57,10 @@ class Controller_Post extends Controller_Layout {
 			$price = @($_POST["price"]);
 			$description = @(htmlspecialchars($_POST["description"]));
 			$category = @($_POST["category"]);
+			if(@($_POST['wanted']))
+				$wanted = 1; //set the value manually to prevent an inconsistent value problem
+			else
+				$wanted = 0;
 			$owner_id = Session::instance()->get('user_id');
 			if ($category == 2) //only fill in the isbn if we need it
 				$isbn = @(htmlspecialchars($_POST["isbn"]));
@@ -65,6 +77,7 @@ class Controller_Post extends Controller_Layout {
 			$content->post_description = $description;
 			$content->post_category = $category;
 			$content->post_isbn = $isbn;
+			$content->wanted = $wanted;
 			
 			$errors = $this->validatepost(array(
 				'title' => $title, 
@@ -167,6 +180,10 @@ class Controller_Post extends Controller_Layout {
 					$title = @(htmlspecialchars($_POST["title"]));
 					$condition = @(htmlspecialchars($_POST["condition"]));
 					$price = @($_POST["price"]);
+					if (@($_POST["wanted"]))
+						$wanted = 1;
+					else	
+						$wanted = 0;
 					$description = @(htmlspecialchars($_POST["description"]));
 					$edit = @($_POST["edit"]);
 					$confirmed = @($_POST["confirmed"]);
@@ -235,6 +252,7 @@ class Controller_Post extends Controller_Layout {
 									'condition'=>$condition,
 									'category'=>$category,
 									'isbn'=>$isbn,
+									'wanted'=>$wanted,
 									'description'=>$description))->where('id','=',$id)->execute();
 							
 								Request::instance()->redirect("home/view/$id");
@@ -342,13 +360,15 @@ class Controller_Post extends Controller_Layout {
 		$content->post_description = $fields['description'];
 		$content->post_category = $fields['category'];
 		$content->post_isbn = $fields['isbn'];
-				
+		$content->post_wanted = $fields['wanted'];
+			
 		$post_preview = View::factory('home_post_view');
 		$post_preview->post_title = $fields['title'];
 		$post_preview->post_price = "$$fields[price]";
 		$post_preview->post_condition = $fields['condition'];
 		$post_preview->post_isbn = $fields['isbn'];
-		$post_preview->post_description = wordwrap($fields['description'],100,"\r\n",true);		
+		$post_preview->post_wanted = $fields['wanted'];
+		$post_preview->post_description = dpmwordwrap($fields['description']);
 		$post_preview->preview = true;
 		$post_preview->wanted = $fields['wanted'];
 		$post_preview->url_base = URL::base();

@@ -2,5 +2,5 @@
 
 return array(
 	'root' => DOCROOT,
-	'version' => "1.2 beta",
+	'version' => "1.3 beta",
 );

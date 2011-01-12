@@ -1,6 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 class Controller_Image extends Controller_Layout {
+	public function before() {
+		parent::before();
+		$this->template->title = "Image Uploader";
+	}
+	
 
 	public function action_index() {
 		Request::instance()->redirect('home');

@@ -4,6 +4,12 @@ class Controller_Help extends Controller_Layout {
 
 	protected $auth_required = false;
 	
+	public function before() {
+		parent::before();
+		$this->template->title = "Help";
+	}
+	
+	
 	public function action_index($page = null) {
 		$config = Kohana::config('masterlist');
 		try {		

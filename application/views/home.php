@@ -26,14 +26,18 @@
 
 <div id="homecontainer">
 <h1>Select a category to begin</h1>
-<p class="info">The Campus Bullet <?=$version?>. (C)2010 Dustin Masters.<br />
+<p class="info">The Campus Bullet <?=$version?>. (C)2011 Dustin Masters.<br />
 Please report ANY bugs with the system, and make suggestions as well using the same tool :)</p>
 <div id="categories">
 <? foreach($categories as $category) { ?>
-<a class="button" href="<?=$url_base?>home/category/<?=$category['name']?>">
-<img src="<?=$url_base?>images/<?=$category['name']?>.png" alt="" /><br />
+<div class="buttonshadow">
+<div class="button">
+<a href="<?=$url_base?>home/category/<?=$category['name']?>">
+<img width="150" height="150" src="<?=$url_base?>images/<?=$category['name']?>.png" alt="<?=$category['name']?>" /><br />
 <?=$category['prettyname']?>
 </a>
+</div>
+</div>
 <? } ?>
 </div>
 

@@ -1,11 +1,11 @@
 ﻿/* Home Page Stylesheet */
 
 #homecontainer {
-	margin-right: 300px;
+	margin-right: 241px;
 }
 
 #newposts {
-	width: 250px;	
+	width: 224px;	
 	float:right;
 
 }
@@ -16,19 +16,33 @@
 	text-align:center;
 }
 
+#categories {
+	text-align:center;
+}
+.buttonshadow {
+	background-image:url('../images/buttonshadow.png');
+	background-repeat:no-repeat;
+	background-position:left top;	
+	display:inline-block;
+}
 .button {
-	width: 202px;
+	overflow: hidden;	
+	margin-right:16px;
+	margin-bottom:16px;
+}
+.button a {
+	display:block;
+	height:180px;
+	width:202px;
 	background: black;
-	margin: 10px;
-	text-align: center;
-	display: inline-block;
-	height: 180px;
-	overflow: hidden;
-	padding: 10px;
 	color: white;
-	opacity: 1;
+	text-align: center;
+	
 }
 .button:hover {
-	opacity:.8;
-	text-decoration:none;
+	
+}
+.button a:hover {
+	text-decoration: none;
+	background: #292F3F;
 }

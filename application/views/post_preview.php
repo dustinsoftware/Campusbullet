@@ -13,6 +13,7 @@
 	<input type="hidden" name="description" value="<?=$post_description?>" />
 	<input type="hidden" name="category" value="<?=$post_category?>" />
 	<input type="hidden" name="isbn" value="<?=$post_isbn?>" />
+	<input type="hidden" name="wanted" value="<?=$post_wanted?>" />
 	<input type="submit" name="confirmed" value=" This looks great! " />
 	<input type="submit" name="edit" value="I messed up, let me make some changes."  />
 </form>
