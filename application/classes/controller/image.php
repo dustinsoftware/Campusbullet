@@ -1,5 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+include_once 'imagemagick.php';
+
 class Controller_Image extends Controller_Layout {
 	public function before() {
 		parent::before();
@@ -12,6 +14,8 @@ class Controller_Image extends Controller_Layout {
 	}
 	
 	public function action_post($id) {
+		$im = new ImageMagick();
+		
 		$user_id = Session::instance()->get('user_id');
 		$is_moderator = Session::instance()->get('moderator');
 		if ($is_moderator)
@@ -64,11 +68,13 @@ class Controller_Image extends Controller_Layout {
 						Upload::save($file, "$id.tmp", "$filepath");
 						
 						$image = $this->image_from_file($filepath . "/$id.tmp");
-						if ($image) {
-							imagejpeg($image, $filepath . "/$id.jpg");
-						
+						if ($image) {							
+							imagejpeg($image, $filepath . "/$id.jpg");						
 							unlink($filepath . "/$id.tmp");
 							imagedestroy($image);
+							
+							//resize the new image to the constrained proportions
+							$im->constrain("$filepath/$id.jpg",640,480);
 							
 							DB::update('posts')->set(array('image' => '-1'))->where('id','=',$id)->execute();
 							$content->message = "The image was successfully uploaded!";
