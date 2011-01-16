@@ -13,12 +13,20 @@ class Controller_Login extends Controller_Layout {
 		$post_pass = @($_POST['asdf']);
 		$failures_row = DB::select('timestamp','failures')->from('login_failures')->where('ip','=',$_SERVER["REMOTE_ADDR"])->execute()->current();
 		
-		if ( ! @($_GET['redir']) && @($_SERVER['HTTP_REFERER'])) {
-			$sitebase = explode("index.php", URL::base(true,true));
-			$sitebase = $sitebase[0];
-			$thispage = explode($sitebase, $_SERVER['HTTP_REFERER']);
+		//dirty hack for getting the current page we're on
+		//currently caused by the redirect to /index.php/ bug, which appears directly after you log out.
+		//the fix is to see if index.php is present in the address
+		if ( ! isset($_GET['redir']) && @($_SERVER['HTTP_REFERER'])) {
+			$sitebase = URL::base(true,true);
+			$sitebase = explode("index.php", $sitebase); $sitebase = $sitebase[0];
+			$thispage = explode($sitebase, $_SERVER['HTTP_REFERER']); $thispage = $thispage[1];
+			$thispage = explode("index.php", $thispage);
+			if (count($thispage) == 2) //if index.php is present, take it out
+				$thispage = $thispage[1];
+			else
+				$thispage = $thispage[0];
 			
-			$redir = urlencode($thispage[1]);
+			$redir = urlencode($thispage);
 			Request::instance()->redirect("login?redir=$redir");
 		}
 		

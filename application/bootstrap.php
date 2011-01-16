@@ -119,20 +119,23 @@ if ( ! defined('SUPPRESS_REQUEST'))
 			throw $e;
         }
 
-        $request->response = Request::factory('error/404')->execute();	
+        $request = Request::factory('error/404')->execute();
+		$request->status = 404;
 	} catch (Database_Exception $e) {
 		if (!IN_PRODUCTION) {
 			throw $e;
         } else {
-			$request->response = Request::factory('error/dbdown')->execute();
+			$request = Request::factory('error/dbdown')->execute();
         }		
+		$request->status = 500;
 	} catch (Exception $e) {
 		if (!IN_PRODUCTION)
         {
 			throw $e;
         }
 
-        $request->response = Request::factory('error/500')->execute();
+        $request = Request::factory('error/500')->execute();
+		$request->status = 500;
 	}
 	
 	echo $request->send_headers()->response;
