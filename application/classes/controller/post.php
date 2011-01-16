@@ -312,11 +312,11 @@ class Controller_Post extends Controller_Layout {
 		if ( ! is_numeric($fields['price']) || $fields['price'] < 0)
 			$errors += array("price" => "Invalid price.  Please enter a number, without the dollar sign.");
 		
-		if (strlen($fields['description']) < 20)
-			$errors += array("description" => "Description too short.&nbsp; Must be at least 20 characters long.");
+		if (strlen($fields['description']) == 0)
+			$errors += array("description" => "Type something in the description box.");
 		
-		if (strlen($fields['description']) > 500)
-			$errors += array("description" => "Description too long.&nbsp; Must be under 500 characters.");
+		if (strlen($fields['description']) > 1000)
+			$errors += array("description" => "Description too long.&nbsp; Must be under 1000 characters.");
 					
 		//check extra fields		
 		try {

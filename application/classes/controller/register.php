@@ -26,7 +26,7 @@ class Controller_Register extends Controller_Layout {
 			$email = @($_POST['email']);
 			
 			$verify_row = DB::select('id')->from('registration_keys')->where('email','=',$email)->execute()->current();
-			$email_row = DB::select('id')->from('users')->where('email','=',$email)->execute()->current();
+			$email_row = DB::select('id')->from('users')->where('originalemail','=',$email)->or_where('email','=',$email)->execute()->current();
 			
 			$validate = Validate::factory(array('email' => $email));
 			$validate->rule('email','email')
@@ -37,7 +37,7 @@ class Controller_Register extends Controller_Layout {
 			} elseif ($email_row) {
 				array_push($errors, "That email address has already been registered!");
 			} elseif ($verify_row) {
-				array_push($errors, "An email has already been sent to this email address.&nbsp; Please check your inbox, or send an email to ml_bugs@dustinsoftware.com to reset that address.");
+				array_push($errors, "An email has already been sent to this email address.&nbsp; Please check your inbox, or send an email to dustin@campusbullet.net to have that address reset.");
 			} elseif ( ! strpos(strtolower($email), "@letu.edu")) {
 				array_push($errors, "Sorry, only @letu.edu address are accepted at this time.");			
 			} else {
@@ -72,6 +72,7 @@ class Controller_Register extends Controller_Layout {
 			$content->errors = array();
 			
 			if (DB::select('id')->from('users')->where('email','=',$email)->execute()->current()) {
+				Session::instance()->set('verifiedemail',"");
 				Request::instance()->redirect('home');
 			}
 			
@@ -112,7 +113,7 @@ class Controller_Register extends Controller_Layout {
 					
 					$hashpw = Auth::instance()->hash_password($pw1);
 					//create the user
-					DB::insert('users')->columns(array('username','userhash','email'))->values(array($username,$hashpw,$email))->execute();
+					DB::insert('users')->columns(array('username','userhash','email','originalemail'))->values(array($username,$hashpw,$email,$email))->execute();
 					//delete the verification key
 					DB::delete('registration_keys')->where('email','=',$email)->execute();
 					//log in the user

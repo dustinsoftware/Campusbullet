@@ -19,9 +19,9 @@ class Controller_Image extends Controller_Layout {
 		$user_id = Session::instance()->get('user_id');
 		$is_moderator = Session::instance()->get('moderator');
 		if ($is_moderator)
-			$post_row = DB::select('id','name','image')->from('posts')->where('id','=',$id)->execute()->current();
+			$post_row = DB::select('id','name','image','category')->from('posts')->where('id','=',$id)->execute()->current();
 		else
-			$post_row = DB::select('id','name','image')->from('posts')->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
+			$post_row = DB::select('id','name','image','category')->from('posts')->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
 		$config = Kohana::config('masterlist');
 		$masterlist_root = $config['root'];
 		
@@ -33,6 +33,9 @@ class Controller_Image extends Controller_Layout {
 			$content->post_name = $post_row['name'];
 			$content->post_link = URL::base() . "home/view/$id";
 			$content->post_id = $post_row['id'];
+			
+			if ($post_row['category'] == 2)
+				$content->message = "If you don't upload a picture, an image will be pulled from the internet with the ISBN you entered.";
 			
 			if (@($_GET['postcreated']) && ! $_POST) {
 				$content->message = "Your post was created successfully.&nbsp; If you want, you can also attach a picture to it!";

@@ -8,6 +8,16 @@ class Controller_Home extends Controller_Layout {
 	
 	public function action_index()
 	{
+		//check if the user has seen the what's new page
+		if (Auth::instance()->logged_in()) {
+			$user_id = Session::instance()->get('user_id');
+			$user_row = DB::select('whatsnew')->from('users')->where('id','=',$user_id)->execute()->current();
+			if ($user_row['whatsnew'] && ! @($_GET['skip'])) {
+				Request::instance()->redirect('whatsnew');
+			}
+		} 
+		
+		//if we got this far, render the home page
 		array_push($this->template->styles, 'home_index'); //styles for the home page
 		$content = View::factory('home');
 		$config = Kohana::config('masterlist');
@@ -137,10 +147,11 @@ class Controller_Home extends Controller_Layout {
 			
 			if ($post['image'])
 				$content->post_image = $base . "images/posts/$id.jpg";
+			elseif ($post['isbn'])
+				$content->post_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
 			else
 				$content->post_image = "";
-			
-			
+						
 			$this->template->content = $content; 
 		} else {
 			Request::instance()->redirect('home');

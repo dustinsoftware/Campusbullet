@@ -7,16 +7,26 @@ class Controller_Login extends Controller_Layout {
 	public function action_index()
 	{
 		$auth = Auth::instance();
-		$redir = @($_GET['redir']);
 		$content = View::factory('notemplate_login');
 		$content->error = "";
 		$post_user = @($_POST['user']);
 		$post_pass = @($_POST['asdf']);
 		$failures_row = DB::select('timestamp','failures')->from('login_failures')->where('ip','=',$_SERVER["REMOTE_ADDR"])->execute()->current();
-				
-		if ( ! $redir)
-			$redir = 'home';
+		
+		if ( ! @($_GET['redir']) && @($_SERVER['HTTP_REFERER'])) {
+			$sitebase = explode("index.php", URL::base(true,true));
+			$sitebase = $sitebase[0];
+			$thispage = explode($sitebase, $_SERVER['HTTP_REFERER']);
 			
+			$redir = urlencode($thispage[1]);
+			Request::instance()->redirect("login?redir=$redir");
+		}
+		
+		if (@($_GET['redir'])) {
+			$redir = @($_GET['redir']);
+		} else
+			$redir = "home";
+		
 		//check if the user is already logged in
 		if ($auth->logged_in())
 			Request::instance()->redirect($redir);

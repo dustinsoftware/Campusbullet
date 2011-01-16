@@ -23,6 +23,12 @@
   })();
 
 </script>
+
+<script type="text/javascript">
+function go(page) {
+	location.href = "<?=$url_base?>" + page;
+}
+</script>
 </head>
 
 <body>

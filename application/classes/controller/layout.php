@@ -16,13 +16,13 @@ class Controller_Layout extends Controller_Template {
 			//double check that the user hasn't been disabled in this session
 			$user_id = Session::instance()->get('user_id');
 			$user_row = DB::select('disabled')->from('users')->where('id','=',$user_id)->execute()->current();
-			if ($user_row['disabled'] == 1)
+			if ($user_row['disabled'] != 0)
 				$auth->logout(true);
 		}
 		
 		if ($this->auth_required && ! $auth->logged_in()) {
-			$path = Request::instance()->uri();
-			Request::instance()->redirect("login?redir=$path");
+			$thispage = explode(URL::base(), $_SERVER["REQUEST_URI"]);
+			Request::instance()->redirect("login?redir=" . urlencode($thispage[1]));
 			die("Login required");
 		}		
 		
