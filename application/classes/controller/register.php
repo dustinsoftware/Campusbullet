@@ -14,6 +14,7 @@ class Controller_Register extends Controller_Layout {
 	}
 	
 	public function action_index() {		
+		$ipaddress = $_SERVER['REMOTE_ADDR'];
 		if (Session::instance()->get('verifiedemail')) {
 			Request::instance()->redirect('register/emailconfirmed');
 		}
@@ -44,7 +45,7 @@ class Controller_Register extends Controller_Layout {
 				//good email and no previous entry, put it in and give the confirmation.
 				$secretkey = sha1(rand(0,1000) . $email);
 				
-				DB::insert('registration_keys')->columns(array('email','key'))->values(array($email,$secretkey))->execute();
+				DB::insert('registration_keys')->columns(array('email','key','ipaddress'))->values(array($email,$secretkey,$ipaddress))->execute();
 				
 				$body = View::factory('email_thanks');				
 				$body->link_register = URL::base(true,true) . "confirm/register/$secretkey";

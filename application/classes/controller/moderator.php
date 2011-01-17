@@ -51,9 +51,11 @@ class Controller_Moderator extends Controller_Layout {
 	
 	public function action_user($id) {
 		$moderator_id = Session::instance()->get('user_id');
-		$user_row = DB::select('*')->from('users')->where('id','=',$id)->execute()->current();
+		$user_row = DB::select('*')->from('users')->where('id','=',$id)->or_where('username','=',$id)->execute()->current();
+		
 		
 		if ($user_row) {
+			$id = $user_row['id']; //fix if a username was used, not an id
 			$user_row['userhash'] = "";
 			$content = View::factory('moderator_user');
 			$content->message = "";
