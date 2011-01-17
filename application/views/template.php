@@ -43,7 +43,7 @@ function go(page) {
 	You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a><? if ($moderator) echo " or <a href=\"" . $url_base . "moderator\">moderate</a>"; ?>?
 	<? } else { ?>
 	You're not logged in.  <a href="<?= $url_base ?>login">Login</a> or <a href="<?=$url_base?>register">register!</a>
-	<? } ?>
+	<? } ?>&nbsp;<a href="<?=$url_base?>help/donate"><img src="<?=$url_base?>images/donate.png" alt="donate plz" /></a>
 </div>
 <div id="header_menu">
 <ul>
