@@ -22,6 +22,11 @@ class Controller_Register extends Controller_Layout {
 		$content = View::factory('register_home');
 		$content->errors = array();
 		
+		$banned_row = DB::select("id")->from("banned_addresses")->where('ip','=',$ipaddress)->execute()->current();
+		
+		if ($banned_row)
+			array_push($content->errors, "This IP has been banned from creating new accounts.&nbsp; Please contact accounts@campusbullet.net for more information.&nbsp; Your IP is $ipaddress.");
+		
 		if ($_POST && empty($content->errors)) {
 			$errors = array();
 			$email = @($_POST['email']);
