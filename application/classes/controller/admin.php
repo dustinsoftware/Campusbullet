@@ -15,6 +15,8 @@ class Controller_Admin extends Controller_Layout {
 	public function action_index() {
 		$content = View::factory('admin_home');
 		$content->message = "";
+		$content->user_rows = DB::select('id','username')->from('users')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
+		$content->activation_rows = DB::select('id','email','ipaddress')->from('registration_keys')->execute()->as_array();
 		
 		$this->template->content = $content;
 	}
