@@ -17,7 +17,7 @@ class Controller_Help extends Controller_Layout {
 				$content = View::factory('help_about');
 				$content->url_base = URL::base();
 				$content->version = $config['version'];
-				$content->beta_testers = DB::select('username')->from('users')->where('role','=','user')->and_where('disabled','=','0')->execute()->as_array();
+				$content->beta_testers = DB::select('username')->from('betatesters')->execute()->as_array();
 				$this->template->content = $content;
 			} elseif ($page) {
 				$this->template->content = View::factory("help_$page")->set('url_base',URL::base());

@@ -21,8 +21,12 @@ class Controller_Layout extends Controller_Template {
 		}
 		
 		if ($this->auth_required && ! $auth->logged_in()) {
-			$thispage = explode(URL::base(), $_SERVER["REQUEST_URI"]);
-			Request::instance()->redirect("login?redir=" . urlencode($thispage[1]));
+			$sourcepage = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+			$sitepath = URL::base(false,true);
+			$split = explode($sitepath,$sourcepage);
+			$redir = $split[1];
+			
+			Request::instance()->redirect("login?redir=" . $redir);
 			die("Login required");
 		}		
 		
