@@ -83,7 +83,7 @@ class Controller_Contact extends Controller_Layout {
 				$body = View::factory('email_template');
 				$body->message = $message;
 				$body->username = Auth::instance()->get_user();
-				$body->base = URL::base(true,true);
+				$body->base = URL::base(false,true);
 								
 				send_email($email, $subject, $body);
 				
@@ -149,7 +149,7 @@ class Controller_Contact extends Controller_Layout {
 					$body->post_name = $post_row['name'];
 					$body->id = $id;
 					$body->sender_email = $user_row['email'];
-					$body->base = URL::base(true,true);
+					$body->base = URL::base(false,true);
 									
 					send_email($email, $subject, $body, $body->sender_email);
 					
