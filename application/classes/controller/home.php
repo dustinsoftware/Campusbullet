@@ -135,9 +135,12 @@ class Controller_Home extends Controller_Layout {
 			if ($post['image']) {				
 				$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id].jpg";
 				$this->template->fb_postid = $post['id'];
-			} else {
+			} elseif ($post['isbn']) {
+				$this->template->fb_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
+			} else {			
 				$this->template->fb_image = null;
 			}
+			$this->template->post_wanted = $post['wanted'];
 			
 			if ($post['owner'] == $user_id) {			
 				$content->is_owner = true;

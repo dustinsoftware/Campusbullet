@@ -53,6 +53,7 @@ class Controller_Layout extends Controller_Template {
 	
 	public function after() {		
 		$this->template->user = Auth::instance()->get_user();
+		$this->template->url_base = URL::base(false,true);
 		parent::after();
 	}
 	

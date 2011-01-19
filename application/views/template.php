@@ -7,7 +7,9 @@
 <meta content="A fancy site for LETU students to sell their junk on." name="description" />
 
 <? if (isset($fb_title)): ?><!--facebook post information -->
-	<meta property="og:title" content="I'm selling my <?=$fb_title?>!" />
+	<? if ($post_wanted): ?><meta property="og:title" content="I'm looking for a <?=$fb_title?>!" />
+	<? else: ?><meta property="og:title" content="I'm selling my <?=$fb_title?>!" />
+	<? endif; ?>
 	<meta property="og:description" content="<?=$fb_description?>" />
 	<? if ($fb_image): ?><meta property="og:image" content="<?=$fb_image?>" />
 	<? else: ?><meta property="og:image" content="<?=$url_base?>images/stuff.png" />
