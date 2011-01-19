@@ -84,7 +84,7 @@
 </table>
 
 </form>
-
+<? if ($editmode): ?><p>...or, if you don't changed your mind, <a href="<?=$url_base?>home/view/<?=$post_id?>">click here to view the post instead.</a></p><? endif; ?>
 <script type="text/javascript">
 function showhide() {
 	document.getElementById("books").className = "hidden";

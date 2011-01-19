@@ -5,3 +5,8 @@
     font-size: medium;
     font-weight: normal;
     margin-top: 12px;}
+
+.success .congrats {
+	font-size: x-large;
+	font-weight: bold;
+}

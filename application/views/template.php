@@ -5,6 +5,16 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="the campus bullet" name="keywords" />
 <meta content="A fancy site for LETU students to sell their junk on." name="description" />
+
+<? if (isset($post_owner)): ?>
+	<!-- this section only shows up on home/view/$id when the currently logged in user is the owner of a post -->
+	<meta property="og:title" content="I'm selling my <?=$fb_title?>!" />
+	<meta property="og:description" content="<?=$fb_description?>" />
+	<? if ($fb_image): ?><meta property="og:image" content="<?=$fb_image?>" />
+	<? else: ?><meta property="og:image" content="<?=$url_base?>images/stuff.png" />
+	<? endif; ?>
+<? endif; ?>
+
 <link type="image/x-icon" href="<?=$url_base?>images/favicon.gif" rel="shortcut icon">
 <title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>

@@ -103,8 +103,10 @@ class Controller_Post extends Controller_Layout {
 						
 					//now that we've crated the post, get the new id and redirect to the image upload page
 					$post_row = DB::select('id')->from('posts')->where('owner','=',$owner_id)->order_by('timestamp','DESC')->execute()->current();
-					
-					Request::instance()->redirect("image/post/$post_row[id]?postcreated=true");
+					if ($category == 2) //redirect texts back to the main page, chances are an image has already been pulled.
+						Request::instance()->redirect("home/view/$post_row[id]?postcreated=true");
+					else
+						Request::instance()->redirect("image/post/$post_row[id]?postcreated=true");
 					
 				} else {
 					$content = $this->previewpost(array(
@@ -114,7 +116,8 @@ class Controller_Post extends Controller_Layout {
 						'category' => $category,
 						'description' => $description, 
 						'isbn' => $isbn,
-						'wanted' => $wanted));
+						'wanted' => $wanted,
+						'image' => 0));
 					
 				}
 			}
@@ -130,10 +133,10 @@ class Controller_Post extends Controller_Layout {
 		if ($id) {
 			array_push($this->template->styles, 'post_new');
 			if ($is_moderator)
-				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted')->from('posts')
+				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
 					->where('id','=',$id)->execute()->current();			
 			else			
-				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted')->from('posts')
+				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
 					->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
 			
 			if ($post_row) {
@@ -265,7 +268,9 @@ class Controller_Post extends Controller_Layout {
 									'description' => $description,
 									'category' => $category,
 									'isbn' => $isbn,
-									'wanted' => $wanted));
+									'wanted' => $wanted,
+									'image' => $post_row['image'],
+									'id' => $post_row['id']));
 							}						
 						}
 					}
@@ -373,9 +378,18 @@ class Controller_Post extends Controller_Layout {
 		$post_preview->wanted = $fields['wanted'];
 		$post_preview->url_base = URL::base();
 		$post_preview->post_category_name = $category_row['name'];
-		$post_preview->post_image = "";
+	
+		if ($fields['image'])
+			$post_preview->post_image = URL::base(false,true) . "images/posts/$fields[id].jpg";
+		elseif ($fields['isbn'])
+			$post_preview->post_image = "http://covers.openlibrary.org/b/isbn/" . $fields['isbn'] . "-L.jpg";
+		else
+			$post_preview->post_image = "";
+		
+		
 		$post_preview->post_disabled = 0;
 		$post_preview->post_date = "";
+		$post_preview->postcreated = "";
 		
 		$content->post_preview = $post_preview;
 		

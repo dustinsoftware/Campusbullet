@@ -113,6 +113,7 @@ class Controller_Home extends Controller_Layout {
 	public function action_view($id) {
 		array_push($this->template->styles, "post_view");
 		$content = View::factory('home_post_view');
+		
 		$user_id = Session::instance()->get('user_id');
 		$base = URL::base();
 		
@@ -123,8 +124,27 @@ class Controller_Home extends Controller_Layout {
 				Request::instance()->redirect('home');
 			}
 			$category_row = DB::select('name')->from('categories')->where('id','=',$post['category'])->execute()->current();
+			if (@($_GET['postcreated'])) {
+				$content->postcreated = true;
+			} else
+				$content->postcreated = false;
 			
-			$content->is_owner = ($post['owner'] == $user_id);
+			//set up stuff for the facebook share button
+			if ($post['owner'] == $user_id) {			
+				$content->is_owner = true;
+				$this->template->post_owner = true;
+				$this->template->fb_title = $post['name'];
+				$this->template->fb_description = $post['description'];
+				if ($post['image']) {				
+					$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id].jpg";
+					$this->template->fb_postid = $post['id'];
+				} else {
+					$this->template->fb_image = null;
+				}
+					
+			} else {
+				$content->is_owner = false;
+			}
 			$content->is_moderator = Session::instance()->get('moderator');
 			$content->poster_id = $post['owner'];
 			$content->preview = false;

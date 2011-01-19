@@ -26,6 +26,8 @@ After you've uploaded it, we'll resize it to fit the page.</p>
 	<td><input type="submit" name="submit" value="Upload the picture!" /></td>
 </tr>
 </table>
+<p>You could also <a target="_blank" href="http://images.google.com/images?q=<?= urlencode($post_name) ?>">google around for an image</a>...</p>
+
 <p>What next?</p><ul>
 <li><a href="<?=$url_base?>home/view/<?=$post_id?>">View your post</a></li>
 <li><a href="<?=$url_base?>post/edit/<?=$post_id?>">Edit your post</a></li>

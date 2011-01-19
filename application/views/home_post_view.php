@@ -4,7 +4,11 @@
 }
 </style>
 <h1><? if ($wanted) echo "Wanted: "; ?><?=$post_title ?><? if ($post_date) { ?><span class="datestamp"><?=$post_date?></span><? } ?></h1>
-
+<? if ($postcreated): ?>
+<p class="success"><span class="congrats">CONGRATULATIONS!</span><br />You just created a post!&nbsp; If you have a Facebook account, you
+should post it to your profile by clicking the Share button, so your friends can see what you're selling (or looking for)!&nbsp; <a name="fb_share" type="button">Post to the Facebooks</a> 
+</p>
+<? endif; ?>
 <? if ($post_disabled) {
 	echo "<p class=\"error\">";
 	if ($post_disabled == 1) {
@@ -45,6 +49,7 @@
 <? if ($is_owner) : ?>
 <p>You are the owner of this post.</p>
 <ul>
+	<li><a name="fb_share" type="button">Put this on the Facebooks</a></li>
 	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit or disable this post</a></li>
 	<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	
 </ul>
@@ -57,3 +62,7 @@
 </p>
 <? endif; ?>
 <? endif; ?>
+
+<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" 
+        type="text/javascript">
+</script>

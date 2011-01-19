@@ -43,7 +43,7 @@ h1 {
 	color: black;
 	list-style: none outside;
 }
-.error a, .info a{
+.error a, .info a, .success a{
 	color:maroon;
 }
 .info {
@@ -52,7 +52,12 @@ h1 {
 	padding: 3px;
 	color: black;
 }
-
+.success {
+	background: #A8E99E;
+	border: 1px solid #008000;
+	padding: 5px;
+	color: black;
+}
 
 /* Container Defs ########################################################### */
 #mainContainer {

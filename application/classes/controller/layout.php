@@ -39,7 +39,7 @@ class Controller_Layout extends Controller_Template {
 		$this->template->styles = array();
 		$this->template->scripts = array();
 		$this->template->sidebar = "";
-		$this->template->url_base = URL::base();
+		$this->template->url_base = URL::base(false,true);
 		$this->template->title = "";
 		
 		$moderator = Session::instance()->get('moderator');
@@ -51,8 +51,7 @@ class Controller_Layout extends Controller_Template {
 		array_push($this->template->styles, 'global');
 	}
 	
-	public function after() {
-		$this->template->url_base = URL::base();
+	public function after() {		
 		$this->template->user = Auth::instance()->get_user();
 		parent::after();
 	}

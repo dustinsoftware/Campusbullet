@@ -34,13 +34,14 @@ class Controller_Image extends Controller_Layout {
 			$content->post_link = URL::base() . "home/view/$id";
 			$content->post_id = $post_row['id'];
 			
-			if ($post_row['category'] == 2)
-				$content->message = "If you don't upload a picture, an image will be pulled from the internet with the ISBN you entered.";
 			
 			if (@($_GET['postcreated']) && ! $_POST) {
-				$content->message = "Your post was created successfully.&nbsp; If you want, you can also attach a picture to it!";
+				$content->message = "Your post was created successfully.&nbsp; If you want, you can also attach a picture to it!&nbsp; ";
 			}
 		
+			if ($post_row['category'] == 2)
+				$content->message .= "If you don't upload a picture, an image will be pulled from the internet with the ISBN you entered.";
+			
 			if ($post_row['image']) {				
 				$content->image = URL::base() . "images/posts/$id.jpg";
 			} else {			
@@ -80,6 +81,9 @@ class Controller_Image extends Controller_Layout {
 							$im->constrain("$filepath/$id.jpg",640,480);
 							
 							DB::update('posts')->set(array('image' => '-1'))->where('id','=',$id)->execute();
+							if (@($_GET['postcreated']))
+								Request::instance()->redirect("home/view/$id?postcreated=true");
+							
 							$content->message = "The image was successfully uploaded!";
 							$content->image = URL::base() . "images/posts/$id.jpg";
 						} else {
