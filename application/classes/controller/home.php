@@ -130,18 +130,17 @@ class Controller_Home extends Controller_Layout {
 				$content->postcreated = false;
 			
 			//set up stuff for the facebook share button
+			$this->template->fb_title = $post['name'];
+			$this->template->fb_description = $post['description'];
+			if ($post['image']) {				
+				$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id].jpg";
+				$this->template->fb_postid = $post['id'];
+			} else {
+				$this->template->fb_image = null;
+			}
+			
 			if ($post['owner'] == $user_id) {			
 				$content->is_owner = true;
-				$this->template->post_owner = true;
-				$this->template->fb_title = $post['name'];
-				$this->template->fb_description = $post['description'];
-				if ($post['image']) {				
-					$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id].jpg";
-					$this->template->fb_postid = $post['id'];
-				} else {
-					$this->template->fb_image = null;
-				}
-					
 			} else {
 				$content->is_owner = false;
 			}
