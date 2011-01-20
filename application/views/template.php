@@ -46,11 +46,6 @@ function go(page) {
 <body>
 <div id="header">
 
-	<div id="header_logo">
-		<a href="<?= $url_base ?>">
-		<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The Campus Bullet" /></a>
-	</div>
-
 	<div id="header_right">
 		<div id="header_login">
 			<? if ($user) { ?>		
@@ -62,7 +57,7 @@ function go(page) {
 		<div id="header_menu">
 			<ul>
 			<li><a href="<?= $url_base ?>">home</a></li>
-			<li><a href="<?= $url_base ?>post/edit">manage posts</a></li>
+			<li><a href="<?= $url_base ?>post/edit">posts</a></li>
 			<li><a href="<?= $url_base ?>account">account</a></li>
 			<li><a href="<?= $url_base ?>search">search</a></li>
 			<li><a href="<?= $url_base ?>help">help</a></li>
@@ -71,6 +66,14 @@ function go(page) {
 		</div>
 
 	</div>
+	
+	
+	<div id="header_logo">
+		<a href="<?= $url_base ?>">
+		<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The Campus Bullet" /></a>
+	</div>
+	
+	<div style="clear:both;"></div>
 
 </div>
 <div id="mainContainer">

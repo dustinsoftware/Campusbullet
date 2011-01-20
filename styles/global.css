@@ -5,7 +5,7 @@ body {
 	background-color: #244369;
 	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 	color: white;
-	min-width: 1020px;
+	min-width: 1000px;
 	font-size: 16px;
 }
 a {
@@ -28,7 +28,7 @@ h1 {
 	border-bottom-width: 1px;
 	border-bottom-color: white;
 	color:white;
-	font-size:30px;
+	font-size:28px;
 	font-weight:bold;
 }
 /* Text formatting defs ########################################################### */ 
@@ -103,14 +103,10 @@ h1 {
 	height:27px;
 	background-image:url('../images/shadow.png');
 }
-#sitelogo {
-	position:relative;
-	float:left;
-}
 #header_logo {
 	margin-top:20px;
 	margin-left:10px;		
-	float:left;
+	margin-right: 540px;
 }
 
 #header_right {
@@ -118,6 +114,7 @@ h1 {
 	height:100px;
 	overflow:hidden;
 	color:black;
+
 }
 
 #header_login {
@@ -130,6 +127,7 @@ h1 {
 	margin-top:33px;
 	margin-right:10px;
 	font-size:16px;
+	text-align:right;
 }
 
 #header_menu ul {
@@ -156,7 +154,7 @@ h1 {
 	width:250px;
 	background:white;
 	color:black;
-	margin-right:40px;
+/*	margin-right:40px;*/
 }
 #sidebar img {
 	background:black;

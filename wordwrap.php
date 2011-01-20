@@ -1,0 +1,1 @@
+<? function dpmwordwrap($text) {				$output = "";		$linesplit = explode("\n",$text);				foreach ($linesplit as $line) {			if (strlen($line) > 90)				$output .= wordwrap($line,90,"\r\n",true) . "\r\n";			else				$output .= $line . "\r\n";		}		return $output;	}

@@ -1,0 +1,1 @@
+<? function send_email($to_email, $subject, $body, $reply_to = null) {		$headers  = 'MIME-Version: 1.0' . "\r\n";		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";		$headers .= "From: masterlist-noreply@dustinsoftware.com\r\n";								if ($reply_to) 			$headers .= "Reply-To: $reply_to\r\n";				mail($to_email, $subject, $body, $headers);			}
