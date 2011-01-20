@@ -15,4 +15,8 @@ class Controller_Secret extends Controller_Layout {
 	public function action_rabbit() {
 		$this->template->content = " U R SPECIAL";
 	}
+	
+	public function action_askkyle() {
+		
+	}
 }

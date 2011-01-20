@@ -5,6 +5,8 @@
 <p class="info">You are viewing posted items.&nbsp; <a href="<?=$url_base?>home/category/<?=$category_name?>?wanted">Click here to view wanted items.</a></p>
 <? } ?>
 
+
+
 <div id="sidebar">
 	<div id="sidebar_inner">
 		<p class="sidebar_header">About this category</p>

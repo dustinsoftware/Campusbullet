@@ -104,23 +104,22 @@ h1 {
 	background-image:url('../images/shadow.png');
 }
 #header_logo {
-	margin-top:20px;
-	margin-left:10px;		
-	margin-right: 540px;
+	float:left;
+	margin-left: 10px;
+	margin-top: 20px;
 }
 
 #header_right {
-	float:right;
 	height:100px;
 	overflow:hidden;
 	color:black;
-
 }
 
 #header_login {
-	margin-top: 10px;
+	margin-top: 16px;
 	margin-right: 10px;
 	text-align:right;
+
 }
 #header_menu {
 	position:relative;
