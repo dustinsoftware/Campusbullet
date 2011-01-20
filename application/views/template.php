@@ -18,6 +18,7 @@
 
 <link type="image/x-icon" href="<?=$url_base?>images/favicon.gif" rel="shortcut icon">
 <title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
+
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
 <? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>
 <script type="text/javascript">
@@ -43,35 +44,34 @@ function go(page) {
 </head>
 
 <body>
-<div id="header_logo">
-<a href="<?= $url_base ?>">
-<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The Campus Bullet" /></a>
-</div>
-
-<div id="header_right">
-<div id="header_login">
-	<? if ($user) { ?>		
-	You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a><? if ($moderator) echo " or <a href=\"" . $url_base . "moderator\">moderate</a>"; ?>?
-	<? } else { ?>
-	You're not logged in.  <a href="<?= $url_base ?>login">Login</a> or <a href="<?=$url_base?>register">register!</a>
-	<? } ?>&nbsp;<a href="<?=$url_base?>help/donate"><img src="<?=$url_base?>images/donate.png" alt="donate plz" /></a>
-</div>
-<div id="header_menu">
-<ul>
-<li><a href="<?= $url_base ?>">home</a></li>
-<li><a href="<?= $url_base ?>post/edit">manage posts</a></li>
-<li><a href="<?= $url_base ?>account">account</a></li>
-<li><a href="<?= $url_base ?>search">search</a></li>
-<li><a href="<?= $url_base ?>help">help</a></li>
-
-</ul>
-</div>
-
-</div>
-
-
 <div id="header">
-<div id="horizontal_sizer">&nbsp;</div>
+
+	<div id="header_logo">
+		<a href="<?= $url_base ?>">
+		<img src="<?= $url_base ?>images/logo.png" id="sitelogo" alt="The Campus Bullet" /></a>
+	</div>
+
+	<div id="header_right">
+		<div id="header_login">
+			<? if ($user) { ?>		
+			You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a><? if ($moderator) echo " or <a href=\"" . $url_base . "moderator\">moderate</a>"; ?>?
+			<? } else { ?>
+			You're not logged in.  <a href="<?= $url_base ?>login">Login</a> or <a href="<?=$url_base?>register">register!</a>
+			<? } ?>&nbsp;<a href="<?=$url_base?>help/donate"><img src="<?=$url_base?>images/donate.png" alt="donate plz" /></a>
+		</div>
+		<div id="header_menu">
+			<ul>
+			<li><a href="<?= $url_base ?>">home</a></li>
+			<li><a href="<?= $url_base ?>post/edit">manage posts</a></li>
+			<li><a href="<?= $url_base ?>account">account</a></li>
+			<li><a href="<?= $url_base ?>search">search</a></li>
+			<li><a href="<?= $url_base ?>help">help</a></li>
+
+			</ul>
+		</div>
+
+	</div>
+
 </div>
 <div id="mainContainer">
 <div id="header_shadow"></div>

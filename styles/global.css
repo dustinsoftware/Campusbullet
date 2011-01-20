@@ -5,6 +5,8 @@ body {
 	background-color: #244369;
 	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 	color: white;
+	min-width: 1020px;
+	font-size: 16px;
 }
 a {
 	text-decoration: none;
@@ -18,12 +20,16 @@ ul {
 }
 a:hover{
 	text-decoration:underline;
+	color: #97D7D0;
 }
 h1 {
 	margin-top: 0;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: white;
+	color:white;
+	font-size:30px;
+	font-weight:bold;
 }
 /* Text formatting defs ########################################################### */ 
 .smalltitle {
@@ -64,11 +70,7 @@ h1 {
 	clear: both;
 	padding-bottom:50px;
 }
-#horizontal_sizer {
-	width: 1000px;
-	height: 1px;
-}
-#betatesters {
+#betatesters { /* the report a bug button */
 	background:black;
 	color:white;
 	border: 1px white solid;
@@ -80,6 +82,7 @@ h1 {
 	top:100px;
 	left: 50%;
 	margin-left: -70px;
+	overflow:hidden;
 }
 #betatesters a {
 	display:block;
@@ -91,6 +94,7 @@ h1 {
 	height: 100px;
 /*	background-color: #E3DAB5;*/
 	background-color: white;
+	overflow:hidden;
 }
 #header_right a, #content_info a {
 	color: #8A1C02;
@@ -104,37 +108,37 @@ h1 {
 	float:left;
 }
 #header_logo {
-	position:absolute;
-	top:20px;
-	left:10px;		
+	margin-top:20px;
+	margin-left:10px;		
+	float:left;
 }
 
 #header_right {
-	position:absolute;
-	right: 0;
-	top: 0;
+	float:right;
 	height:100px;
 	overflow:hidden;
 	color:black;
 }
 
 #header_login {
-	position:absolute;
-	top:15px;
-	right:25px;
+	margin-top: 10px;
+	margin-right: 10px;
+	text-align:right;
 }
 #header_menu {
 	position:relative;
-	margin-top:67px;
+	margin-top:33px;
 	margin-right:10px;
 	font-size:16px;
 }
 
 #header_menu ul {
 	list-style:none;
+
 }
 #header_menu ul li {
 	display: inline;
+	margin:0;
 }
 #header_menu a{
 	padding: 15px;

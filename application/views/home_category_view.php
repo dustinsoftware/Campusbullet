@@ -21,10 +21,10 @@
 	</div>
 </div>
 
+<div id="hp_posts">
 
 <? if ($dategroups) { ?>
 
-<div id="hp_posts">
 <p>Posts, sorted by date, are shown below.</p>
 <table style="width:100%">
 <? foreach ($dategroups as $date => $posts) {
@@ -38,7 +38,7 @@
 	echo ("</ul>");
 } ?>
 </table>
-</div>
+
 
 <div id="pagination"><?= $pagination?></div>
 
@@ -52,3 +52,4 @@
 <li><a href="<?=$url_base?>">Go back home</a></li>
 </ul>
 
+</div>

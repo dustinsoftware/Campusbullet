@@ -15,3 +15,4 @@ alternatively give me a hi-five next time you see me.</p>
 <p>Whether or not you donate, thanks for using the Campus Bullet!&nbsp; It was a 
 lot of fun to program =)</p>
 <p>Dustin</p>
+<p>PS: Did you know the title of this page is really a link to something cool?</p>

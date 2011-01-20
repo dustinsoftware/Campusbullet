@@ -36,7 +36,9 @@ class Controller_Layout extends Controller_Template {
 				Request::instance()->redirect('home');
 		}
 		
-		$this->template->styles = array();
+		$this->template->styles = array(
+			'global',
+			);
 		$this->template->scripts = array();
 		$this->template->sidebar = "";
 		$this->template->url_base = URL::base(false,true);
@@ -48,7 +50,7 @@ class Controller_Layout extends Controller_Template {
 		else
 			$this->template->moderator = false;
 		
-		array_push($this->template->styles, 'global');
+	
 	}
 	
 	public function after() {		

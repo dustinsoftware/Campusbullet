@@ -67,7 +67,7 @@ class Controller_Login extends Controller_Layout {
 				}		
 					
 				else
-					$content->error = "Sorry, that username and password didn't work.<br />If you forgot your password, <a href=\"" . URL::base() . "register/forgotpassword\">click here to reset it</a>.";
+					$content->error = "Sorry, that username and password didn't work.<br />If you forgot your password, <a href=\"" . URL::base() . "register/forgotpassword\">click here to reset it</a>.<br /><br />Remember, you have to <a href=\"" . URL::base() . "register\">register for an account</a> first! (Your LETNET username and password won't work here)";
 					
 				if ($failures_row) {
 					DB::update('login_failures')->set(array(
