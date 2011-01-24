@@ -6,7 +6,7 @@
 <h1><? if ($wanted) echo "Wanted: "; ?><?=$post_title ?><? if ($post_date) { ?><span class="datestamp"><?=$post_date?></span><? } ?></h1>
 <? if ($postcreated): ?>
 <p class="success"><span class="congrats">CONGRATULATIONS!</span><br />The post was successful!&nbsp; If you have a Facebook account, you
-should post it to your profile by clicking the Share button, so your friends can see what you posted!&nbsp; <a name="fb_share" type="button">Post to Facebook</a> 
+should post it to your profile by clicking the Share button, so your friends can see what you posted!&nbsp; <a name="fb_share" type="button" share_url="<?=$url_base?>home/view/<?=$post_id?>">Post to Facebook</a> 
 </p>
 <? endif; ?>
 <? if ($post_disabled) {
@@ -52,7 +52,7 @@ should post it to your profile by clicking the Share button, so your friends can
 <p>You are the owner of this post.</p>
 <ul>
 	<? if ($post_disabled == 0): ?>
-		<li><a name="fb_share" type="button">Post to Facebook</a></li>
+		<li><a name="fb_share" type="button" share_url="<?=$url_base?>home/view/<?=$post_id?>">Post to Facebook</a></li>
 		<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit this post</a></li>
 		<li><a href="<?=$url_base?>post/disable/<?=$post_id?>">Disable this post</a></li>		
 		<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	
