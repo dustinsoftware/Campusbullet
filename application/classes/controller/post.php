@@ -164,8 +164,9 @@ class Controller_Post extends Controller_Layout {
 					$content->image_attached = false;
 					
 				//check if the post can be bumped
-				if (Date::span(strtotime($post_row['timestamp']),null,'days') >= 7) {
+				if (Date::span(strtotime($post_row['timestamp']),null,'days') >= 7 && $disabled != 3) {
 					$content->allow_repost = true;
+					$content->message = "Your post can be reposted to the top!&nbsp; Use the fancy button below the description to do so.";
 				} else
 					$content->allow_repost = false;
 
@@ -200,9 +201,15 @@ class Controller_Post extends Controller_Layout {
 						$isbn = null;
 					}
 					
-					if ($repost && $content->allow_repost) {
-						DB::update('posts')->set(array('timestamp' => Date::formatted_time()))->where('id','=',$id)->execute(); //re-enable the post
-						$content->message = "Your post has been bumped to the top!";
+					if ($repost) {
+						if ($content->allow_repost) {
+							DB::update('posts')->set(array('timestamp' => Date::formatted_time()))->where('id','=',$id)->execute(); //re-enable the post
+							$content->message = "Your post has been bumped to the top!";
+							$content->allow_repost = false;
+						} else {
+							$content->message = "You can't repost to the top for that post again, at least for another week.";
+						}
+						
 					} elseif ($disable) {						
 						//if we're going to disable the post, do a check to see if the user confirmed
 						if ($confirmed) {
@@ -248,7 +255,9 @@ class Controller_Post extends Controller_Layout {
 							if ($confirmed) {							
 								if ($disabled == 1) {								
 									DB::update('posts')->set(array('disabled' => 0))->where('id','=',$id)->execute(); //re-enable the post									
-								}		
+								} elseif ($disabled == 3) {
+									DB::update('posts')->set(array('timestamp' => Date::formatted_time(), 'disabled' => 0))->where('id','=',$id)->execute(); //update timestamp and enable post if expired
+								}
 								DB::update('posts')->set(array(
 									'name'=>$title,
 									'price'=>$price,
@@ -258,7 +267,7 @@ class Controller_Post extends Controller_Layout {
 									'wanted'=>$wanted,
 									'description'=>$description))->where('id','=',$id)->execute();
 							
-								Request::instance()->redirect("home/view/$id");
+								Request::instance()->redirect("home/view/$id?postcreated=true");
 								$content->show_form = false;
 							} else {
 								$content = $this->previewpost(array(
@@ -292,6 +301,37 @@ class Controller_Post extends Controller_Layout {
 			$content->url_base = URL::base();
 			$this->template->content = $content;
 		}
+	}
+	
+	public function action_disable($id) {
+		$user_id = Session::instance()->get('user_id');
+		$post_row = DB::select('id')->from('posts')
+			->where('id','=',$id)
+			->and_where('owner','=',$user_id)
+			->and_where('disabled','=','0')
+			->execute()->current();
+		
+		if ($post_row) {
+			$confirmed = @($_POST['confirmed']);
+			if ($confirmed) {
+				//disable the post if teh post has not been banned			
+				DB::update('posts')->set(array('disabled' => '1'))
+					->where('id','=',$id)
+					->and_where('disabled','=','0')
+					->and_where('owner','=',$user_id)->execute();							
+				Request::instance()->redirect('post/edit');				
+			} else {
+				$content = View::factory('form_confirm');
+				$content->form_items = array(
+					'disable' => 'yes');								
+				$content->goback = URL::base() . "home/view/$id";
+				$content->action = "post_disable";
+				$this->template->content = $content;
+			}					
+		} else {
+			Request::instance()->redirect('post/edit');
+		}
+		
 	}
 	
 	private function validatepost($fields) {	
@@ -395,5 +435,7 @@ class Controller_Post extends Controller_Layout {
 		
 		return $content;
 	}
+	
+	
 	
 }

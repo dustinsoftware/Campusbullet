@@ -1,4 +1,4 @@
-﻿/* Home Page Stylesheet */
+/* Home Page Stylesheet */
 
 #homecontainer {
 	margin-right: 241px;
@@ -24,6 +24,7 @@
 	background-repeat:no-repeat;
 	background-position:left top;	
 	display:inline-block;
+	zoom:1; *display: inline; _height: 180px;
 }
 .button {
 	overflow: hidden;	

@@ -2,5 +2,6 @@
 
 return array(
 	'root' => DOCROOT,
-	'version' => "1.4",
+	'version' => "1.5",
+	'curl_key' => 'kylerocks12345679',
 );

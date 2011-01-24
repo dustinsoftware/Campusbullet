@@ -1,3 +1,16 @@
+<script type="text/javascript">
+/*function checkprice(source) {
+	var searchterm = escape(document.getElementsByName('title')[0].value);
+	alert(searchterm);
+	if (source == "google") {
+		window.open("http://www.google.com/search?hl=en&tbs=shop%3A1&aq=f&q=" + searchterm);
+	} else if (source == "ebay") {
+	} else if (source == "half") {
+		
+	}
+}*/
+</script>
+
 <?	if ($editmode) $title = "Edit Your Post!";
 	else $title = "Post Something New!"; ?>
 <h1><?=$title?></h1>
@@ -8,16 +21,18 @@
 <? if ($errors) { ?><ul class="error">
 <? foreach ($errors as $error) { ?><li><?=$error?></li><? } ?></ul>
 <? } else { 
-		echo "<p>Want to create a new post?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:";
+		echo "<p>Want to create a new post?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:</p>";
 	?>
 	<ul>		
 		<li>When your post is at least a week old, you will have the option of reposting it to the top.&nbsp; Please don't create duplicate posts.</li>
 		<li>Make sure you have a quick look over the <a href="<?=$url_base?>help/terms">terms and conditions</a>.&nbsp; Don't worry, it's short :)</li>	
+		<li>Please don't list any contact information in the post below unless necessary.&nbsp; For example, if you need people to get ahold of you fast,
+		putting a phone number is fine.&nbsp; Otherwise, just let users email you through the site (to cut back on spam and for security reasons)</li>
 	</ul>
-	</p>
-
-<? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; To repost it, just hit "Preview this Post".</p><? } ?>
-<? if ($disabled == 2) { ?><p class="error">This post has been flagged.&nbsp; It cannot be re-enabled.</p><? } ?>
+	
+	<? if ($disabled == 1) { ?><p class="info">Note: This post is disabled.&nbsp; To repost it, just hit "Preview this Post".</p><? } ?>
+	<? if ($disabled == 2) { ?><p class="error">This post has been flagged.&nbsp; It cannot be re-enabled.</p><? } ?>
+	<? if ($disabled == 3) { ?><p class="info">Note: This post has expired from the site and is no longer visible to other users.&nbsp; To repost, just hit "Preview this Post".</p><? } ?>
 <? } ?>
 
 <? if ($editmode) { 
@@ -47,7 +62,7 @@
 <tr>
 	<th>Category:</th>
 	<td><select name="category" style="width: 200px" onchange="showhide()">
-	<?foreach ($categories as $category) {		
+	<? foreach ($categories as $category) {		
 		if ($post_category == $category['id']) {
 			echo "<option selected=\"selected\" value=\"$category[id]\">$category[prettyname]</option>\r\n";
 		} else {
@@ -84,7 +99,7 @@
 </table>
 
 </form>
-<? if ($editmode): ?><p>...or, if you don't changed your mind, <a href="<?=$url_base?>home/view/<?=$post_id?>">click here to view the post instead.</a></p><? endif; ?>
+<? if ($editmode): ?><p>...or, if you changed your mind, <a href="<?=$url_base?>home/view/<?=$post_id?>">click here to view the post instead.</a></p><? endif; ?>
 <script type="text/javascript">
 function showhide() {
 	document.getElementById("books").className = "hidden";

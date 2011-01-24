@@ -19,6 +19,9 @@ document.</p>
 	free to you, so stop whining.</li>
 	<li>Will remove any content posted and/or ban associated accounts if it 
 	violates the terms you agreed to in this document.</li>
+	<li>Reserve the right to delete any post or ban any account if we feel
+	you are being disruptive to the service.&nbsp; We won't do it unless
+	we need to, and if we do, we promise it'll be for a good reason.</li>
 </ul>
 
 

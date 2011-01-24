@@ -5,8 +5,8 @@
 </style>
 <h1><? if ($wanted) echo "Wanted: "; ?><?=$post_title ?><? if ($post_date) { ?><span class="datestamp"><?=$post_date?></span><? } ?></h1>
 <? if ($postcreated): ?>
-<p class="success"><span class="congrats">CONGRATULATIONS!</span><br />You just created a post!&nbsp; If you have a Facebook account, you
-should post it to your profile by clicking the Share button, so your friends can see what you're selling (or looking for)!&nbsp; <a name="fb_share" type="button">Post to the Facebooks</a> 
+<p class="success"><span class="congrats">CONGRATULATIONS!</span><br />The post was successful!&nbsp; If you have a Facebook account, you
+should post it to your profile by clicking the Share button, so your friends can see what you posted!&nbsp; <a name="fb_share" type="button">Post to Facebook</a> 
 </p>
 <? endif; ?>
 <? if ($post_disabled) {
@@ -16,6 +16,8 @@ should post it to your profile by clicking the Share button, so your friends can
 	} elseif ($post_disabled == 2) {
 		echo "Your post has been flagged because it contained either inappropriate content, was miscategorized, or violates the terms of use.&nbsp; It cannot be re-enabled or edited.&nbsp; ";
 		echo "If you feel that this was a mistake, please <a href=\"" . $url_base . "contact/message/ml_abuse?postid=$post_id\">contact us by clicking here</a>.";
+	} elseif ($post_disabled == 3) {
+		echo "Your post has been expired from the site.&nbsp; To repost it to the site, use the edit link below.";
 	}
 	echo "</p>\r\n";
 } ?>
@@ -46,12 +48,17 @@ should post it to your profile by clicking the Share button, so your friends can
 </ul>
 <? endif; ?>
 
-<? if ($is_owner) : ?>
+<? if ($is_owner && $post_disabled != 2) : ?>
 <p>You are the owner of this post.</p>
 <ul>
-	<li><a name="fb_share" type="button">Put this on the Facebooks</a></li>
-	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit or disable this post</a></li>
-	<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	
+	<? if ($post_disabled == 0): ?>
+		<li><a name="fb_share" type="button">Post to Facebook</a></li>
+		<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit this post</a></li>
+		<li><a href="<?=$url_base?>post/disable/<?=$post_id?>">Disable this post</a></li>		
+		<li><a href="<?= $url_base ?>image/post/<?=$post_id?>">Attach or remove a picture to this post</a></li>	
+	<? elseif ($post_disabled == 1 || $post_disabled == 3): ?>
+		<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Re-enable this post</a></li>
+	<? endif; ?>
 </ul>
 <? else: ?>
 <p>What next? </br>
