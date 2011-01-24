@@ -115,7 +115,7 @@ class Controller_Home extends Controller_Layout {
 		$content = View::factory('home_post_view');
 		
 		$user_id = Session::instance()->get('user_id');
-		$base = URL::base();
+		$base = URL::base(false,true);
 		
 		$post = DB::select('*')->from('posts')->where('id','=',$id)->execute()->current();
 			
