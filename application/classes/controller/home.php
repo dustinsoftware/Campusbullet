@@ -121,7 +121,10 @@ class Controller_Home extends Controller_Layout {
 			
 		if ($post) {
 			if ($post['disabled'] != 0 && $post['owner'] != $user_id) {
-				Request::instance()->redirect('home');
+				if ( ! $user_id)
+					Request::instance()->redirect("login?redir=home/view/$id");
+				else
+					Request::instance()->redirect('home');
 			}
 			$category_row = DB::select('name')->from('categories')->where('id','=',$post['category'])->execute()->current();
 			if (@($_GET['postcreated'])) {

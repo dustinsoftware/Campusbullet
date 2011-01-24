@@ -6,6 +6,6 @@
 
 <p>Click on the following link to confirm the change: <a href="<?=$base?>confirm/emailchange/<?=$key?>"><?=$base?>confirm/emailchange/<?=$key?></a></p>
 
-<p>If you did NOT request this change, please forward this email to ml_abuse@dustinsoftware.com.</p>
+<p>If you did NOT request this change, please forward this email to abuse@campusbullet.net.</p>
 
 <p>Thanks for using The Campus Bullet!</p>
