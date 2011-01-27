@@ -1,5 +1,5 @@
 <div id="newposts">
-<h1>Newest Posts!</h1>
+<h1><a href="<?=$url_base?>home/category/all">Newest Posts!</a></h1>
 <ul>
 <? foreach ($newposts as $post) { 
 	if (strlen($post['name']) > 50) {
@@ -10,7 +10,7 @@
 	echo "<li><a href=\"" . $url_base . "home/view/$post[id]\">$description</a>\r\n</li>"; 
 }?>
 </ul>
-<h1>Wanted Stuff!</h1>
+<h1><a href="<?=$url_base?>home/category/all?wanted">Wanted Stuff!</a></h1>
 <ul>
 <? foreach ($wantedposts as $post) { 
 	if (strlen($post['name']) > 50) {

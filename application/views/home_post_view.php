@@ -22,7 +22,7 @@ should post it to your profile by clicking the Share button, so your friends can
 	echo "</p>\r\n";
 } ?>
 <table>
-<tr><td>Posted in:</td><td><a href="<?=$url_base?>home/category/<?=$post_category_name?>"><?=$post_category_name?></a></td></tr>
+<tr><td>Posted in:</td><td><a href="<?=$url_base?>home/category/<?=$post_category_name?><? if ($wanted) echo "?wanted"; ?>"><?=$post_category_name?></a></td></tr>
 <tr><td>Price:</td><td><?=$post_price?></td></tr>
 <tr><td>Condition:</td><td><?=$post_condition?></td></tr>
 <? if ($post_isbn) {
@@ -39,7 +39,7 @@ should post it to your profile by clicking the Share button, so your friends can
 
 <? if ($post_image) { ?> <p><img src="<?=$post_image?>" alt="" /></p><? } ?>
 
-<? if ( ! $preview) : ?>
+<? if ( ! $preview && $post_disabled != 2) : ?>
 <? if ( ! $is_owner && $is_moderator): ?>
 <p>Moderator tools:</p>
 <ul>
@@ -48,7 +48,7 @@ should post it to your profile by clicking the Share button, so your friends can
 </ul>
 <? endif; ?>
 
-<? if ($is_owner && $post_disabled != 2) : ?>
+<? if ($is_owner) : ?>
 <p>You are the owner of this post.</p>
 <ul>
 	<? if ($post_disabled == 0): ?>

@@ -23,6 +23,7 @@
 	<tr><td>Username:</td><td><input name="user" type="text" style="width: 163px" /></td></tr>
 	<tr><td>Password:</td><td><input name="asdf" type="password" style="width: 163px"/></td></tr>
 	<tr><td></td><td><input name="action" id="sumbit_button" type="submit" value="login" style="width: 84px" /></td></tr>
+	<tr><td colspan="2" style="text-align: center"><br /><a href="<?=$url_base?>register/forgotpassword">Forgot your username or password?</a></td></tr>
 	</table>
 	
 	</div>

@@ -4,3 +4,37 @@
 #hp_posts {
 	margin-right:280px;
 }
+
+#viewbuttons {
+	border-bottom: 1px white solid;
+	margin:0px;
+	list-style:none outside none;
+
+}
+#viewbuttons a {
+	background:white;
+	padding:5px;
+	color:black;
+}
+#viewbuttons .selected {
+	background:#FFCC00;
+	color:black;
+}
+#viewbuttons a:hover {
+	text-decoration:none;
+	background: #2D2D2D;
+	color:white;
+}
+#viewbuttons .createbutton {
+	float:right;
+	margin-right: 10px;
+	background: white;
+}
+.categorybutton {
+	float:left;
+	margin-left:10px;
+}
+
+h1 {
+	border:0;
+}

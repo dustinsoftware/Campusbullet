@@ -93,9 +93,11 @@
 			?>  <input type="submit" name="disable" value="Disable this post" /> <?
 		}
 	
-	} ?></td>
+	} else {
+		echo "<br /><br />You'll have the chance to upload a picture after you create the post.";
+	}
+		?></td>
 </tr>
-
 </table>
 
 </form>

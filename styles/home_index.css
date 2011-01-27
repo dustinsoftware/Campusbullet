@@ -1,4 +1,11 @@
-/* Home Page Stylesheet */
+﻿/* Home Page Stylesheet */
+
+h1 a {
+	color:white;
+}
+h1 a:hover {
+	color:white;
+}
 
 #homecontainer {
 	margin-right: 241px;

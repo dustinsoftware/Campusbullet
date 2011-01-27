@@ -38,7 +38,9 @@ class Controller_Home extends Controller_Layout {
 	}
 	
 	public function action_category($category_request) {
+		$viewall = ($category_request == "all");
 		$content = View::factory('home_category_view');
+		
 		array_push($this->template->styles, "category_view");
 		
 		
@@ -46,14 +48,22 @@ class Controller_Home extends Controller_Layout {
 		//we'll just get the string name from the categories table
 		$category_row = DB::select('id','name','prettyname','description')->from('categories')->where('name','=',$category_request)->and_where('disabled','=',0)->execute()->current();
 		
-		if ($category_row) {		
-			if (isset($_GET['wanted'])) {
+		if ($category_row || $viewall) {				
+			if (isset($_GET['wanted']))
+				$wanted = 1;
+			else
+				$wanted = 0;
+			
+			if ($wanted)
 				$content->wanted = true;
-				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]' and wanted != 0")->execute()->current();
-			} else {
+			else
 				$content->wanted = false;
-				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]' and wanted=0")->execute()->current();
-			}
+			
+			if ($viewall)
+				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and wanted = $wanted")->execute()->current();
+			else
+				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]' and wanted = $wanted")->execute()->current();
+		
 			$current_count = $current_count['count'];
 			
 			//set up pagination
@@ -61,15 +71,14 @@ class Controller_Home extends Controller_Layout {
 				'total_items' => $current_count,
 				'items_per_page' => 30,			
 				));
-			
-			if (isset($_GET['wanted'])) {
-				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','!=','0')->order_by('timestamp','DESC')
-					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
-			} else {
-				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=','0')->order_by('timestamp','DESC')
-					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
-			}
 						
+			if ($viewall)
+				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
+			else
+				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
+				
 			$dategroups = array();
 			
 			foreach($current_posts as $post) {
@@ -97,11 +106,18 @@ class Controller_Home extends Controller_Layout {
 			
 			$content->dategroups = $dategroups;
 			$content->category_prettyname = $category_row['prettyname'];
-			$content->category_name = $category_row['name'];
+			$content->category_name = $category_request;
+			$content->category_description = $category_row['description'];
 			$content->postbase = URL::base() . 'home/view/';			
 			$content->pagination = $pagination;
 			$content->url_base = URL::base();
-			$content->category_description = $category_row['description'];
+			
+			if ($viewall) {
+				$content->category_prettyname = "All Posts";
+				$content->category_name = "all";
+				$content->category_description = "All the posts on the site can be viewed here, for the lazy.";
+			}
+			
 			
 			$this->template->content = $content;
 		} else {
