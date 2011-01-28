@@ -8,7 +8,7 @@
 but no new registrations will be accepted.</p>
 
 <form action="" method="post">
-<? if ($banned): ?><input type="submit" name="action" value="Ban <?=$ip?>" /><? else: ?>
+<? if ( ! $banned): ?><input type="submit" name="action" value="Ban <?=$ip?>" /><? else: ?>
 <input type="submit" name="action" value="Unban <?=$ip?>" />
 <? endif; ?>
 </form>

@@ -22,7 +22,7 @@ should post it to your profile by clicking the Share button, so your friends can
 	echo "</p>\r\n";
 } ?>
 <table>
-<tr><td>Posted in:</td><td><a href="<?=$url_base?>home/category/<?=$post_category_name?><? if ($wanted) echo "?wanted"; ?>"><?=$post_category_name?></a></td></tr>
+<tr><td>Posted in:</td><td><a href="<?=$url_base?>home/category/<?=$post_category_name?><? if ($wanted) echo "?wanted"; ?>"><?=$post_category_prettyname?></a></td></tr>
 <tr><td>Price:</td><td><?=$post_price?></td></tr>
 <tr><td>Condition:</td><td><?=$post_condition?></td></tr>
 <? if ($post_isbn) {
@@ -44,6 +44,7 @@ should post it to your profile by clicking the Share button, so your friends can
 <p>Moderator tools:</p>
 <ul>
 	<li><a href="<?=$url_base?>moderator/post/<?=$post_id?>">Flag this post</a></li>
+	<li><a href="<?=$url_base?>moderator/miscategorized/<?=$post_id?>">Change post catgegory</a></li>
 	<li><a href="<?=$url_base?>moderator/user/<?=$poster_id?>">Check out the poster's account</a></li>
 </ul>
 <? endif; ?>

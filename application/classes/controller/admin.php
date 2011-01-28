@@ -18,7 +18,7 @@ class Controller_Admin extends Controller_Layout {
 		$content->url_base = URL::base();
 		$content->user_rows = DB::select('id','username')->from('users')->order_by('create_date','DESC')->limit(5)->execute()->as_array();
 		$content->activation_rows = DB::select('id','email','ipaddress')->from('registration_keys')->execute()->as_array();
-		
+		$content->user_count = count(DB::select('id')->from('users')->where('role','=','user')->execute()->as_array());
 		if ($_POST) {
 			$id = @($_POST['id']);
 			$reg_row = DB::select('email','key')->from('registration_keys')->where('id','=',$id)->execute()->current();
@@ -60,9 +60,11 @@ class Controller_Admin extends Controller_Layout {
 				if ( ! $ip_row) {
 					DB::insert('banned_addresses')->columns(array('ip'))->values(array($ip))->execute();
 					$content->message = "The address was banned succesfully.&nbsp; However, pending registrations have been left in the system, incase some of them were legit.";			
+					$content->banned = true;
 				} else {
 					DB::delete('banned_addresses')->where('ip','=',$ip)->execute();
 					$content->message = "The address was unbanned successfully.";
+					$content->banned = false;
 				}
 				
 			}

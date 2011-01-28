@@ -16,6 +16,7 @@
 <p>If you want to stop receiving emails regarding this item, please take down the post by clicking <a href="<?=$base?>post/edit/<?=$id?>">here</a>.
 &nbsp; Please note that your post will automatically expire after 30 days from the date of initial posting, unless you repost it to the top.&nbsp; Thanks for using The Campus Bullet!</p>
 
+<p>Receiving abusive messages from this user?&nbsp; Forward this message to <a href="mailto:abuse@campusbullet.net">abuse@campusbullet.net</a> and we'll take care of it.</p>
 
 </body>
 </html>

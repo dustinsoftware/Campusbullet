@@ -22,6 +22,29 @@ class Controller_Moderator extends Controller_Layout {
 		$this->template->content = $content;
 	}
 	
+	public function action_miscategorized($id) {
+		$post_row = DB::select('id','name','category')->from('posts')->where('id','=',$id)->execute()->current();
+		$categories_rows = DB::select('id','name','prettyname')->from('categories')->where('disabled','=','0')->execute()->as_array();
+		if ($post_row) {
+			$content = View::factory('moderator_miscategorized');
+			$content->post_name = $post_row['name'];
+			$content->categories = $categories_rows;
+			$content->post_category = $post_row['category'];
+			
+			if ($_POST) {
+				$category = @($_POST['category']);				
+				$category_row = DB::select('id')->from('categories')->where('id','=',$category)->and_where('disabled','=','0')->execute()->current();
+				if ($category_row) {				
+					DB::update('posts')->set(array('category' => $category))->where('id','=',$id)->execute();
+					Request::instance()->redirect("home/view/$id");
+				}
+			}
+			$this->template->content = $content;
+		} else {
+			Request::instance()->redirect('moderator');
+		}
+	}
+	
 	public function action_post($id) {		
 		$post_row = DB::select('id','disabled','owner')->from('posts')->where('id','=',$id)->execute()->current();
 		$owner_row = null;

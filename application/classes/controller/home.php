@@ -142,7 +142,7 @@ class Controller_Home extends Controller_Layout {
 				else
 					Request::instance()->redirect('home');
 			}
-			$category_row = DB::select('name')->from('categories')->where('id','=',$post['category'])->execute()->current();
+			$category_row = DB::select('name','prettyname')->from('categories')->where('id','=',$post['category'])->execute()->current();
 			if (@($_GET['postcreated'])) {
 				$content->postcreated = true;
 			} else
@@ -180,6 +180,7 @@ class Controller_Home extends Controller_Layout {
 			
 			$content->post_description = dpmwordwrap($post['description']);			
 			$content->post_category_name = $category_row['name'];
+			$content->post_category_prettyname = $category_row['prettyname'];
 			$content->post_condition = $post['condition'];
 			$content->post_isbn = $post['isbn'];
 			$content->url_base = $base;

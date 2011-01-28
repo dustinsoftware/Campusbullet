@@ -1,9 +1,9 @@
 <h1>Super Cool Admin Toolbox</h1>
 <? if ($message): ?><p class="info"><?=$message?></p>
-<? else:?><p>"Power intoxicates men. When a man is intoxicated by alcohol, he can recover, but when intoxicated by power, he seldom recovers."</p>
+<? else:?><p>Praise the LORD. Blessed is the man who fears the LORD, who finds great delight in his commands. -Psalm 112:1</p>
 <? endif; ?>
 
-
+<p>There are <?=$user_count?> users registered.</p>
 <h2>Pending activations:</h2>
 <table>
 

@@ -128,15 +128,11 @@ class Controller_Post extends Controller_Layout {
 	
 	public function action_edit($id = null) {
 		$user_id = Session::instance()->get('user_id');
-		$is_moderator = Session::instance()->get('moderator');
 		
 		if ($id) {
 			array_push($this->template->styles, 'post_new');
-			if ($is_moderator)
-				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
-					->where('id','=',$id)->execute()->current();			
-			else			
-				$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
+			
+			$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
 					->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
 			
 			if ($post_row) {
@@ -396,7 +392,7 @@ class Controller_Post extends Controller_Layout {
 	
 	private function previewpost($fields) {
 		
-		$category_row = DB::select('name')->from('categories')->where('id','=',$fields['category'])->execute()->current();
+		$category_row = DB::select('name','prettyname')->from('categories')->where('id','=',$fields['category'])->execute()->current();
 		
 		$content = View::factory('post_preview');
 		$content->post_title = $fields['title'];
@@ -418,7 +414,8 @@ class Controller_Post extends Controller_Layout {
 		$post_preview->wanted = $fields['wanted'];
 		$post_preview->url_base = URL::base();
 		$post_preview->post_category_name = $category_row['name'];
-	
+		$post_preview->post_category_prettyname = $category_row['prettyname'];
+		
 		if ($fields['image'])
 			$post_preview->post_image = URL::base(false,true) . "images/posts/$fields[id].jpg";
 		elseif ($fields['isbn'])
