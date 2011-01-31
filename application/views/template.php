@@ -5,7 +5,7 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="the campus bullet" name="keywords" />
 <meta content="A fancy site for LETU students to sell their junk on." name="description" />
-
+<? if (isset($feed)): ?><link rel="alternate" type="application/rss+xml" title="<?=$feed['title']?>" href="<?=$feed['link']?>" /> <? endif; ?>
 <? if (isset($fb_title)): ?><!--facebook post information -->
 	<? if ($post_wanted): ?><meta property="og:title" content="I'm looking for a <?=$fb_title?>!" />
 	<? else: ?><meta property="og:title" content="I'm selling my <?=$fb_title?>!" />

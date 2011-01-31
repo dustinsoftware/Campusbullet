@@ -38,11 +38,12 @@ class Controller_Home extends Controller_Layout {
 	}
 	
 	public function action_category($category_request) {
-		$viewall = ($category_request == "all");
+		$viewall = ($category_request == "all");		
+		$feed = isset($_GET['feed']);
 		$content = View::factory('home_category_view');
 		
-		array_push($this->template->styles, "category_view");
 		
+		array_push($this->template->styles, "category_view");
 		
 		//since i can't remember how to do string concatenation without leaving this vulnerable to an sql injection,
 		//we'll just get the string name from the categories table
@@ -73,10 +74,10 @@ class Controller_Home extends Controller_Layout {
 				));
 						
 			if ($viewall)
-				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+				$current_posts = DB::select('id','name','description','timestamp','price')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
 					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
 			else
-				$current_posts = DB::select('id','name','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+				$current_posts = DB::select('id','name','description','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
 					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
 				
 			$dategroups = array();
@@ -111,15 +112,47 @@ class Controller_Home extends Controller_Layout {
 			$content->postbase = URL::base() . 'home/view/';			
 			$content->pagination = $pagination;
 			$content->url_base = URL::base();
-			
 			if ($viewall) {
 				$content->category_prettyname = "All Posts";
 				$content->category_name = "all";
 				$content->category_description = "All the posts on the site can be viewed here, for the lazy.";
 			}
+			$feed_link = URL::base(false,true) . "home/category/" . $content->category_name . "/?feed";
+			if ($wanted)
+				$feed_link .= "&wanted";
+				
+			$this->template->feed = array(
+				'title' => "The Campus Bullet - " . $content->category_prettyname,
+				'link' => $feed_link,
+			);
 			
+			if ($feed) {
+				$feed_title = "The Campus Bullet - " . $content->category_prettyname;
+				$feed_description = $content->category_description;
+				$feed_items = array();
+				foreach ($current_posts as $post) {
+					array_push($feed_items, array(
+						'title' => $post['name'],
+						'description' => $post['description'],
+						'pubDate' => strtotime($post['timestamp']),
+						'link' => 'home/view/' . $post['id'],
+					));
+				}
+				
+				if ($wanted)
+					$feed_title .= " (wanted)";
+					
+				$this->auto_render = false;
+				$this->request->response = Feed::create(
+					array(
+						'title' => $feed_title,
+						'description' => "This feed provides the last 30 posts for this category.",						
+						'link' => 'home/category/' . $content->category_name,
+					),$feed_items);
+			} else {
+				$this->template->content = $content;
+			}
 			
-			$this->template->content = $content;
 		} else {
 			//invalid category, take them home.
 			Request::instance()->redirect('home');
