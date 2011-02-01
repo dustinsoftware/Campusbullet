@@ -77,7 +77,7 @@ function go(page) {
 </div>
 <div id="mainContainer">
 <div id="header_shadow"></div>
-<div id="betatesters"><a href="<?=$url_base?>contact/message/ml_bug_report">make suggestion</a></div>
+<div id="betatesters"><a href="<?=$url_base?>contact/message/ml_bug_report">feedback</a></div>
 
 <div id="content">
 
