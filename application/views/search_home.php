@@ -1,6 +1,6 @@
 <h1>Search for a post</h1>
 <form action="" method="get">
-<p>Search term:&nbsp; <input type="textbox" name="q" /> <input type="submit" value="Search!"/></p>
+<p>Search for:&nbsp; <input type="textbox" name="q" /> <input type="submit" value="Search!"/></p>
 <p>Tips for searching:</p>
 <ul>
 	<li>You can search for either post title or ISBN using the box above.</li>

@@ -28,12 +28,18 @@ class Controller_Home extends Controller_Layout {
 		$content->url_base = URL::base();
 		
 		// get the 5 most recent posts
-		$recent_post_rows = DB::select('id','name')->from('posts')->where('disabled','=','0')->and_where('wanted','=','0')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
+		$recent_post_rows = DB::select('id','name','price')->from('posts')->where('disabled','=','0')->and_where('wanted','=','0')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
 		$wanted_post_rows = DB::select('id','name')->from('posts')->where('disabled','=','0')->and_where('wanted','!=','0')->order_by('timestamp','DESC')->limit(5)->execute()->as_array();
 		$content->newposts = $recent_post_rows;
 		$content->wantedposts = $wanted_post_rows;
 		
-		$content->version = $config['version'];
+		$feed_link = URL::base(false,true) . "home/category/all?feed";
+			
+		$this->template->feed = array(
+			'title' => "The Campus Bullet - All Posts",
+			'link' => $feed_link,
+		);
+			
 		$this->template->content = $content;
 	}
 	
@@ -74,17 +80,19 @@ class Controller_Home extends Controller_Layout {
 				));
 						
 			if ($viewall)
-				$current_posts = DB::select('id','name','description','timestamp','price')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+				$current_posts = DB::select('id','name','description','timestamp','price','wanted')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
 					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
 			else
-				$current_posts = DB::select('id','name','description','timestamp','price')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+				$current_posts = DB::select('id','name','description','timestamp','price','wanted')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
 					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
 				
 			$dategroups = array();
 			
 			foreach($current_posts as $post) {
 				$date = date("m-d-Y", strtotime($post['timestamp']));
-				if ($post['price'] > 0)
+				if ($post['wanted'])
+					$post_title = "$post[name]";
+				elseif ($post['price'] > 0)
 					$post_title = "$post[name] ($$post[price])";
 				else
 					$post_title = "$post[name] (FREE!)";
@@ -131,8 +139,14 @@ class Controller_Home extends Controller_Layout {
 				$feed_description = $content->category_description;
 				$feed_items = array();
 				foreach ($current_posts as $post) {
+					if ($post['wanted'])
+						$post_title = $post['name'];
+					elseif ($post['price'] > 0)
+						$post_title = $post['name'] . " ($$post[price])";
+					else
+						$post_title = $post['name'] . " (FREE!)";
 					array_push($feed_items, array(
-						'title' => $post['name'],
+						'title' => $post_title,
 						'description' => $post['description'],
 						'pubDate' => strtotime($post['timestamp']),
 						'link' => 'home/view/' . $post['id'],
@@ -169,65 +183,71 @@ class Controller_Home extends Controller_Layout {
 		$post = DB::select('*')->from('posts')->where('id','=',$id)->execute()->current();
 			
 		if ($post) {
-			if ($post['disabled'] != 0 && $post['owner'] != $user_id) {
-				if ( ! $user_id)
-					Request::instance()->redirect("login?redir=home/view/$id");
-				else
-					Request::instance()->redirect('home');
-			}
-			$category_row = DB::select('name','prettyname')->from('categories')->where('id','=',$post['category'])->execute()->current();
-			if (@($_GET['postcreated'])) {
-				$content->postcreated = true;
-			} else
-				$content->postcreated = false;
-			
-			//set up stuff for the facebook share button
-			$this->template->fb_title = $post['name'];
-			$this->template->fb_description = $post['description'];
-			if ($post['image']) {				
-				$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id].jpg";
-				$this->template->fb_postid = $post['id'];
-			} elseif ($post['isbn']) {
-				$this->template->fb_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
+			if ($post['disabled'] == 1 && $post['owner'] != $user_id) {
+				$content = View::factory('home_post_gone');
+				$content->url_base = URL::base();
+				$this->template->content = $content;
 			} else {			
-				$this->template->fb_image = null;
+				if ($post['disabled'] != 0 && $post['owner'] != $user_id) {
+					if ( ! $user_id)
+						Request::instance()->redirect("login?redir=home/view/$id");
+					else
+						Request::instance()->redirect('home');
+				}
+				$category_row = DB::select('name','prettyname')->from('categories')->where('id','=',$post['category'])->execute()->current();
+				if (@($_GET['postcreated'])) {
+					$content->postcreated = true;
+				} else
+					$content->postcreated = false;
+				
+				//set up stuff for the facebook share button
+				$this->template->fb_title = $post['name'];
+				$this->template->fb_description = $post['description'];
+				if ($post['image']) {				
+					$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id].jpg";
+					$this->template->fb_postid = $post['id'];
+				} elseif ($post['isbn']) {
+					$this->template->fb_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
+				} else {			
+					$this->template->fb_image = null;
+				}
+				$this->template->post_wanted = $post['wanted'];
+				
+				if ($post['owner'] == $user_id) {			
+					$content->is_owner = true;
+				} else {
+					$content->is_owner = false;
+				}
+				$content->is_moderator = Session::instance()->get('moderator');
+				$content->poster_id = $post['owner'];
+				$content->preview = false;
+				$content->post_disabled = $post['disabled'];
+				$content->post_title = $post['name'];
+				$content->wanted = $post['wanted'];
+				$post_price = $post['price'];
+				if ($post_price == 0)
+					$content->post_price = "Free!";
+				else
+					$content->post_price = "$$post_price";
+				
+				$content->post_description = dpmwordwrap($post['description']);			
+				$content->post_category_name = $category_row['name'];
+				$content->post_category_prettyname = $category_row['prettyname'];
+				$content->post_condition = $post['condition'];
+				$content->post_isbn = $post['isbn'];
+				$content->url_base = $base;
+				$content->post_id = $id;
+				$content->post_date = date("M d, Y",strtotime($post['timestamp']));
+				
+				if ($post['image'])
+					$content->post_image = $base . "images/posts/$id.jpg";
+				elseif ($post['isbn'])
+					$content->post_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
+				else
+					$content->post_image = "";
+							
+				$this->template->content = $content; 
 			}
-			$this->template->post_wanted = $post['wanted'];
-			
-			if ($post['owner'] == $user_id) {			
-				$content->is_owner = true;
-			} else {
-				$content->is_owner = false;
-			}
-			$content->is_moderator = Session::instance()->get('moderator');
-			$content->poster_id = $post['owner'];
-			$content->preview = false;
-			$content->post_disabled = $post['disabled'];
-			$content->post_title = $post['name'];
-			$content->wanted = $post['wanted'];
-			$post_price = $post['price'];
-			if ($post_price == 0)
-				$content->post_price = "Free!";
-			else
-				$content->post_price = "$$post_price";
-			
-			$content->post_description = dpmwordwrap($post['description']);			
-			$content->post_category_name = $category_row['name'];
-			$content->post_category_prettyname = $category_row['prettyname'];
-			$content->post_condition = $post['condition'];
-			$content->post_isbn = $post['isbn'];
-			$content->url_base = $base;
-			$content->post_id = $id;
-			$content->post_date = date("M d, Y",strtotime($post['timestamp']));
-			
-			if ($post['image'])
-				$content->post_image = $base . "images/posts/$id.jpg";
-			elseif ($post['isbn'])
-				$content->post_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
-			else
-				$content->post_image = "";
-						
-			$this->template->content = $content; 
 		} else {
 			Request::instance()->redirect('home');
 		}

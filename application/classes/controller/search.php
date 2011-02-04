@@ -16,18 +16,33 @@ class Controller_Search extends Controller_Layout {
 			$query = @(htmlspecialchars($_GET['q']));			
 			$content = View::factory('search_results');
 			
-			$post_rows = DB::select('id','name','timestamp')->from('posts')				
+			$post_rows = DB::select('id','name','timestamp','wanted','price')->from('posts')				
 				->where('disabled','=','0')
 				->and_where_open()
 				->where('name','LIKE',"%$query%")
 				->or_where('description','LIKE',"%$query%")
 				->or_where('isbn','=',"$query")
 				->where_close()->execute()->as_array();
-				
+			$search_results = array();
 			
+			foreach ($post_rows as $post) {
+				if ($post['wanted'])
+					$post_title = $post['name'];
+				elseif ($post['price'] > 0)
+					$post_title = "$post[name] ($$post[price])";
+				else
+					$post_title = "$post[name] (FREE)";
+					
+				array_push($search_results,array(
+					'id' => $post['id'],
+					'title' => $post_title,
+					'wanted' => $post['wanted'],
+				));
 				
-				
-			$content->posts = $post_rows;
+			}
+			
+			
+			$content->posts = $search_results;
 			$content->query = $query;
 			
 		}
