@@ -1,4 +1,4 @@
-﻿/* Category View - home/category/$id */
+/* Category View - home/category/$id */
 
 
 #hp_posts {
@@ -9,7 +9,7 @@
 	border-bottom: 1px white solid;
 	margin:0px;
 	list-style:none outside none;
-
+	height: 28px;
 }
 #viewbuttons a {
 	background:white;

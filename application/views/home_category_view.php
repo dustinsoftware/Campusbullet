@@ -22,7 +22,7 @@
 <div id="viewbuttons">
 <a class="categorybutton <? if ( ! $wanted) echo "selected"; ?>" href="<?=$url_base?>home/category/<?=$category_name?>">posted</a>
 <a class="categorybutton <? if ($wanted) echo "selected"; ?>" href="<?=$url_base?>home/category/<?=$category_name?>?wanted">wanted</a>
-<a class="createbutton" href="<?=$url_base?>post/new/<?=$category_name?>">create post</a>
+<a class="createbutton" href="<?=$url_base?>post/new/<?=$category_name?><? if ($wanted) echo "?wanted"; ?>">create post</a>
 <div style="clear:left"></div>
 </div>
 

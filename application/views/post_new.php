@@ -21,7 +21,7 @@
 <? if ($errors) { ?><ul class="error">
 <? foreach ($errors as $error) { ?><li><?=$error?></li><? } ?></ul>
 <? } else { 
-		echo "<p>Want to create a new post?&nbsp; Awesome!&nbsp; Please remember that there are a few rules:</p>";
+		echo "<p>A few things to remember when making a post:</p>";
 	?>
 	<ul>		
 		<li>When your post is at least a week old, you will have the option of reposting it to the top.&nbsp; Please don't create duplicate posts.</li>
@@ -40,26 +40,30 @@
 	if ($image_attached) echo "Click here to change or remove the attached image.";
 	else echo "Click here to attach a picture to this post.";
 	echo "</a></p>\r\n";
-} ?>
+} else { 
+	if ($wanted) echo "<p>You are creating a wanted post. &nbsp; Click <a href=\"$url_base" . "post/new/$post_category_name\">here</a> to create a normal post.</p>";
+	else echo "<p>You are creating a normal post. &nbsp; Click <a href=\"$url_base" . "post/new/$post_category_name?wanted\">here</a> to create a wanted post.</p>";
+}
+?>
 
 <form action="" method="POST" >
 <table class="editor">
 <tr>
-	<th>Kind of post:</th>
-	<td><select name="wanted"><?
-		if ($wanted) echo "<option value=\"0\">Selling</option><option selected=\"selected\" value=\"1\">Wanted</option>\r\n";
-		else echo "<option selected=\"selected\" value=\"0\">Selling</option><option value=\"1\">Wanted</option>\r\n";
-	?></select></td>
-</tr>
-<tr>
 	<th>Post title:</th>
 	<td><input type="textbox" name="title" value="<?=$post_title?>" /></td>
 </tr>
+<? if ( ! $wanted): ?>
 <tr>
 	<th>Condition of item:</th>
 	<td><input type="textbox" name="condition" value="<?=$post_condition?>" /></td>
 </tr>
 <tr>
+	<th>Price:</th>
+	<td><input type="textbox" name="price" value="<?=$post_price?>" /> (0 if the item is free)</td>
+</tr>
+<? endif; ?>
+<tr>
+
 	<th>Category:</th>
 	<td><select name="category" style="width: 200px" onchange="showhide()">
 	<? foreach ($categories as $category) {		
@@ -76,12 +80,12 @@
 	<th>ISBN:</th>
 	<td><input type="textbox" name="isbn" value="<?=$post_isbn?>" /></td>
 </tr>
-<tr>
-	<th><? if ($wanted) echo "Suggested asking price: ($)"; else echo "Asking price: ($)"; ?></th>
-	<td><input type="textbox" name="price" value="<?=$post_price?>" /> (0 if the item is free)</td>
+<tr>	
+	<th></th>
+	<td><br /><? if ($wanted) echo "Describe what you're looking for:"; else echo "Describe the item:"; ?></td>
 </tr>
 <tr>
-	<th><? if ($wanted) echo "Describe what you're looking for:"; else echo "Describe the item:"; ?></th>
+	<th></th>
 	<td><textarea name="description" style="width:500px; height: 200px;"><?=$post_description ?></textarea></td>
 </tr>
 <tr>

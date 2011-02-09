@@ -32,6 +32,7 @@ class Controller_Post extends Controller_Layout {
 		$content->post_condition = "";
 		$content->post_description = "";
 		$content->post_category = "";
+		$content->post_category_name = "";
 		$content->post_isbn = "";
 		$content->wanted = $wanted;
 		$content->allow_repost = false;
@@ -45,22 +46,25 @@ class Controller_Post extends Controller_Layout {
 		
 		
 		if ($starting_category_name) {
-			$category_row = DB::select('id')->from('categories')->where('name','=',$starting_category_name)->execute()->current();
-			if ($category_row)
+			$category_row = DB::select('id','name')->from('categories')->where('name','=',$starting_category_name)->execute()->current();
+			if ($category_row) {			
 				$content->post_category = $category_row['id'];
+				$content->post_category_name = $category_row['name'];
+			}
 		}
 			
 		
 		if ($_POST) {
 			$title = @(htmlspecialchars($_POST["title"]));
-			$condition = @(htmlspecialchars($_POST["condition"]));
-			$price = @($_POST["price"]);
 			$description = @(htmlspecialchars($_POST["description"]));
 			$category = @($_POST["category"]);
-			if(@($_POST['wanted']))
-				$wanted = 1; //set the value manually to prevent an inconsistent value problem
-			else
-				$wanted = 0;
+			if($wanted) {
+				$condition = "";
+				$price = 0;				
+			} else {
+				$condition = @(htmlspecialchars($_POST["condition"]));
+				$price = @($_POST["price"]);							
+			}
 			$owner_id = Session::instance()->get('user_id');
 			if ($category == 2) //only fill in the isbn if we need it
 				$isbn = @(htmlspecialchars($_POST["isbn"]));
@@ -85,9 +89,10 @@ class Controller_Post extends Controller_Layout {
 				'condition' => $condition,
 				'description' => $description, 
 				'category' => $category, 
-				'isbn' => $isbn,));
-			
-			
+				'isbn' => $isbn,				
+				'wanted' => $wanted,
+			));
+		
 			if ($edit) {
 				//do nothing, just show the form.
 			}
@@ -96,11 +101,11 @@ class Controller_Post extends Controller_Layout {
 			} else {				
 				$content->show_form = false;
 				if ($confirmed) {
-					//create the post, and report a success						
+					//create the post, and report a success				
 					DB::insert('posts')
 						->columns(array('owner','name','price','condition','description','category','isbn','wanted'))
-						->values(array($owner_id, $title, $price, $condition, $description, $category,$isbn,$wanted))->execute();
-						
+						->values(array($owner_id, $title, $price, $condition, $description, $category,$isbn,$wanted))->execute();						
+					
 					//now that we've crated the post, get the new id and redirect to the image upload page
 					$post_row = DB::select('id')->from('posts')->where('owner','=',$owner_id)->order_by('timestamp','DESC')->execute()->current();
 					if ($category == 2) //redirect texts back to the main page, chances are an image has already been pulled.
@@ -178,12 +183,13 @@ class Controller_Post extends Controller_Layout {
 				if ($_POST) {					
 					//get the data
 					$title = @(htmlspecialchars($_POST["title"]));
-					$condition = @(htmlspecialchars($_POST["condition"]));
-					$price = @($_POST["price"]);
-					if (@($_POST["wanted"]))
-						$wanted = 1;
-					else	
-						$wanted = 0;
+					if ($wanted) {
+						$condition = "";
+						$price = 0;						
+					} else {
+						$condition = @(htmlspecialchars($_POST["condition"]));
+						$price = @($_POST["price"]);						
+					}
 					$description = @(htmlspecialchars($_POST["description"]));
 					$edit = @($_POST["edit"]);
 					$confirmed = @($_POST["confirmed"]);
@@ -203,7 +209,7 @@ class Controller_Post extends Controller_Layout {
 							$content->message = "Your post has been bumped to the top!";
 							$content->allow_repost = false;
 						} else {
-							$content->message = "You can't repost to the top for that post again, at least for another week.";
+							$content->message = "You can't repost to the top for that post again.&nbsp; Try again later.";
 						}
 						
 					} elseif ($disable) {						
@@ -240,7 +246,9 @@ class Controller_Post extends Controller_Layout {
 							'description' => $description,
 							'originalpostid' => $id,	
 							'isbn' => $isbn,
-							'category' => $category));
+							'category' => $category,
+							'wanted' => $wanted,
+						));
 						
 						if ($edit) {	
 							//do nothing, just show the form!
@@ -332,6 +340,7 @@ class Controller_Post extends Controller_Layout {
 	
 	private function validatepost($fields) {	
 		$errors = array();
+		$wanted = @($fields['wanted']);
 		
 		$category_row = DB::select('id')->from('categories')->where('disabled','=','0')->and_where('id','=',$fields['category'])->execute()->current();
 		
@@ -340,18 +349,25 @@ class Controller_Post extends Controller_Layout {
 			
 		if (strlen($fields['title']) > 100)
 			$errors += array("title" => "Title too long!  Don't make it longer than 100 characters.");
-		
-		if (strlen($fields['condition']) == 0)
-			$errors += array("condition" => "Please enter a condition.");
-			
-		if (strlen($fields['condition']) > 50)
-			$errors += array("condition" => "Condition too long!  Make it something short, like 'used' or 'new'.");
-		
+
 		if ( ! $category_row)
 			$errors += array("category" => "Please select a category.");
 		
-		if ( ! is_numeric($fields['price']) || $fields['price'] < 0)
-			$errors += array("price" => "Invalid price.  Please enter a number, without the dollar sign.");
+		//wanted posts only contain the title, category, and description
+		if ( ! $wanted) {
+		
+			if (strlen($fields['condition']) == 0)
+				$errors += array("condition" => "Please enter a condition.");
+				
+			if (strlen($fields['condition']) > 50)
+				$errors += array("condition" => "Condition too long!  Make it something short, like 'used' or 'new'.");
+		
+			if ( ! is_numeric($fields['price']) || $fields['price'] < 0)
+				$errors += array("price" => "Invalid price.  Please enter a number, without the dollar sign.");
+		
+		}
+		
+		
 		
 		if (strlen($fields['description']) == 0)
 			$errors += array("description" => "Type something in the description box.");
@@ -375,9 +391,7 @@ class Controller_Post extends Controller_Layout {
 		//check for double post
 		$originalpostid = @($fields['originalpostid']);
 		$previous_post = DB::select('id')->from('posts')
-			->where('name','=',$fields['title'])
-			->and_where('price','=',$fields['price'])
-			->and_where('condition','=',$fields['condition'])
+			->where('name','=',$fields['title'])			
 			->and_where('description','=',$fields['description'])
 			->and_where('disabled','=','0')
 			->and_where('id','!=',$originalpostid)
