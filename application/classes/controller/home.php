@@ -8,14 +8,6 @@ class Controller_Home extends Controller_Layout {
 	
 	public function action_index()
 	{
-		//check if the user has seen the what's new page
-		if (Auth::instance()->logged_in()) {
-			$user_id = Session::instance()->get('user_id');
-			$user_row = DB::select('whatsnew')->from('users')->where('id','=',$user_id)->execute()->current();
-			if ($user_row['whatsnew'] && ! @($_GET['skip'])) {
-				Request::instance()->redirect('whatsnew');
-			}
-		} 
 		
 		//if we got this far, render the home page
 		array_push($this->template->styles, 'home_index'); //styles for the home page
@@ -39,7 +31,15 @@ class Controller_Home extends Controller_Layout {
 			'title' => "The Campus Bullet - All Posts",
 			'link' => $feed_link,
 		);
-			
+		
+		//check if the user has seen the what's new page
+		$lastvisit = Cookie::get('lastvisit','');
+		if ($lastvisit) {
+			$content->announcement = true;
+		} else {
+			$content->announcement = false;
+		}
+					
 		$this->template->content = $content;
 	}
 	
