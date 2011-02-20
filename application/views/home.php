@@ -30,6 +30,9 @@
 
 <div id="homecontainer">
 <h1>Select a category to begin</h1>
+<? if ($announcement): ?>
+<p class="info">New features were added to the site since you were last here!&nbsp; <a href="<?=$url_base?>whatsnew">Click here to check out what's new,</a> or <a href="<?=$url_base?>whatsnew/dontcare">click here if you don't care.</a>
+<? endif; ?>
 <div id="categories">
 <? foreach($categories as $category) { ?>
 <div class="buttonshadow">

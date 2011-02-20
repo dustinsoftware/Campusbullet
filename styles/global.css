@@ -105,8 +105,8 @@ h1 {
 }
 #header_logo {
 	float:left;
-	margin-left: 10px;
-	margin-top: 20px;
+	margin-left: 0px;
+	margin-top: 8px;
 }
 
 #header_right {

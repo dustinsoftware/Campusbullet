@@ -54,13 +54,16 @@ class Controller_Moderator extends Controller_Layout {
 			$content = View::factory('moderator_post');
 			$content->post_id = $post_row['id'];
 			$content->post_disabled = $post_row['disabled'];
+			$content->post_status_codes = $this->post_status_codes;
 			$content->url_base = URL::base();
 			$content->owner_id = $owner_row['id'];
 			$content->owner_name = $owner_row['username'];
 			
 			if ($_POST) {
-				if ($post_row['disabled'] == 0) {
-					DB::update('posts')->set(array('disabled' => '2'))->where('id','=',$post_row['id'])->execute();
+				$disabled = @($_POST['disabled']);
+				
+				if ($post_row['disabled'] == 0 && $disabled >= 1 && $disabled <= 3) {
+					DB::update('posts')->set(array('disabled' => $disabled))->where('id','=',$post_row['id'])->execute();
 					Request::instance()->redirect("contact/message/$owner_row[username]");
 				}
 			}
@@ -153,6 +156,7 @@ class Controller_Moderator extends Controller_Layout {
 			$content->user_dump = print_r($user_row,true);
 			$content->user_disabled = $user_row['disabled'];
 			$content->user_posts = DB::select('*')->from('posts')->where('owner','=',$id)->order_by('timestamp','DESC')->execute()->as_array();
+			$content->post_status_codes = $this->post_status_codes;
 			$content->message_history = DB::select('recipient','count')->from('message_log')->where('sender','=',$id)->execute()->as_array();
 			$content->log_history  = DB::select('id','message','timestamp','log_type')->from('logs')->where('regarding_user','=',$user_row['username'])->execute()->as_array();
 			

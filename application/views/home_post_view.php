@@ -46,6 +46,7 @@ should post it to your profile by clicking the Share button, so your friends can
 <p>Moderator tools:</p>
 <ul>
 	<li><a href="<?=$url_base?>moderator/post/<?=$post_id?>">Flag this post</a></li>
+	<li><a href="<?= $url_base ?>post/edit/<?=$post_id?>">Edit this post</a></li>
 	<li><a href="<?=$url_base?>moderator/miscategorized/<?=$post_id?>">Change post catgegory</a></li>
 	<li><a href="<?=$url_base?>moderator/user/<?=$poster_id?>">Check out the poster's account</a></li>
 </ul>

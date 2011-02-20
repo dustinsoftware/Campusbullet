@@ -11,9 +11,7 @@
 	</tr>
 	<tr>
 		<td>Current post status:</td>
-		<td><? if ($post_disabled == 0) echo "Active";
-			   elseif ($post_disabled == 1) echo "Inactive";
-			   elseif ($post_disabled == 2) echo "Flagged"; ?></td>			   
+		<td><?=$post_status_codes[$post_disabled] ?></td>			   
 	</tr>
 </table>
 
@@ -21,7 +19,8 @@
 <p>This post is currently active.&nbsp; To flag it, press the button below.&nbsp; You will then be taken to
 the message send screen where you can explain to the user how their post violated the terms of use.</p>
 <form method="post" action="">
-<input type="submit" name="confirm" value="Flag the post" />
+Change status to: <select name="disabled"><option value="2">Flagged</option><option value="1">Inactive</option></select> 
+<input type="submit" name="confirm" value="Do it" />
 </form>
 <? elseif ($post_disabled == 1): ?>
 <p class="info">This post has been disabled by the user.&nbsp; They must re-enable it for it to become active on the site.</p>

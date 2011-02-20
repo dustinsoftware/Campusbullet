@@ -19,12 +19,7 @@
 		echo "<td>$post[id]</td>";
 		echo "<td><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a></td>";
 		echo "<td>$post[timestamp]</td>";
-		echo "<td>";
-		if ($post['disabled'] == 0) echo "Active";
-		elseif ($post['disabled'] == 1) echo "Inactive";
-		elseif ($post['disabled'] == 2) echo "Flagged";
-		else echo "Unknown";
-		echo "</td>";
+		echo "<td>" . $post_status_codes[$post['disabled']] . "</td>";
 	echo "</tr>\r\n";
 } ?>
 </table>

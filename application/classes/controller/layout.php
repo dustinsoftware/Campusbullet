@@ -50,7 +50,12 @@ class Controller_Layout extends Controller_Template {
 		else
 			$this->template->moderator = false;
 		
-	
+		$this->post_status_codes = array(
+			0 => "Active",
+			1 => "Inactive",
+			2 => "Flagged", 
+			3 => "Expired",
+		);
 	}
 	
 	public function after() {		

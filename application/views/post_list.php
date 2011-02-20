@@ -22,17 +22,7 @@ function createpost() {
 	else
 		echo "<td><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a> (<a href=\"" . $url_base . "post/edit/$post[id]\">edit</a>)</td>";
 	echo "<td>$post[timestamp]</td>";
-	if ($post['disabled'] == 0)
-		echo "<td>Active!</td>";
-	elseif ($post['disabled'] == 1)
-		echo "<td>Inactive</td>";	
-	elseif ($post['disabled'] == 2)
-		echo "<td>Flagged</td>";
-	elseif ($post['disabled'] == 3)
-		echo "<td>Expired</td>";
-	else
-		echo "<td>Unknown status</td>";
-		
+	echo "<td>" . $post_status_codes[$post['disabled']] . "</td>";
 	echo "</tr>\n";
 } ?>
 

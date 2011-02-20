@@ -133,14 +133,21 @@ class Controller_Post extends Controller_Layout {
 	
 	public function action_edit($id = null) {
 		$user_id = Session::instance()->get('user_id');
+		$moderator = Session::instance()->get('moderator');
 		
 		if ($id) {
 			array_push($this->template->styles, 'post_new');
 			
-			$post_row = DB::select('id','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
-					->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
+			$post_row = DB::select('id','owner','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
+					->where('id','=',$id)->execute()->current();
 			
-			if ($post_row) {
+			if ($moderator) {
+				$permission_to_edit = true;
+			} else {			
+				$permission_to_edit = $post_row['owner'] == $user_id;
+			}
+			
+			if ($post_row && $permission_to_edit) {
 				$disabled = $post_row['disabled'];
 				$wanted = $post_row['wanted'];
 				$content = View::factory('post_new');
@@ -205,7 +212,10 @@ class Controller_Post extends Controller_Layout {
 					
 					if ($repost) {
 						if ($content->allow_repost) {
-							DB::update('posts')->set(array('timestamp' => Date::formatted_time()))->where('id','=',$id)->execute(); //re-enable the post
+							DB::update('posts')->set(array(
+								'timestamp' => Date::formatted_time(), 
+								'warningsent' => 0))->where('id','=',$id)->execute(); //re-enable the post
+							
 							$content->message = "Your post has been bumped to the top!";
 							$content->allow_repost = false;
 						} else {
@@ -296,6 +306,7 @@ class Controller_Post extends Controller_Layout {
 		} else {
 			array_push($this->template->styles, "post_list");
 			$content = View::factory('post_list');
+			$content->post_status_codes = $this->post_status_codes;
 			$user_id = Session::instance()->get('user_id');
 
 			$my_posts = DB::select('id','name','timestamp','disabled')->from('posts')->where('owner','=',$user_id)
