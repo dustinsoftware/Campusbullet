@@ -139,7 +139,7 @@ class Controller_Post extends Controller_Layout {
 			array_push($this->template->styles, 'post_new');
 			
 			$post_row = DB::select('id','owner','name','price','condition','description','disabled','category','isbn','timestamp','image','wanted','image')->from('posts')
-					->where('id','=',$id)->execute()->current();
+					->where('id','=',$id)->and_where('disabled','!=','4')->execute()->current();
 			
 			if ($moderator) {
 				$permission_to_edit = true;
@@ -309,7 +309,7 @@ class Controller_Post extends Controller_Layout {
 			$content->post_status_codes = $this->post_status_codes;
 			$user_id = Session::instance()->get('user_id');
 
-			$my_posts = DB::select('id','name','timestamp','disabled')->from('posts')->where('owner','=',$user_id)
+			$my_posts = DB::select('id','name','timestamp','disabled')->from('posts')->where('owner','=',$user_id)->and_where('disabled','!=','4')
 				->order_by('timestamp','DESC')->order_by('id','DESC')->execute()->as_array();
 			
 			$content->my_posts = $my_posts;		
@@ -345,7 +345,37 @@ class Controller_Post extends Controller_Layout {
 			}					
 		} else {
 			Request::instance()->redirect('post/edit');
+		}		
+	}
+	
+	public function action_delete($id) {
+		$user_id = Session::instance()->get('user_id');
+		$post_row = DB::select('id')->from('posts')
+			->where('id','=',$id)
+			->and_where('owner','=',$user_id)
+			->and_where('disabled','!=','4')
+			->execute()->current();
+		
+		if ($post_row) {
+			$confirmed = @($_POST['confirmed']);
+			
+			if ($confirmed) {
+				DB::update('posts')->set(array('disabled' => '4'))
+					->where('id','=',$id)
+					->and_where('owner','=',$user_id)->execute();		
+				Request::instance()->redirect('post/edit?postdeleted');				
+			} else {
+				$content = View::factory('form_confirm');
+				$content->form_items = array(
+					'disable' => 'yes');	
+				$content->goback = URL::base() . "home/view/$id";
+				$content->action = "post_delete";
+				$this->template->content = $content;
+			}
+		} else {
+			Request::instance()->redirect('post/edit');	
 		}
+		
 		
 	}
 	

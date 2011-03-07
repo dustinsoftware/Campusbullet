@@ -10,6 +10,8 @@ if ($action == "post_disable")
 	$message = "You are about to disable a post.&nbsp; You can always re-enable it if you change your mind.";
 elseif ($action == "post_enable")
 	$message = "You are about to re-enable a post that was disabled.";
+elseif ($action == "post_delete")
+	$message = "You are about to delete a post.&nbsp; This cannot be undone.";
 else
 	$message = "";
 ?>

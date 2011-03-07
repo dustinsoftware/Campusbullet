@@ -9,20 +9,37 @@ function createpost() {
 <? if ($my_posts) { ?>
 <table>
 <tr>
-	<th>ID</th>
+	<th>Post Date</th>
 	<th>Post title</th>
-	<th>Timestamp</th>
 	<th>Status</th>
+	<th>Actions</th>
+	
 </tr>
 <? foreach ($my_posts as $post) {
 	echo "<tr>";
-	echo "<td>$post[id]</td>";
-	if ($post['disabled'] == 2)
-		echo "<td><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a></td>";
-	else
-		echo "<td><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a> (<a href=\"" . $url_base . "post/edit/$post[id]\">edit</a>)</td>";
-	echo "<td>$post[timestamp]</td>";
+	$date = date("m-d-Y", strtotime($post['timestamp']));
+	echo "<td>$date</td>";
+	echo "<td><a href=\"" . $url_base . "home/view/$post[id]\">$post[name]</a></td>";
 	echo "<td>" . $post_status_codes[$post['disabled']] . "</td>";
+	
+	$options = array();
+	if ($post['disabled'] == 0 || $post['disabled'] == 1 || $post['disabled'] == 3)		
+		$options += array("post/edit/$post[id]" => 'edit');
+	if ($post['disabled'] == 0)
+		$options += array("post/disable/$post[id]" => 'disable');		
+	$options += array("post/delete/$post[id]" => 'delete');
+		
+	echo "<td style=\"text-align: center\">";
+	$first = true;
+	foreach ($options as $link => $name) {
+		if ($first)				
+			$first = false;
+		else
+			echo " | ";
+		echo "<a href=\"" . $url_base . "$link\">$name</a>";
+	}			
+	echo "</td>";
+
 	echo "</tr>\n";
 } ?>
 

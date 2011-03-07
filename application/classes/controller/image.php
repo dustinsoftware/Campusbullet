@@ -21,7 +21,8 @@ class Controller_Image extends Controller_Layout {
 		if ($is_moderator)
 			$post_row = DB::select('id','name','image','category')->from('posts')->where('id','=',$id)->execute()->current();
 		else
-			$post_row = DB::select('id','name','image','category')->from('posts')->where('owner','=',$user_id)->and_where('id','=',$id)->execute()->current();
+			$post_row = DB::select('id','name','image','category')->from('posts')->where('owner','=',$user_id)->and_where('id','=',$id)
+				->and_where('disabled','!=','4')->execute()->current();
 		$config = Kohana::config('masterlist');
 		$masterlist_root = $config['root'];
 		

@@ -185,7 +185,7 @@ class Controller_Home extends Controller_Layout {
 		$user_id = Session::instance()->get('user_id');
 		$base = URL::base(false,true);
 		
-		$post = DB::select('*')->from('posts')->where('id','=',$id)->execute()->current();
+		$post = DB::select('*')->from('posts')->where('id','=',$id)->and_where('disabled','!=','4')->execute()->current();
 			
 		if ($post) {
 			if ($post['disabled'] == 1 && $post['owner'] != $user_id) {
