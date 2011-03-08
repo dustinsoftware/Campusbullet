@@ -36,7 +36,7 @@ class Controller_System extends Controller {
 			}
 			
 			//and...expire the posts that have past their expiration date. users will have to re-activate them.  
-			$expired_rows = DB::query(Database::SELECT, "select posts.id,posts.name,users.email,users.username from posts join users on posts.owner = users.id where posts.timestamp < date_sub(current_date, interval 30 day) and posts.disabled=0 and posts.warningsent = 1")
+			$expired_rows = DB::query(Database::SELECT, "select posts.id,posts.name,users.email,users.username from posts join users on posts.owner = users.id where posts.timestamp < date_sub(current_date, interval 30 day) and posts.disabled=0")
 				->execute()->as_array();
 			
 			//send the expired emails
