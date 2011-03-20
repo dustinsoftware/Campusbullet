@@ -12,6 +12,8 @@ elseif ($action == "post_enable")
 	$message = "You are about to re-enable a post that was disabled.";
 elseif ($action == "post_delete")
 	$message = "You are about to delete a post.&nbsp; This cannot be undone.";
+elseif ($action == "image_delete")
+	$message = "You are about to delete an image.&nbsp; This cannot be undone.";
 else
 	$message = "";
 ?>

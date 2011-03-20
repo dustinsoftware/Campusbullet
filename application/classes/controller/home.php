@@ -7,8 +7,7 @@ class Controller_Home extends Controller_Layout {
 	protected $auth_required = false;
 	
 	public function action_index()
-	{
-		
+	{		
 		//if we got this far, render the home page
 		array_push($this->template->styles, 'home_index'); //styles for the home page
 		$content = View::factory('home');
@@ -179,6 +178,7 @@ class Controller_Home extends Controller_Layout {
 	}
 	
 	public function action_view($id) {
+		
 		array_push($this->template->styles, "post_view");
 		$content = View::factory('home_post_view');
 		
@@ -200,20 +200,18 @@ class Controller_Home extends Controller_Layout {
 						Request::instance()->redirect('home');
 				}
 				$category_row = DB::select('name','prettyname')->from('categories')->where('id','=',$post['category'])->execute()->current();
-				if (@($_GET['postcreated'])) {
+				if (isset($_GET['newpost']))
 					$content->postcreated = true;
-				} else
+				else
 					$content->postcreated = false;
 				
 				//set up stuff for the facebook share button
 				$this->template->fb_title = $post['name'];
 				$this->template->fb_description = $post['description'];
 				if ($post['image']) {				
-					$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id].jpg";
+					$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id]-1.jpg";
 					$this->template->fb_postid = $post['id'];
-				} elseif ($post['isbn']) {
-					$this->template->fb_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
-				} else {			
+				} else {
 					$this->template->fb_image = null;
 				}
 				$this->template->post_wanted = $post['wanted'];
@@ -244,13 +242,11 @@ class Controller_Home extends Controller_Layout {
 				$content->post_id = $id;
 				$content->post_date = date("M d, Y",strtotime($post['timestamp']));
 				
-				if ($post['image'])
-					$content->post_image = $base . "images/posts/$id.jpg";
-				elseif ($post['isbn'])
-					$content->post_image = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
-				else
-					$content->post_image = "";
-							
+				$content->post_images = array();
+				for ($i = 1; $i <= $post['image']; $i++) {
+					array_push($content->post_images, URL::base() . "images/posts/$id-$i.jpg");
+				}
+				$this->template->title = $content->post_title;
 				$this->template->content = $content; 
 			}
 		} else {

@@ -7,6 +7,8 @@ class Controller_System extends Controller {
 		parent::before();
 		$config = Kohana::config('masterlist');
 		$key = @($_POST['curl_key']);
+		if (! $key)
+			$key = @($_GET['key']);
 		$hidden_key = $config['curl_key'];
 		if ($key != $hidden_key) {
 			die("Access denied.");
@@ -63,5 +65,57 @@ class Controller_System extends Controller {
 		
 		
 	}	
+	
+	public function action_migratecovers() {
+		echo "<p>Migrating...</p>";
+		flush();
+		$config = Kohana::config('masterlist');
+		$savepath = $config['image_filepath'];
+		
+		$post_rows = DB::select('id','category','isbn')->from('posts')
+			->where('disabled','!=','4')
+			->and_where('category','=','2')
+			->and_where('image','=','0')->execute()->as_array();
+		foreach ($post_rows as $post) {
+			$filename = "$savepath/$post[id]-1.jpg";
+			
+			try {
+				$coverlink = "http://covers.openlibrary.org/b/isbn/" . $post['isbn'] . "-L.jpg";
+				$image = imagecreatefromjpeg($coverlink);
+				imagejpeg($image, $filename);
+
+				DB::update('posts')->set(array(
+					'image' => '1'
+				))->where('id','=',$post['id'])->execute();
+			} catch (Exception $e) {
+			}
+		
+		}
+		
+		echo "<p>Migration complete.</p>";
+	}
+	
+	public function action_migrateimages() {
+		$config = Kohana::config('masterlist');
+		$savepath = $config['image_filepath'];
+		
+		$post_rows = DB::select('id')->from('posts')
+			->where('disabled','!=','4')
+			->and_where('image','!=','0')
+			->execute()->as_array();
+			
+		foreach ($post_rows as $row) {
+			$filepath = "$savepath/$row[id].jpg";
+			if (file_exists($filepath)) {
+				$image = imagecreatefromjpeg($filepath);
+				imagejpeg($image, "$savepath/$row[id]-1.jpg");
+				unlink($filepath);
+			}
+			
+			DB::update('posts')->set(array('image' => 1))->where('id','=',$row['id'])->execute();
+		}
+		
+		Request::instance()->response = "All images migrated.";
+	}
 	
 }

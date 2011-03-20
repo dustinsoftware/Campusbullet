@@ -7,6 +7,7 @@
 <meta content="A fancy site for LETU students to sell their junk on." name="description" />
 <? if (isset($feed)): ?><link rel="alternate" type="application/rss+xml" title="<?=$feed['title']?>" href="<?=$feed['link']?>" /> <? endif; ?>
 <? if (isset($fb_title)): ?><!--facebook post information -->
+	<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
 	<? if ($post_wanted): ?><meta property="og:title" content="I'm looking for a <?=$fb_title?>!" />
 	<? else: ?><meta property="og:title" content="I'm selling my <?=$fb_title?>!" />
 	<? endif; ?>
@@ -20,7 +21,7 @@
 <title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
 
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
-<? foreach ($scripts as $file) echo HTML::style($file), "\n"; ?>
+<? foreach ($scripts as $file) echo HTML::script("scripts/$file.js"), "\n"; ?>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

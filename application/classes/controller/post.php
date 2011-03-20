@@ -108,10 +108,8 @@ class Controller_Post extends Controller_Layout {
 					
 					//now that we've crated the post, get the new id and redirect to the image upload page
 					$post_row = DB::select('id')->from('posts')->where('owner','=',$owner_id)->order_by('timestamp','DESC')->execute()->current();
-					if ($category == 2) //redirect texts back to the main page, chances are an image has already been pulled.
-						Request::instance()->redirect("home/view/$post_row[id]?postcreated=true");
-					else
-						Request::instance()->redirect("image/post/$post_row[id]?postcreated=true");
+					
+					Request::instance()->redirect("image/bookcover/$post_row[id]?newpost");
 					
 				} else {
 					$content = $this->previewpost(array(
@@ -281,7 +279,7 @@ class Controller_Post extends Controller_Layout {
 									'wanted'=>$wanted,
 									'description'=>$description))->where('id','=',$id)->execute();
 							
-								Request::instance()->redirect("home/view/$id?postcreated=true");
+								Request::instance()->redirect("home/view/$id");
 								$content->show_form = false;
 							} else {
 								$content = $this->previewpost(array(
@@ -471,14 +469,10 @@ class Controller_Post extends Controller_Layout {
 		$post_preview->post_category_name = $category_row['name'];
 		$post_preview->post_category_prettyname = $category_row['prettyname'];
 		
-		if ($fields['image'])
-			$post_preview->post_image = URL::base(false,true) . "images/posts/$fields[id].jpg";
-		elseif ($fields['isbn'])
-			$post_preview->post_image = "http://covers.openlibrary.org/b/isbn/" . $fields['isbn'] . "-L.jpg";
-		else
-			$post_preview->post_image = "";
-		
-		
+		$post_preview->post_images = array();
+			for ($i = 1; $i <= $fields['image']; $i++) {
+				array_push($post_preview->post_images, URL::base() . "images/posts/" . $fields['id'] . "-$i.jpg");
+			}
 		$post_preview->post_disabled = 0;
 		$post_preview->post_date = "";
 		$post_preview->postcreated = "";

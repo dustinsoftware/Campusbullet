@@ -5,7 +5,7 @@
 </style>
 <h1><? if ($wanted) echo "Wanted: "; ?><?=$post_title ?><? if ($post_date) { ?><span class="datestamp"><?=$post_date?></span><? } ?></h1>
 <? if ($postcreated): ?>
-<p class="success"><span class="congrats">CONGRATULATIONS!</span><br />The post was successful!&nbsp; If you have a Facebook account, you
+<p class="success"><span class="congrats">CONGRATULATIONS!</span><br />Your post is active!&nbsp; If you have a Facebook account, you
 should post it to your profile by clicking the Share button, so your friends can see what you posted!&nbsp; <a name="fb_share" type="button" share_url="<?=$url_base?>home/view/<?=$post_id?>">Post to Facebook</a> 
 </p>
 <? endif; ?>
@@ -28,9 +28,6 @@ should post it to your profile by clicking the Share button, so your friends can
 	<tr><td>Condition:</td><td><?=$post_condition?></td></tr>
 <? endif; ?>
 <? if ($post_isbn) {
-	/*if (strlen($post_isbn) == 13) {
-		$post_isbn = substr($post_isbn,0,3) . "-" . substr($post_isbn,3,1) . "-" . substr($post_isbn,4,5) . "-" . substr($post_isbn,9,3) . "-" . substr($post_isbn,12,1);
-	} buggy, commenting out */
 	echo "<tr><td>ISBN:</td><td>$post_isbn</td></tr>\r\n";
 } ?>
 </table>
@@ -39,7 +36,7 @@ should post it to your profile by clicking the Share button, so your friends can
 <pre><?=$post_description ?></pre>
 </p>
 
-<? if ($post_image) { ?> <p><img src="<?=$post_image?>" alt="" /></p><? } ?>
+<? foreach ($post_images as $image) echo "<img class=\"postimage\" alt=\"\" src=\"$image\" />"; ?>
 
 <? if ( ! $preview && $post_disabled != 2) : ?>
 <? if ( ! $is_owner && $is_moderator): ?>

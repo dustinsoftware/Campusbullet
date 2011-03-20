@@ -10,3 +10,8 @@
 	font-size: x-large;
 	font-weight: bold;
 }
+
+.postimage {
+	margin: 10px;
+	vertical-align: top; 
+}

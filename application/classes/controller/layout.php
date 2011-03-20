@@ -39,7 +39,9 @@ class Controller_Layout extends Controller_Template {
 		$this->template->styles = array(
 			'global',
 			);
-		$this->template->scripts = array();
+		$this->template->scripts = array(
+			'mootools-core-1.3.1-full-compat',
+		);
 		$this->template->sidebar = "";
 		$this->template->url_base = URL::base(false,true);
 		$this->template->title = "";
