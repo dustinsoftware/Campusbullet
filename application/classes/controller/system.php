@@ -67,8 +67,7 @@ class Controller_System extends Controller {
 	}	
 	
 	public function action_migratecovers() {
-		echo "<p>Migrating...</p>";
-		flush();
+		
 		$config = Kohana::config('masterlist');
 		$savepath = $config['image_filepath'];
 		
@@ -92,7 +91,7 @@ class Controller_System extends Controller {
 		
 		}
 		
-		echo "<p>Migration complete.</p>";
+		Request::instance()->response = "All book covers migrated.";
 	}
 	
 	public function action_migrateimages() {

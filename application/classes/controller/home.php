@@ -84,10 +84,10 @@ class Controller_Home extends Controller_Layout {
 				));
 						
 			if ($viewall)
-				$current_posts = DB::select('id','name','description','timestamp','price','wanted')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+				$current_posts = DB::select('id','name','description','timestamp','price','wanted','image')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
 					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
 			else
-				$current_posts = DB::select('id','name','description','timestamp','price','wanted')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
+				$current_posts = DB::select('id','name','description','timestamp','price','wanted','image')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
 					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
 				
 			$dategroups = array();
@@ -105,15 +105,18 @@ class Controller_Home extends Controller_Layout {
 				if (array_key_exists($date, $dategroups)) {
 					array_push($dategroups[$date], array(
 						'id' => $post['id'], 
-						'title' => $post_title));
+						'title' => $post_title,
+						'image' => $post['image']));
 				} else {
 					$dategroups = $dategroups + array(
 						$date => array(
 							array(
 								'id' => $post['id'], 
-								'title' => $post_title)
+								'title' => $post_title,
+								'image' => $post['image']
 							)
-						);
+						)
+					);
 				}
 			}
 			

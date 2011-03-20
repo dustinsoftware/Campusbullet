@@ -21,7 +21,7 @@
 <title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
 
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
-<? foreach ($scripts as $file) echo HTML::script("scripts/$file.js"), "\n"; ?>
+<? foreach ($scripts as $file) echo "<script type=\"text/javascript\" src=\"{$url_base}scripts/$file.js\" />"; ?>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

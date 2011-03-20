@@ -10,6 +10,10 @@ class Controller_Layout extends Controller_Template {
 	public function before() {
 		parent::before();	
 		
+		if (file_exists(DOCROOT . "/offline") && ! isset($_GET['debug'])) {
+			Request::instance()->redirect('offline.php');
+		}
+		
 		$auth = Auth::instance();
 		$user_id = Session::instance()->get('user_id');
 		

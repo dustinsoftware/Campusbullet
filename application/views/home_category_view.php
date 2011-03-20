@@ -36,7 +36,7 @@
 	echo ("<ul>");
 	//spit out the date, then the posts in that group
 	foreach ($posts as $post) {		
-		echo ("<li><a href=\"$postbase$post[id]\">$post[title]</a></li>");				
+		echo ("<li><a href=\"$postbase$post[id]\">$post[title]</a> <img src=\"{$url_base}images/pictures.png\" /></li>");				
 	}
 	echo ("</ul>");
 } ?>
