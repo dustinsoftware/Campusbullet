@@ -17,7 +17,7 @@
 	<? endif; ?>
 <? endif; ?>
 
-<link type="image/x-icon" href="<?=$url_base?>images/favicon.gif" rel="shortcut icon">
+<link type="image/x-icon" href="<?=$url_base?>images/favicon.gif" rel="shortcut icon" />
 <title>The Campus Bullet<? if ($title) echo " | $title"; ?></title>
 
 <? foreach ($styles as $file) echo HTML::style("styles/$file.css"), "\n"; ?>
