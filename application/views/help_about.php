@@ -24,7 +24,8 @@ so it would be greatly appreciated!</p>
 	<li>Dustin Masters - Site design and programming</li>
 	<li>Becca Masters - Category icons/site logo (and general artistic advisor)</li>
 	<li>David Nemati - Legal/senate advisor</li>	
-	<li>Jacob Hurst - Video editor</li>
+	<li>Jacob Hurst - Video editor/producer</li>
+	<li>Maddie Pointer - Those cool looking advertisements you see around campus</li>
 </ul>
 <p>Beta Testers:</p>
 <ul>
