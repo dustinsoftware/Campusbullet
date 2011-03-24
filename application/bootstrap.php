@@ -1,6 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
-define("IN_PRODUCTION",FALSE);
+$remoteip = $_SERVER['REMOTE_ADDR'];
+if ($remoteip == "127.0.0.1")
+	define("IN_PRODUCTION",false);
+else
+	define("IN_PRODUCTION",TRUE);
 
 //-- Environment setup --------------------------------------------------------
 
@@ -60,10 +63,20 @@ if (isset($_ENV['KOHANA_ENV']))
  * - boolean  profile     enable or disable internal profiling               TRUE
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
-Kohana::init(array(
-	'base_url'   => '/kohana/',
-	'index_file' => '',
-));
+if (IN_PRODUCTION) {
+	Kohana::init(array(
+		'base_url'   => '/',
+		'index_file' => '',
+	));
+
+} else {
+	Kohana::init(array(
+		'base_url'   => '/kohana/',
+		'index_file' => '',
+	));
+
+}
+ 
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
@@ -81,14 +94,14 @@ Kohana::$config->attach(new Kohana_Config_File);
 Kohana::modules(array(
 	 'auth'       => MODPATH.'auth',       // Basic authentication
 	 'cache'      => MODPATH.'cache',      // Caching with multiple backends
-	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
+//	 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
 	 'database'   => MODPATH.'database',   // Database access
-	// 'image'      => MODPATH.'image',      // Image manipulation
-	// 'orm'        => MODPATH.'orm',        // Object Relationship Mapping
-	// 'oauth'      => MODPATH.'oauth',      // OAuth authentication
+//	 'image'      => MODPATH.'image',      // Image manipulation
+//   'orm'        => MODPATH.'orm',        // Object Relationship Mapping
+//   'oauth'      => MODPATH.'oauth',      // OAuth authentication
 	 'pagination' => MODPATH.'pagination', // Paging of results
-	// 'unittest'   => MODPATH.'unittest',   // Unit testing
-	 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
+//   'unittest'   => MODPATH.'unittest',   // Unit testing
+//	 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
 	));
 
 /**
@@ -114,6 +127,15 @@ if ( ! defined('SUPPRESS_REQUEST'))
 		$request = Request::instance();
 		$request->execute();		
 	} catch (ReflectionException $e) {
+		
+        if (!IN_PRODUCTION)
+        {
+			throw $e;
+        }
+
+        $request = Request::factory('error/404')->execute();
+		$request->status = 404;
+	} catch (Kohana_Request_Exception $e) {
 		
         if (!IN_PRODUCTION)
         {

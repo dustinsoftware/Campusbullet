@@ -25,7 +25,8 @@
 	echo "<li><a href=\"" . $url_base . "home/view/$post[id]\">$description</a>\r\n</li>"; 
 }?>
 </ul>
-
+<br />
+<iframe src="http://www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FThe-Campus-Bullet%2F184454954911265&amp;width=200&amp;colorscheme=light&amp;show_faces=false&amp;stream=false&amp;header=false&amp;height=72" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:72px; margin-left: 20px; background: white;" allowTransparency="true"></iframe>
 </div>
 
 <div id="homecontainer">
