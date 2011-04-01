@@ -19,7 +19,7 @@ just about anything, kinda like your local garbage collector, or that hobo on th
 <img src="<?= URL::base()?>images/kyle-3.jpg" alt="This is kyle" />&nbsp;&nbsp;
 </div>
 
-<p>Want to get Kyle's opinion on something?&nbsp; Type in anything, and the all knowledgable Kyle will (probably not) write you back with an all-wise response!&nbsp;
+<p>Want to get Kyle's opinion on something?&nbsp; Type in anything, and the all knowledgable Kyle might write you back (if he deems your question worth answering)&nbsp;
 Results may vary.</p>
 
 
@@ -28,7 +28,7 @@ Dear Kyle,<br />
 <textarea name="message" style="width: 700px; height: 300px;" ><?=$message?></textarea><br />
 <table>
 <tr>
-	<td>I'd like him to write me back at this email address:</td><td><input type="text" name="email" style="width: 300px" value="<?=$email?>"/></td>
+	<td>My email address: (leave blank to be extra secretive)</td><td><input type="text" name="email" style="width: 300px" value="<?=$email?>"/></td>
 </tr>
 </table>
 <input type="submit" name="submit" value="Ask Kyle!" />
