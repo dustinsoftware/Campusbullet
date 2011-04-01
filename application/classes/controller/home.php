@@ -15,7 +15,11 @@ class Controller_Home extends Controller_Layout {
 		
 		$categories_rows = DB::select('name','prettyname')->from('categories')->where('disabled','=','0')->order_by('sort_order','ASC')->execute()->as_array();
 		
-		$content->categories = $categories_rows;
+		$temp_category_rows = array(array(
+			'name' => 'askkyle',
+			'prettyname' => 'Ask Kyle'));
+		$temp_category_rows = array_merge($temp_category_rows, $categories_rows);
+		$content->categories = $temp_category_rows;
 		$content->url_base = URL::base();
 		
 		// get the 5 most recent posts
@@ -48,6 +52,9 @@ class Controller_Home extends Controller_Layout {
 	}
 	
 	public function action_category($category_request) {
+		if ($category_request == "askkyle")
+			Request::instance()->redirect('askkyle');
+			
 		$viewall = ($category_request == "all");		
 		$feed = isset($_GET['feed']);
 		$content = View::factory('home_category_view');
