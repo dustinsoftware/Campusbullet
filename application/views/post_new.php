@@ -50,16 +50,16 @@
 <table class="editor">
 <tr>
 	<th>Post title:</th>
-	<td><input type="textbox" name="title" value="<?=$post_title?>" /></td>
+	<td><input type="text" name="title" value="<?=$post_title?>" /></td>
 </tr>
 <? if ( ! $wanted): ?>
 <tr>
 	<th>Condition of item:</th>
-	<td><input type="textbox" name="condition" value="<?=$post_condition?>" /></td>
+	<td><input type="text" name="condition" value="<?=$post_condition?>" /></td>
 </tr>
 <tr>
 	<th>Price:</th>
-	<td><input type="textbox" name="price" value="<?=$post_price?>" /> (0 if the item is free)</td>
+	<td><input type="text" name="price" value="<?=$post_price?>" /> (0 if the item is free)</td>
 </tr>
 <? endif; ?>
 <tr>
@@ -78,7 +78,7 @@
 </tr>
 <tr class="hidden" id="books">
 	<th>ISBN:</th>
-	<td><input type="textbox" name="isbn" value="<?=$post_isbn?>" /></td>
+	<td><input type="text" name="isbn" value="<?=$post_isbn?>" /></td>
 </tr>
 <tr>	
 	<th></th>
