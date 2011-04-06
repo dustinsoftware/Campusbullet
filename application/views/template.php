@@ -42,6 +42,7 @@ function go(page) {
 	location.href = "<?=$url_base?>" + page;
 }
 </script>
+<meta property="fb:admins" content="703125477"/>
 </head>
 
 <body>
@@ -78,7 +79,7 @@ function go(page) {
 </div>
 <div id="mainContainer">
 <div id="header_shadow"></div>
-<div id="betatesters"><a href="<?=$url_base?>contact/message/ml_bug_report">suggestions?</a></div>
+<div id="betatesters"><a href="<?=$url_base?>help/suggestions">suggestions?</a></div>
 
 <div id="content">
 

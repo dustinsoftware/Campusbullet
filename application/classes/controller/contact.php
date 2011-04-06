@@ -29,9 +29,7 @@ class Controller_Contact extends Controller_Layout {
 		
 		if (isset($_GET['postid'])) {
 			$content->form_message = "Regarding post id: " . $_GET['postid'] . "\r\n\r\n";
-		} elseif ($recipient_name == 'ml_bug_report' && isset($_SERVER['HTTP_REFERER'])) {
-			$content->form_message = "The page I was on: " . $_SERVER['HTTP_REFERER'] . "\r\n\r\n";
-		}
+		} 
 		
 		
 		
@@ -51,7 +49,7 @@ class Controller_Contact extends Controller_Layout {
 			if ( ! $recipient_row) 
 				array_push($validation_errors, "Invalid recipient.");
 			if (strtolower(substr($recipient,0,3)) != "ml_" && ! $is_moderator) {
-				array_push($validation_errors, "Only MasterList staff can be messaged.");
+				array_push($validation_errors, "Only Campus Bullet staff can be messaged.");
 			}
 			//get our id
 			$session = Session::instance();
