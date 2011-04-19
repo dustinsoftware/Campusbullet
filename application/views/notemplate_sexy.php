@@ -69,6 +69,7 @@ The great google: <input type="text" name="q" />&nbsp;<input type="submit" value
 <table>
 	<tr>
 		<th>Announcements:</th>		
+		<th>Today at Saga:</th>
 	</tr>
 	<tr>
 		<td style="width: 50%">			
@@ -77,9 +78,13 @@ The great google: <input type="text" name="q" />&nbsp;<input type="submit" value
 				echo "<li><a href=\"javascript:showhide($announcement[id])\">$announcement[title]</a><div class=\"hidden announcement\" id=\"$announcement[id]\">$announcement[description]</div></li>";
 			} ?>
 			</ul>
-		</td>		
+		</td>
+		<td>
+			<? if ($cafe_menu) echo "<table>$cafe_menu</table>"; else echo "No menu found for today."; ?>
+		</td>
 	</tr>
-	
+</table>
+<table>
 	<tr>
 		<th>Helpful Stuff:</th>
 	</tr>

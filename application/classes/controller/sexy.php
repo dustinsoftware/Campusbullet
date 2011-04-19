@@ -1,5 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+include 'html_scrape.php';
+
 class Controller_Sexy extends Controller_Layout {
 
 	protected $auth_required = false;
@@ -19,11 +21,14 @@ class Controller_Sexy extends Controller_Layout {
 		if (IN_PRODUCTION) {		
 			$cache = Cache::instance('memcache');			
 			$announcements = $cache->get('announcements');
+			$foodmenu = $cache->get('foodmenu');
 		} else {
 			$announcements = null;
 			$cache = null;
+			$foodmenu = null;
 		}
 		if ( ! $announcements) {			
+			//start page announcements
 			$dom = new DOMDocument();
 			$dom->load('http://letustartpage.blogspot.com/feeds/posts/default?alt=rss');
 			
@@ -38,8 +43,54 @@ class Controller_Sexy extends Controller_Layout {
 				array_push($announcements, $announcement);
 			}
 			
-			if ($cache)
+			
+			//saga menu
+			$menuhtml = file_get_html('cafemenu.txt');
+			//die(Kohana::debug($menuhtml));
+			
+			$boxbody = $menuhtml->find('div.boxbody',0)->find('table',0);
+			$weeks = array();
+			$days = array('monday','tuesday','wednesday','thursday','friday','saturday','sunday');
+			$previousdata = "";
+			$previousday = "";
+			
+			//remove images
+			foreach ($boxbody->find('img') as $img) {
+				$img->outertext = "";
+			}
+			
+			//parse all the items on the menu
+			foreach ($boxbody->find('tr') as $row) {
+				//check for a date
+				foreach ($days as $day) {
+					if (strpos(strtolower($row->innertext),$day)) {
+						if ($previousdata) {
+							$weeks += array($previousday => $previousdata);
+						}
+						$previousdata = "";
+						$previousday = $day;						
+					}
+				}
+				
+				if ($previousday) {
+					$str = (string)$row;
+					$previousdata .= $str;					
+				}
+			}
+			
+			$today = strtolower(date('l'));
+			
+			
+			if (array_key_exists($today, $weeks))
+				$this->template->cafe_menu = $weeks[$today];
+			else
+				$this->template->cafe_menu = null;
+				
+			
+			if ($cache) {
+				$cache->set('foodmenu',$foodmenu);
 				$cache->set('announcements',$announcements);
+			}
 		}
 		
 		$this->template->announcements = $announcements;	
