@@ -3,7 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>sexy start page</title>
+<title>super start page</title>
 <style type="text/css">
 body {
 	background: #244369;
