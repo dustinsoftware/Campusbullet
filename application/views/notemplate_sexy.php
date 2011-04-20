@@ -58,7 +58,7 @@ function showhide(id) {
 <body onload="document.forms[0].elements[0].focus();">
 <div style="text-align:center;margin-top:50px;">
 
-<h1>Sexy Start Page</h1>
+<h1>Super Start Page</h1>
 <p><a target="_blank" href="http://mail.letu.edu">email</a> | <a  target="_blank" href="http://courses.letu.edu">blackboard</a> | 
 <a  target="_blank" href="http://facebook.com">facebook</a> | <a  target="_blank" href="http://campusbullet.net">campusbullet</a></p>
 <form action="http://www.google.com/search" method="get">
