@@ -88,6 +88,24 @@ h1 {
 	display:block;
 	color:yellow;
 }
+#searchbox {
+	width: 300px;
+	margin-top: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url('icons/search.png');
+	border: 1px white solid;
+	background: black;
+}
+#searchbox input {
+	border: 0px black solid;
+	padding: 3px;
+	width: 250px;
+	background: black;
+}
+#searchbox .initial {
+	color: yellow;
+}
 
 /* Header Defs ########################################################### */ 
 #header {
@@ -102,6 +120,7 @@ h1 {
 #header_shadow {
 	height:27px;
 	background-image:url('../images/shadow.png');
+	margin-bottom: -27px;
 }
 #header_logo {
 	float:left;
