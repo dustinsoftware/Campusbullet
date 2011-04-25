@@ -44,6 +44,7 @@ class Controller_Search extends Controller_Layout {
 			
 			$content->posts = $search_results;
 			$content->query = $query;
+			$this->template->searchquery = $query;
 			
 		}
 		$content->url_base = URL::base();

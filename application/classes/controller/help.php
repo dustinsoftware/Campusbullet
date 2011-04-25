@@ -11,6 +11,8 @@ class Controller_Help extends Controller_Layout {
 	
 	
 	public function action_index($page = null) {
+		array_push($this->template->styles, 'help_home');
+		
 		$config = Kohana::config('masterlist');
 		try {		
 			if ($page == 'about') {

@@ -1,7 +1,4 @@
 <h1>Search results</h1>
-<form action="" method="get">
-<p>Search for:&nbsp; <input type="textbox" name="q" /> <input type="submit" value="Search!"/></p>
-</form>
 
 <? if ($posts) { ?>
 <ul>
@@ -15,5 +12,7 @@
 
 
 <? } else { ?>
-<p>No posts were found for <?=$query?>.</p>
+<p>No posts were found for <?=$query?>.&nbsp; Right now the search engine is pretty picky, so try using less words.&nbsp;
+If nothing comes up, we don't have anything that matches.&nbsp; Sorry!</p>
+<p><a href="<?=$url_base?>">Go back home?</a></p>
 <? } ?>

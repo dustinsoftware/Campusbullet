@@ -41,6 +41,22 @@
 function go(page) {
 	location.href = "<?=$url_base?>" + page;
 }
+function searchBoxFocus() {
+	var sb = $('searchboxinput');
+	
+	if (sb.value == "Search...") {
+		sb.value = "";
+	}
+	
+}
+function searchBoxBlur() {
+	var sb = $('searchboxinput');
+	
+	if (sb.value == "") {
+		sb.value = "Search...";
+	}
+}
+
 </script>
 <meta property="fb:admins" content="703125477"/>
 </head>
@@ -67,7 +83,6 @@ function go(page) {
 			<li><a href="<?= $url_base ?>">home</a></li>
 			<li><a href="<?= $url_base ?>post/edit">posts</a></li>
 			<li><a href="<?= $url_base ?>account">account</a></li>
-			<li><a href="<?= $url_base ?>search">search</a></li>
 			<li><a href="<?= $url_base ?>help">help</a></li>
 
 			</ul>
@@ -79,7 +94,7 @@ function go(page) {
 </div>
 <div id="mainContainer">
 <div id="header_shadow"></div>
-<div id="betatesters"><a href="<?=$url_base?>help/suggestions">suggestions?</a></div>
+<div id="searchbox"><form action="<?= $url_base ?>search" method="get"><input id="searchboxinput" type="text" class="initial" name="q" onfocus="searchBoxFocus()" onblur="searchBoxBlur()" value="<? if ($searchquery) echo $searchquery; else echo "Search..."; ?>" /></form></div>
 
 <div id="content">
 

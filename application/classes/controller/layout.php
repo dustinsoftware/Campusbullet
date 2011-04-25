@@ -49,6 +49,7 @@ class Controller_Layout extends Controller_Template {
 		$this->template->sidebar = "";
 		$this->template->url_base = URL::base(false,true);
 		$this->template->title = "";
+		$this->template->searchquery = "";
 		
 		$moderator = Session::instance()->get('moderator');
 		if ($moderator)

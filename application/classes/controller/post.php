@@ -170,7 +170,7 @@ class Controller_Post extends Controller_Layout {
 					$content->image_attached = false;
 					
 				//check if the post can be bumped
-				if (Date::span(strtotime($post_row['timestamp']),null,'days') >= 7 && $disabled != 3) {
+				if (Date::span(strtotime($post_row['timestamp']),null,'days') >= 7 && $disabled == 0) {
 					$content->allow_repost = true;
 					$content->message = "Your post can be reposted to the top!&nbsp; Use the fancy button below the description to do so.";
 				} else
@@ -212,7 +212,7 @@ class Controller_Post extends Controller_Layout {
 						if ($content->allow_repost) {
 							DB::update('posts')->set(array(
 								'timestamp' => Date::formatted_time(), 
-								'warningsent' => 0))->where('id','=',$id)->execute(); //re-enable the post
+								'warningsent' => 0))->where('id','=',$id)->execute(); //re-set the warning stamp
 							
 							$content->message = "Your post has been bumped to the top!";
 							$content->allow_repost = false;
@@ -264,12 +264,17 @@ class Controller_Post extends Controller_Layout {
 							$content->errors = $errors;
 						} else {
 							//the data is good, preview the change (or submit if confirmed)
-							if ($confirmed) {							
-								if ($disabled == 1) {								
-									DB::update('posts')->set(array('disabled' => 0))->where('id','=',$id)->execute(); //re-enable the post									
-								} elseif ($disabled == 3) {
-									DB::update('posts')->set(array('timestamp' => Date::formatted_time(), 'disabled' => 0))->where('id','=',$id)->execute(); //update timestamp and enable post if expired
+							if ($confirmed) {		
+								//change the post status to active
+								DB::update('posts')->set(array('disabled' => 0))->where('id','=',$id)->execute(); //re-enable the post									
+								
+								//update the timestamp to the current day if the post is old enough
+								if (Date::span(strtotime($post_row['timestamp']),null,'days') >= 7) {
+									DB::update('posts')->set(array(
+										'timestamp' => Date::formatted_time(), 
+										'warningsent' => 0))->where('id','=',$id)->execute(); //re-set the warning stamp
 								}
+								
 								DB::update('posts')->set(array(
 									'name'=>$title,
 									'price'=>$price,
