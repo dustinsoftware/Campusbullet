@@ -68,10 +68,14 @@ The great google: <input type="text" name="q" />&nbsp;<input type="submit" value
 <div id="announcements">
 <table>
 	<tr>
-		<th>Announcements:</th>		
+		
 		<th>Today at Saga:</th>
+		<th>Announcements:</th>		
 	</tr>
 	<tr>
+		<td>
+			<? if ($cafe_menu) echo "<table>$cafe_menu</table>"; else echo "No menu found for today."; ?>
+		</td>
 		<td style="width: 50%">			
 			<ul>
 			<? foreach ($announcements as $announcement) {
@@ -79,9 +83,7 @@ The great google: <input type="text" name="q" />&nbsp;<input type="submit" value
 			} ?>
 			</ul>
 		</td>
-		<td>
-			<? if ($cafe_menu) echo "<table>$cafe_menu</table>"; else echo "No menu found for today."; ?>
-		</td>
+		
 	</tr>
 </table>
 <table>
