@@ -61,7 +61,7 @@ class Controller_Contact extends Controller_Layout {
 			
 			
 			//check for self sender
-			if ($user_id == $recipient_row['id'])
+			if ($user_id == $recipient_row['id'] && ! $is_moderator)
 				array_push($validation_errors, "You can't send a message to yourself.");
 			
 			if ($validation_errors) {

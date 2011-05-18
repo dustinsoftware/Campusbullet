@@ -6,8 +6,8 @@ class Controller_Admin extends Controller_Layout {
 		parent::before();
 		
 		$user_id = Session::instance()->get('user_id');
-		$user_row = DB::select('role')->from('users')->where('id','=',$user_id)->and_where('role','=','admin')->execute()->current();
-		if ( ! $user_row)
+		$this->user_row = DB::select('role','email','username')->from('users')->where('id','=',$user_id)->and_where('role','=','admin')->execute()->current();
+		if ( ! $this->user_row)
 			Request::instance()->redirect('home');
 		
 	}
@@ -74,6 +74,15 @@ class Controller_Admin extends Controller_Layout {
 			Request::instance()->redirect('admin');
 		}
 		
+	}
+	
+	public function action_emailtest() {
+		$content = View::factory('admin_emailtest');
+		$content->admin_email = $this->user_row['email'];
+		$content->admin_name = $this->user_row['username'];
+		
+		
+		$this->template->content = $content;
 	}
 
 }

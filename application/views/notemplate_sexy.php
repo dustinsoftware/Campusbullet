@@ -66,17 +66,19 @@ The great google: <input type="text" name="q" />&nbsp;<input type="submit" value
 </form>
 </div>
 <div id="announcements">
-<table>
+<table style="width: 100%">
 	<tr>
 		
-		<th>Today at Saga:</th>
+		<?/*<th>Today at Saga:</th>*/?>
 		<th>Announcements:</th>		
 	</tr>
 	<tr>
+		<? /*
 		<td>
 			<? if ($cafe_menu) echo "<table>$cafe_menu</table>"; else echo "No menu found for today."; ?>
 		</td>
-		<td style="width: 50%">			
+		*/ ?>
+		<td>			
 			<ul>
 			<? foreach ($announcements as $announcement) {
 				echo "<li><a href=\"javascript:showhide($announcement[id])\">$announcement[title]</a><div class=\"hidden announcement\" id=\"$announcement[id]\">$announcement[description]</div></li>";

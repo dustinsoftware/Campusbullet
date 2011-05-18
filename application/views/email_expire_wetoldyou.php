@@ -12,10 +12,11 @@
 month!&nbsp; Posts that reach this level of prestige earn the <strong>expired</strong> award.&nbsp; 
 Posts that earn this particular award are removed from the site, to make room 
 for the newer posts.</p>
-<p>If you&#39;d like to post it back to the site, <a href="<?=$link_repost?>">just click here</a> and it will be 
-reposted to the site for another 30 days, just like that!&nbsp; If you don&#39;t 
-want to repost it, just ignore this email.&nbsp; The post will stay removed from 
-the site, and you won&#39;t receive another one regarding that particular post.</p>
+<p>If you&#39;d like to post it back to the site, <a href="<?=$link_repost?>">just click here</a> 
+and it will be reposted to the site for another 30 days, just like that!&nbsp; 
+If you don&#39;t want to repost it, just ignore this email.&nbsp; The post will stay 
+removed from the site and we won&#39;t bug you again unless you choose to enable the 
+post again.</p>
 <p>Thanks for using the Campus Bullet!</p>
 </body>
 

@@ -7,7 +7,7 @@
 <meta content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" name="viewport" />
 <link href="<?=$url_base?>iwebkit/css/style.css" rel="stylesheet" media="screen" type="text/css" />
 <script src="<?=$url_base?>javascript/functions.js" type="text/javascript"></script>
-<title>Sexy Start Page</title>
+<title>Super Start Page</title>
 
 <style type="text/css">
 .hidden {
@@ -28,7 +28,7 @@ function showhide(id) {
 <body>
 
 <div id="topbar" class="black">
-	<div id="title">Sexy Start Page</div>
+	<div id="title">Super Start Page</div>
 </div>
 <div id="content">
 	<span class="graytitle">Campus Announcements:</span>
