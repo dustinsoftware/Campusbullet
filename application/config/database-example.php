@@ -20,7 +20,7 @@ return array
 			'hostname'   => 'localhost',
 			'database'   => 'campusbullet',
 			'username'   => 'campusbullet',
-			'password'   => 'fsLmGyXJaLUBNjAR',
+			'password'   => '',
 			'persistent' => FALSE,
 		),
 		'table_prefix' => '',
