@@ -1,9 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-$remoteip = $_SERVER['REMOTE_ADDR'];
-if ($remoteip == "127.0.0.1")
-	define("IN_PRODUCTION",false);
-else
-	define("IN_PRODUCTION",TRUE);
+if (file_exists(DOCROOT . 'debug'))
+	define("IN_PRODUCTION", false);
+else 
+	define("IN_PRODUCTION", true);
+
 
 //-- Environment setup --------------------------------------------------------
 
@@ -63,20 +63,10 @@ if (isset($_ENV['KOHANA_ENV']))
  * - boolean  profile     enable or disable internal profiling               TRUE
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
-if (IN_PRODUCTION) {
 	Kohana::init(array(
 		'base_url'   => '/',
 		'index_file' => '',
 	));
-
-} else {
-	Kohana::init(array(
-		'base_url'   => '/kohana/',
-		'index_file' => '',
-	));
-
-}
- 
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
