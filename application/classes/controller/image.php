@@ -272,7 +272,7 @@ class Controller_Image extends Controller_Layout {
 				}
 				
 				array_push($post_images, array(
-					'link' => URL::base() . "images/posts/$id-$i.jpg",
+					'link' => URL::base() . "images/posts/?q=$id-$i",
 					'width' => $width,
 					'height' => $height,
 					'index' => $i,

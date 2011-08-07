@@ -139,18 +139,25 @@ class Controller_Home extends Controller_Layout {
 				'title' => "The Campus Bullet - " . $content->category_prettyname,
 				'link' => $feed_link,
 			);
+			$content->feed_link = $feed_link;
 			
 			if ($feed) {
 				$feed_title = "The Campus Bullet - " . $content->category_prettyname;
 				$feed_description = $content->category_description;
 				$feed_items = array();
 				foreach ($current_posts as $post) {
-					if ($post['wanted'])
-						$post_title = $post['name'];
-					elseif ($post['price'] > 0)
-						$post_title = $post['name'] . " ($$post[price])";
-					else
-						$post_title = $post['name'] . " (FREE!)";
+					$post_title = $post['name'];
+					if ($viewmode == 0) {
+						if ($post['wanted']) {
+							$post_title = "Wanted: " . $post_title;
+						} 
+					}
+					if ($post['wanted'] == FALSE) {					
+						if ($post['price'] > 0)
+							$post_title = $post_title . " ($$post[price])";
+						else
+							$post_title = $post_title . " (FREE!)";
+					}
 					array_push($feed_items, array(
 						'title' => $post_title,
 						'description' => $post['description'],
@@ -214,7 +221,7 @@ class Controller_Home extends Controller_Layout {
 				$this->template->fb_title = $post['name'];
 				$this->template->fb_description = $post['description'];
 				if ($post['image']) {				
-					$this->template->fb_image = URL::base(false,true) . "images/posts/$post[id]-1.jpg";
+					$this->template->fb_image = URL::base(false,true) . "images/posts/?q=$post[id]-1";
 					$this->template->fb_postid = $post['id'];
 				} else {
 					$this->template->fb_image = null;
@@ -249,7 +256,7 @@ class Controller_Home extends Controller_Layout {
 				
 				$content->post_images = array();
 				for ($i = 1; $i <= $post['image']; $i++) {
-					array_push($content->post_images, URL::base() . "images/posts/$id-$i.jpg");
+					array_push($content->post_images, URL::base() . "images/posts/?q=$id-$i");
 				}
 				$this->template->title = $content->post_title;
 				$this->template->content = $content; 

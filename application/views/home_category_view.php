@@ -1,4 +1,4 @@
-<h1><?=$category_prettyname?></h1>
+<h1><?=$category_prettyname?> <a href="<?=$feed_link?>"><img src="<?=$url_base?>images/rss.png" alt="RSS Link"></a></h1>
 
 
 <div id="sidebar">
