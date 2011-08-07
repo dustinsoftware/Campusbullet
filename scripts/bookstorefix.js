@@ -50,7 +50,7 @@ function scrape() {
 	if (isbn == "") {
 		alert("No valid ISBNs were found on the current page.");
 	} else {
-		window.location = "http://localhost/powersearch?isbn=" + isbn;
+		window.location = "http://test.campusbullet.net/powersearch?isbn=" + isbn;
 	}
 }
 
