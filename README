@@ -1,0 +1,10 @@
+To install:
+
+Get the base sql file and configure application/config/database.php with your database config.
+Make sure the following dirs are writable:
+
+application/logs
+application/cache
+images/posts
+
+PHP also needs to be able to send mail.
