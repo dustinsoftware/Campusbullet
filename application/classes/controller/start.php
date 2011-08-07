@@ -19,15 +19,10 @@ class Controller_Start extends Controller_Layout {
 	
 	
 	public function action_index() {
-		if (IN_PRODUCTION) {		
-			$cache = Cache::instance('memcache');			
-			$announcements = $cache->get('announcements');
-			$cafe_menu = $cache->get('cafe_menu');
-		} else {
-			$announcements = null;
-			$cache = null;
-			$cafe_menu = null;
-		}
+		$cache = Cache::instance('memcache');			
+		$announcements = $cache->get('announcements');
+		$cafe_menu = $cache->get('cafe_menu');
+		
 		if ( ! $announcements) {			
 			//start page announcements
 			$dom = new DOMDocument();
@@ -46,7 +41,6 @@ class Controller_Start extends Controller_Layout {
 		
 			
 			try {
-				throw(new Exception("not needed for summer"));
 				//saga menu
 				$menuhtml = file_get_html('http://www.cafebonappetit.com/letu/cafes/thecafe/weekly_menu.html');
 				//die(Kohana::debug($menuhtml));

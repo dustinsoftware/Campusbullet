@@ -43,14 +43,14 @@ if ($newposts): ?>
 <h1>Select a category to begin</h1>
 <div id="categories">
 <? foreach($categories as $category) { ?>
-<div class="buttonshadow">
-<div class="button">
-<a href="<?=$url_base?>home/category/<?=$category['name']?>">
-<img width="150" height="150" src="<?=$url_base?>images/<?=$category['name']?>.png" alt="<?=$category['name']?>" /><br />
-<?=$category['prettyname']?>
-</a>
-</div>
-</div>
+	<div class="buttonshadow">
+		<div class="button">
+			<a href="<?=$url_base?>home/category/<?=$category['name']?>">
+			<img width="150" height="150" src="<?=$url_base?>images/<?=$category['name']?>.png" alt="<?=$category['name']?>" /><br />
+			<?=$category['prettyname']?> (<?=$category['postcount']?>)
+			</a>
+		</div>
+	</div>
 <? } ?>
 </div>
 

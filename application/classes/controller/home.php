@@ -13,7 +13,13 @@ class Controller_Home extends Controller_Layout {
 		$content = View::factory('home');
 		$config = Kohana::config('masterlist');
 		
-		$categories_rows = DB::select('name','prettyname')->from('categories')->where('disabled','=','0')->order_by('sort_order','ASC')->execute()->as_array();
+		$categories_rows = DB::select('name','prettyname','id')->from('categories')->where('disabled','=','0')->order_by('sort_order','ASC')->execute()->as_array();
+		
+		//loop through each of the categories and get how many posts exist
+		foreach ($categories_rows as &$row) {
+			$postcount = DB::select('id')->from('posts')->where('category','=',$row['id'])->and_where('disabled','=','0')->execute()->count();
+			$row['postcount'] = $postcount;
+		}
 		
 		$content->categories = $categories_rows;
 		$content->url_base = URL::base();
@@ -46,21 +52,25 @@ class Controller_Home extends Controller_Layout {
 		//we'll just get the string name from the categories table
 		$category_row = DB::select('id','name','prettyname','description')->from('categories')->where('name','=',$category_request)->and_where('disabled','=',0)->execute()->current();
 		
-		if ($category_row || $viewall) {				
-			if (isset($_GET['wanted']))
-				$wanted = 1;
-			else
-				$wanted = 0;
+		if ($category_row || $viewall) {			
+			if (isset($_GET['posted'])) {
+				$viewmode = 1;
+				$extrasql = "and wanted = 0";
+			} elseif (isset($_GET['wanted'])) {
+				$viewmode = 2;
+				$extrasql = "and wanted = 1";
+			} else {
+				$viewmode = 0;
+				$extrasql = "";
+			}
 			
-			if ($wanted)
-				$content->wanted = true;
-			else
-				$content->wanted = false;
+			$content->viewmode = $viewmode;
+			
 			
 			if ($viewall)
-				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and wanted = $wanted")->execute()->current();
+				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 $extrasql")->execute()->current();
 			else
-				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]' and wanted = $wanted")->execute()->current();
+				$current_count = DB::query(Database::SELECT, "select count(id) as count from posts where disabled=0 and category='$category_row[id]' $extrasql")->execute()->current();
 		
 			$current_count = $current_count['count'];
 			
@@ -70,12 +80,10 @@ class Controller_Home extends Controller_Layout {
 				'items_per_page' => 30,			
 				));
 						
-			if ($viewall)
-				$current_posts = DB::select('id','name','description','timestamp','price','wanted','image')->from('posts')->where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
-					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
+			if ($viewall)		
+				$current_posts = DB::query(Database::SELECT, "SELECT id, name, description, timestamp, price, wanted, image FROM posts WHERE disabled = 0 $extrasql ORDER BY timestamp DESC LIMIT " . $pagination->items_per_page . " OFFSET " . $pagination->offset)->execute()->as_array();
 			else
-				$current_posts = DB::select('id','name','description','timestamp','price','wanted','image')->from('posts')->where('category','=',$category_row['id'])->and_where('disabled','=','0')->and_where('wanted','=',$wanted)->order_by('timestamp','DESC')
-					->limit($pagination->items_per_page)->offset($pagination->offset)->execute()->as_array();			
+				$current_posts = DB::query(Database::SELECT, "SELECT id, name, description, timestamp, price, wanted, image FROM posts WHERE category = $category_row[id] AND disabled = 0 $extrasql ORDER BY timestamp DESC LIMIT " . $pagination->items_per_page . " OFFSET " . $pagination->offset)->execute()->as_array();
 				
 			$dategroups = array();
 			
@@ -93,14 +101,16 @@ class Controller_Home extends Controller_Layout {
 					array_push($dategroups[$date], array(
 						'id' => $post['id'], 
 						'title' => $post_title,
-						'image' => $post['image']));
+						'image' => $post['image'],
+						'wanted' => $post['wanted']));
 				} else {
 					$dategroups = $dategroups + array(
 						$date => array(
 							array(
 								'id' => $post['id'], 
 								'title' => $post_title,
-								'image' => $post['image']
+								'image' => $post['image'],
+								'wanted' => $post['wanted']
 							)
 						)
 					);
@@ -120,9 +130,11 @@ class Controller_Home extends Controller_Layout {
 				$content->category_description = "All the posts on the site can be viewed here, for the lazy.";
 			}
 			$feed_link = URL::base(false,true) . "home/category/" . $content->category_name . "/?feed";
-			if ($wanted)
+			if ($viewmode == 1) {
+				$feed_link .= "&posted";
+			} elseif ($viewmode == 2) {
 				$feed_link .= "&wanted";
-				
+			}
 			$this->template->feed = array(
 				'title' => "The Campus Bullet - " . $content->category_prettyname,
 				'link' => $feed_link,
@@ -147,7 +159,10 @@ class Controller_Home extends Controller_Layout {
 					));
 				}
 				
-				if ($wanted)
+				if ($viewmode == 1) {
+					$feed_title .= " (posted)";
+				}
+				if ($viewmode == 2)
 					$feed_title .= " (wanted)";
 					
 				$this->auto_render = false;
