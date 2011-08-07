@@ -137,7 +137,10 @@ class Controller_Image extends Controller_Layout {
 						
 						
 					} catch (Exception $e) {
-						array_push($errors, "The file must be a PNG, JPG, or GIF file.&nbsp; Try uploading the picture again.");
+						if (IN_PRODUCTION)
+							array_push($errors, "The file must be a PNG, JPG, or GIF file.&nbsp; Try uploading the picture again.");
+						else
+							array_push($errors, "$e");
 					}
 					
 					
