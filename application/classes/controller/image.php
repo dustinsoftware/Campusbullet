@@ -30,7 +30,7 @@ class Controller_Image extends Controller_Layout {
 			->and_where('disabled','!=','4')->execute()->current();
 		
 		if ($post_row) {
-			if ($post_row['category'] != 2) { //if this isn't a book
+			if ($post_row['category'] != 2 || strcmp($post_row['isbn'],"") == 0) { //if this isn't a book
 				Request::instance()->redirect("image/post/$id{$newpost}");
 			}
 			$content = View::factory('image_bookcover');

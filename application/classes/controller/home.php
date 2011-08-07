@@ -31,19 +31,6 @@ class Controller_Home extends Controller_Layout {
 			'link' => $feed_link,
 		);
 		
-		//check if the user has seen the what's new page
-		$lastvisit = Cookie::get('lastvisit','');
-		$announcement_row = DB::select('timestamp')->from('announcements')->order_by('timestamp','DESC')->execute()->current();
-		$content->announcement = false;
-		
-		if ($announcement_row) { //make sure there's at least one announcement in the system			
-			if ($lastvisit && strtotime($lastvisit) < strtotime($announcement_row['timestamp'])) {							
-				$content->announcement = true;
-			} elseif ( ! $lastvisit) {				
-				Cookie::set('lastvisit',$announcement_row['timestamp'],31536000); // set the cookie to the last announcement row..
-			}
-		}
-					
 		$this->template->content = $content;
 	}
 	

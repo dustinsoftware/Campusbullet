@@ -23,7 +23,7 @@ class ImageMagick
      * (using a constant instead of a variable)
      */
     
-    var $convert = 'C:\imagemagick\convert.exe';
+    var $convert = "/usr/bin/convert";
     
     function ImageMagick()
     {

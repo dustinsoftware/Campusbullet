@@ -52,7 +52,6 @@ class Controller_Post extends Controller_Layout {
 				$content->post_category_name = $category_row['name'];
 			}
 		}
-			
 		
 		if ($_POST) {
 			$title = @(htmlspecialchars($_POST["title"]));
@@ -421,12 +420,9 @@ class Controller_Post extends Controller_Layout {
 					
 		//check extra fields		
 		try {
-			if ($fields['category'] == 2) {
-				//if this is a book
-				if ((strlen($fields['isbn']) != 10 && strlen($fields['isbn']) != 13) || ! is_numeric($fields['isbn'])) {
-					$errors += array("isbn" => "Invalid 10 or 13-digit ISBN.  Please make sure you enter the ISBN without the dashes.");
-				}				
-			}
+			if (strcmp($fields['isbn'],"") != 0 && ((strlen($fields['isbn']) != 10 && strlen($fields['isbn']) != 13) || ! is_numeric($fields['isbn']))) {
+				$errors += array("isbn" => "Invalid 10 or 13-digit ISBN.  Please make sure you enter the ISBN without the dashes.");
+			}				
 			
 		} catch (Exception $e) {
 			$errors += array("fields" => "Extra information missing.  " . $e->getMessage());
