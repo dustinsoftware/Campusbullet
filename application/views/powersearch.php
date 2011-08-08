@@ -1,7 +1,60 @@
 <h1>Textbook Powersearch!</h1>
 
 <? if ($booklist): ?>
-	<?= Kohana::debug($booklist) ?>
+<script type="text/javascript">
+var baseurl = "";
+var isbn = "";
+var searchengine = new Object();
+
+<? foreach ($enginelist as $id => $engine): ?>
+	searchengine['<?=$id?>'] = "<?=$engine['base']?>";
+<? endforeach; ?>
+
+function changebook(sourceisbn) {
+	isbn = sourceisbn;
+	refreshframe();
+}
+
+function changeengine(engine) {
+	baseurl = searchengine[engine];
+	refreshframe();
+}
+
+function refreshframe() {
+	document.getElementById('searchengineframe').src = baseurl + isbn;
+}
+
+window.addEvent('domready', function() {
+	<? foreach ($enginelist as $id => $engine) {
+		echo "baseurl = \"$engine[base]\";";
+		break;
+	} ?>
+	<? foreach ($booklist as $isbn => $book) {
+		echo "isbn = $isbn;";
+		break;
+	} ?>
+	refreshframe();
+});
+</script>
+
+<p>Your textbooks for the current semester are shown below.&nbsp; Select a 
+textbook, and its search results will appear in the browser below.&nbsp; Select 
+the tabs on top to change the search engine.</p>
+	<ul>
+	<? foreach ($booklist as $isbn => $book): ?>
+		<li id="book-<?=$isbn?>"><a href="javascript:void(0);" onclick="changebook(<?=$isbn?>)"><?=$book["title"]?></a></li>
+	<? endforeach; ?>
+	</ul>
+	
+	<ul>
+	<? foreach ($enginelist as $id => $engine): ?>
+		<li id="<?=$id ?>"><a href="javascript:void(0);" onclick="changeengine('<?=$id?>')"><?=$engine["title"]?></a></li>
+	<? endforeach; ?>
+	</ul>
+
+	<div style="background:white">
+	<iframe style="width:100%; height: 800px" id="searchengineframe" src="about:blank"></iframe>
+	</div>
 <? else: ?>
 <p>Save money on your college textbooks by buying them from alternate sources!&nbsp; 
 This tool examines the textbooks required by your classes and searches popular 
