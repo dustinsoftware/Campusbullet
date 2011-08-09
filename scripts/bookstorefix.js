@@ -19,13 +19,31 @@ function scrape() {
 	
 	var currentnumberstack = "";
 	var currentlength = 0;
+	var optionaltext = false;
+	var recommended = "RECOMMENDED".split("");
 	
 	for (var i = 0; i < pagearray.length; i++) {
 		var currentchar = pagearray[i];
 
-		if (currentchar == "-") {
+		if (currentchar == "-") { //ignore dashes
 			continue;
 		}
+		
+		//check for recommended flag
+		var j;
+		for (j = 0; j < recommended.length && i < pagearray.length; j++) {
+			if (currentchar != recommended[j]) {
+				break;
+			} else {
+				alert(currentchar);
+				i++;
+				currentchar = pagearray[i];				
+			}
+		}
+		if (j == recommended.length) {
+			optionaltext = true;
+		}
+		
 		
 		if (isNumeric(currentchar)) {
 			currentnumberstack = currentnumberstack + currentchar;
@@ -37,6 +55,10 @@ function scrape() {
 				if (isbn.indexOf(currentnumberstack) == -1) {
 					if (isbn != "") {
 						isbn += ",";
+					}
+					if (optionaltext) {
+						isbn += "r";
+						optionaltext = false;
 					}
 					
 					isbn += currentnumberstack;

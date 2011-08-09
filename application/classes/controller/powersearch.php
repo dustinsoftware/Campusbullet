@@ -18,31 +18,32 @@ class Controller_Powersearch extends Controller_Layout {
 			$booklist = array();
 			$isbns = explode(",", $isbns);
 			foreach ($isbns as $isbn) {
-				$dom = new DOMDocument();
-				$dom->load('http://www.google.com/books/feeds/volumes?q=ISBN' . $isbn);
-				
-				$result = $dom->getElementsByTagName('entry')->item(0);
-				
-				if ($result) {
-					$title = $result->getElementsByTagName('title')->item(0)->nodeValue;
-					//$author = $result->getElementsByTagName('dc:creator')->item(0)->nodeValue;
-					$author = "";
-					$booklist += array($isbn => array(
-						'title' => $title,
-						'author' => $author,
-					));					
+				if (is_isbn_valid($isbn) && ! array_key_exists($isbn, $booklist)) {
+					$dom = new DOMDocument();
+					$dom->load('http://www.google.com/books/feeds/volumes?q=ISBN' . $isbn);
+					
+					$result = $dom->getElementsByTagName('entry')->item(0);
+					
+					if ($result) {
+						$title = $result->getElementsByTagName('title')->item(0)->nodeValue;
+						//$author = $result->getElementsByTagName('dc:creator')->item(0)->nodeValue;
+						$author = "";
+						$booklist += array($isbn => array(
+							'title' => $title,
+							'author' => $author,
+						));					
+					}
 				}
-				
 			}
 			
 			$content->enginelist = array(
-				'chegg' => array(
-					'title' => "Chegg",
-					'base' => "http://www.chegg.com/search/",
-				),
 				'allbookstores' => array(
 					'title' => "All Bookstores",
 					'base' => "http://www.allbookstores.com/book/compare/",
+				),
+				'chegg' => array(
+					'title' => "Chegg",
+					'base' => "http://www.chegg.com/search/",
 				),
 				'bigwords' => array(
 					'title' => "Bigwords",
@@ -75,5 +76,20 @@ class Controller_Powersearch extends Controller_Layout {
 		$this->template = View::factory('powersearch_halfredirect');
 	}
 	
-	
+}
+
+function is_isbn_valid($isbn) {
+	if (strlen($isbn) == 13) {
+		$check = 0;
+		for ($i = 0; $i < 13; $i+=2) $check += substr($isbn, $i, 1);
+		for ($i = 1; $i < 12; $i+=2) $check += 3 * substr($isbn, $i, 1);
+		return $check % 10 == 0;
+	} elseif (strlen($isbn) == 10) {
+		$check = 0;
+		for ($i = 0; $i < 9; $i++) $check += (10 - $i) * substr($isbn, $i, 1);
+		$t = substr($isbn, 9, 1); // tenth digit (aka checksum or check digit)
+		$check += ($t == 'x' || $t == 'X') ? 10 : $t;
+		return $check % 11 == 0;
+	}
+	return false;
 }

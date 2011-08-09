@@ -1,3 +1,33 @@
+<style type="text/css">
+.instructions li {
+	margin: 10px;
+}
+.tabs {
+	padding: 0px;
+	margin: 7px;
+}
+.tabs li {
+	display: inline;
+	margin: 0;
+}
+.tabs li a {
+	padding: 7px;
+	color: gray;
+	background: black;
+	text-decoration: none;
+}
+
+.tabs li a:hover, .tabs li a.tabselected {
+	color: white;
+}
+
+</style>
+<script type="text/javascript">
+function hidenotice() {
+	document.getElementById('notice').style.display = "none";
+}
+</script>
+
 <h1>Textbook Powersearch!</h1>
 
 <? if ($booklist): ?>
@@ -17,6 +47,10 @@ function changebook(sourceisbn) {
 
 function changeengine(engine) {
 	baseurl = searchengine[engine];
+	<? foreach ($enginelist as $id => $engine): ?>
+		document.getElementById('<?=$id?>').className = "";
+	<? endforeach; ?>
+	document.getElementById(engine).className = "tabselected";
 	refreshframe();
 }
 
@@ -25,30 +59,29 @@ function refreshframe() {
 }
 
 window.addEvent('domready', function() {
-	<? foreach ($enginelist as $id => $engine) {
-		echo "baseurl = \"$engine[base]\";";
-		break;
-	} ?>
 	<? foreach ($booklist as $isbn => $book) {
-		echo "isbn = $isbn;";
+		echo "changebook($isbn);";
 		break;
 	} ?>
-	refreshframe();
+	<? foreach ($enginelist as $id => $engine) {
+		echo "changeengine('$id');";
+		break;
+	} ?>	
 });
 </script>
 
 <p>Your textbooks for the current semester are shown below.&nbsp; Select a 
 textbook, and its search results will appear in the browser below.&nbsp; Select 
 the tabs on top to change the search engine.</p>
-	<ul>
+	<ul class="textbooks">
 	<? foreach ($booklist as $isbn => $book): ?>
 		<li id="book-<?=$isbn?>"><a href="javascript:void(0);" onclick="changebook(<?=$isbn?>)"><?=$book["title"]?></a></li>
 	<? endforeach; ?>
 	</ul>
 	
-	<ul>
+	<ul class="tabs">
 	<? foreach ($enginelist as $id => $engine): ?>
-		<li id="<?=$id ?>"><a href="javascript:void(0);" onclick="changeengine('<?=$id?>')"><?=$engine["title"]?></a></li>
+		<li><a id="<?=$id ?>" href="javascript:void(0);" onclick="changeengine('<?=$id?>')"><?=$engine["title"]?></a></li>
 	<? endforeach; ?>
 	</ul>
 
@@ -59,16 +92,24 @@ the tabs on top to change the search engine.</p>
 <p>Save money on your college textbooks by buying them from alternate sources!&nbsp; 
 This tool examines the textbooks required by your classes and searches popular 
 used textbook websites, including our own.&nbsp; No personal information is 
-stored by this tool.&nbsp; To use the tool, follow the five easy steps 
+stored by this tool.&nbsp; To use it, follow the five easy steps 
 below:</p>
-<ol>
-	<li>Click and drag this link to your links toolbar.&nbsp; Your links toolbar 
+<ol class="instructions">
+	<li>Click and drag this link to your bookmarks toolbar.&nbsp; Your bookmarks toolbar 
 	usually appears right below your address bar at the top of your browser 
 	window.<br />
 	<br />
 	<span style="font-size: large"><strong><a href="javascript:(function(){var%20myDoc%20=%20document;var%20fileref=myDoc.createElement('script');fileref.setAttribute('type','text/javascript');fileref.setAttribute('src',%20'<?=URL::base(false,true)?>scripts/bookstorefix.js');myDoc.getElementsByTagName('head')[0].appendChild(fileref);})();" onclick="return false">
 	Textbook Powersearch!</a></strong></span><br />
 	<br />
+	Help for: <a href="http://www.google.com/support/chrome/bin/answer.py?answer=95745" target="_blank">Chrome</a> | 
+	<a href="http://support.mozilla.com/en-US/kb/Bookmarks%20Toolbar" target="_blank">Firefox</a> | 
+	<a href="http://windows.microsoft.com/en-US/windows-vista/Show-or-hide-the-Favorites-bar-in-Internet-Explorer-8" target="_blank">Internet Explorer</a>
+	<? if (eregi("chrome", $_SERVER['HTTP_USER_AGENT'])): ?>
+	<p class="info" id="notice"><strong>Chrome users:</strong> Chrome has a bug in it that might cause no text show up when you drag the icon to your
+	bookmarks bar.&nbsp; To fix this, right-click the globe icon after you drag the link, click Edit, and give the bookmarklet a name.
+	<input type="button" value="OK, Thanks." onclick="javascript:hidenotice()"></p>
+	<? endif; ?>
 	</li>
 	<li>Click on the "Textbook Powersearch!" button in your toolbar.</li>
 	<li>Log in with your LETU username and password.&nbsp; This information is 
