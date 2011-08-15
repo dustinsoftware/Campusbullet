@@ -17,23 +17,32 @@ class Controller_Powersearch extends Controller_Layout {
 		if ($isbns) {
 			$booklist = array();
 			$isbns = explode(",", $isbns);
-			foreach ($isbns as $isbn) {
-				if (is_isbn_valid($isbn) && ! array_key_exists($isbn, $booklist)) {
-					$dom = new DOMDocument();
-					$dom->load('http://www.google.com/books/feeds/volumes?q=ISBN' . $isbn);
-					
-					$result = $dom->getElementsByTagName('entry')->item(0);
-					
-					if ($result) {
-						$title = $result->getElementsByTagName('title')->item(0)->nodeValue;
-						//$author = $result->getElementsByTagName('dc:creator')->item(0)->nodeValue;
-						$author = "";
-						$booklist += array($isbn => array(
-							'title' => $title,
-							'author' => $author,
-						));					
+			$i = 0;
+			while ( ! empty($isbns) && $i < 50) {
+				reset($isbns);
+				$isbn = current($isbns);
+				try {
+					if (is_isbn_valid($isbn) && ! array_key_exists($isbn, $booklist)) {
+						$dom = new DOMDocument();
+							$dom->load('http://www.google.com/books/feeds/volumes?q=ISBN' . $isbn);
+							
+							$result = $dom->getElementsByTagName('entry')->item(0);
+							
+							if ($result) {
+								$title = $result->getElementsByTagName('title')->item(0)->nodeValue;
+								//$author = $result->getElementsByTagName('dc:creator')->item(0)->nodeValue;
+								$author = "";
+								$booklist += array($isbn => array(
+									'title' => $title,
+									'author' => $author,
+								));					
+							}
+						
 					}
-				}
+					unset($isbns[0]);
+					$isbns = array_values($isbns);
+				} catch (Exception $e) { }
+				$i++; //prevent infinite loop
 			}
 			
 			$content->enginelist = array(

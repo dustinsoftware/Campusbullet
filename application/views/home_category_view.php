@@ -13,6 +13,9 @@
 			
 		</div>
 		<p><?=$category_description?></p>
+		<? if ($category_name == "books"): ?>
+		<p style="text-align: center"><a style="font-size: 26px; font-weight: bold" href="<?=URL::base()?>powersearch">Textbook Powersearch</a><br />or</p>
+		<? endif; ?>
 		<p style="text-align: center"><a href="<?=$url_base?>post/new/<?=$category_name?><? if ($viewmode == 2) echo "?wanted"; ?>">Post something here</a></p>
 	</div>
 </div>
@@ -27,8 +30,10 @@
 <div style="clear:left"></div>
 </div>
 
+<? if ($category_name == "books"): ?>
+<p class="info"><a href="<?=URL::base()?>powersearch">Hey!&nbsp; Did you know you can find textbooks using our new Textbook Powersearch tool?&nbsp; Give it a try here!</a></p>
+<? endif; ?>
 <? if ($dategroups) { ?>
-
 <p>Posts, sorted by date, are shown below.</p>
 <table style="width:100%">
 <? foreach ($dategroups as $date => $posts) {
