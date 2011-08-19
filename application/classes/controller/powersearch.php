@@ -46,17 +46,17 @@ class Controller_Powersearch extends Controller_Layout {
 			}
 			
 			$content->enginelist = array(
+				'bigwords' => array(
+					'title' => "Bigwords",
+					'base' => "http://www5.bigwords.com/search/?z=easysearch&searchtype=all&searchstring=",
+				),
 				'allbookstores' => array(
-					'title' => "All Bookstores",
+					'title' => "Allbookstores.com",
 					'base' => "http://www.allbookstores.com/book/compare/",
 				),
 				'chegg' => array(
 					'title' => "Chegg",
 					'base' => "http://www.chegg.com/search/",
-				),
-				'bigwords' => array(
-					'title' => "Bigwords",
-					'base' => "http://www5.bigwords.com/search/?z=easysearch&searchtype=all&searchstring=",
 				),
 				'amazon' => array(
 					'title' => "Amazon.com",
