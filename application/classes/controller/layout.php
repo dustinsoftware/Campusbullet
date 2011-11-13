@@ -94,3 +94,7 @@ class Controller_Layout extends Controller_Template {
 	}
 
 } 
+
+function debug($var) {
+	die(Kohana::debug($var));
+}
