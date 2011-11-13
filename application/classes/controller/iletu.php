@@ -2,6 +2,10 @@
 
 class Controller_Iletu extends Controller_Layout {
 
+	public function before() {
+		parent::before();
+		$this->template->title = "iLETU";
+	}
 	protected $auth_required = false;
 	
 	public function action_index() {
