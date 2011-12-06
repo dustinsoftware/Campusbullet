@@ -1,4 +1,7 @@
 <style type="text/css">
+.bookselected a {
+	color: white;
+}
 .instructions li {
 	margin: 10px;
 }
@@ -42,6 +45,10 @@ var searchengine = new Object();
 
 function changebook(sourceisbn) {
 	isbn = sourceisbn;
+	<? foreach($booklist as $isbn => $book): ?>
+                document.getElementById('book-<?=$isbn?>').className = "";
+        <? endforeach; ?>
+	document.getElementById('book-' + sourceisbn).className = "bookselected";
 	refreshframe();
 }
 
@@ -75,7 +82,10 @@ textbook, and its search results will appear in the browser below.&nbsp; Select
 the tabs on top to change the search engine.</p>
 	<ul class="textbooks">
 	<? foreach ($booklist as $isbn => $book): ?>
-		<li id="book-<?=$isbn?>"><a href="javascript:void(0);" onclick="changebook(<?=$isbn?>)"><?=$book["title"]?></a></li>
+			<li id="book-<?=$isbn?>"><a href="javascript:void(0);" onclick="changebook(<?=$isbn?>)"><?=$book["title"]?></a>
+			<? if ($book['matches']): ?>
+				- <a style="color: yellow" href="<?=URL::base()?>search?q=<?=$isbn?>"><? if($book['matches'] == 1) echo "1 copy is for sale on The Campus Bullet!"; if ($book['matches'] > 1) echo "$book[matches] copies are for sale on The Campus Bullet!";?></a>
+			<? endif; ?>
 	<? endforeach; ?>
 	</ul>
 	

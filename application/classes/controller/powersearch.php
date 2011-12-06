@@ -32,9 +32,12 @@ class Controller_Powersearch extends Controller_Layout {
 								$title = $result->getElementsByTagName('title')->item(0)->nodeValue;
 								//$author = $result->getElementsByTagName('dc:creator')->item(0)->nodeValue;
 								$author = "";
+								//see if we have any results in the campus bullet.
+								$matches = count(DB::select('isbn')->from('posts')->where('isbn','=',$isbn)->where('disabled','=',0)->execute()->as_array());
 								$booklist += array($isbn => array(
 									'title' => $title,
 									'author' => $author,
+									'matches' => $matches,
 								));					
 							}
 						
