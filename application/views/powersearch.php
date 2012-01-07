@@ -117,11 +117,6 @@ below:</p>
 	Help for: <a href="http://www.google.com/support/chrome/bin/answer.py?answer=95745" target="_blank">Chrome</a> | 
 	<a href="http://support.mozilla.com/en-US/kb/Bookmarks%20Toolbar" target="_blank">Firefox</a> | 
 	<a href="http://windows.microsoft.com/en-US/windows-vista/Show-or-hide-the-Favorites-bar-in-Internet-Explorer-8" target="_blank">Internet Explorer</a>
-	<? if (eregi("chrome", $_SERVER['HTTP_USER_AGENT'])): ?>
-	<p class="info" id="notice"><strong>Chrome users:</strong> Chrome has a bug in it that might cause no text show up when you drag the icon to your
-	bookmarks bar.&nbsp; To fix this, right-click the globe icon after you drag the link, click Edit, and give the bookmarklet a name.
-	<input type="button" value="OK, Thanks." onclick="javascript:hidenotice()"></p>
-	<? endif; ?>
 	</li>
 	<li>Click on the "Textbook Powersearch!" button in your toolbar.</li>
 	<li>Log in with your LETU username and password.&nbsp; This information is 
