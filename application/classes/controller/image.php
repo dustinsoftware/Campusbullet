@@ -105,7 +105,7 @@ class Controller_Image extends Controller_Layout {
 				$errors = array();
 				if ($file['error'])
 					array_push($errors, "There was an error uploading the file.&nbsp; Please try again.");
-				elseif ($file['size'] > 2000000)
+				elseif ($file['size'] > 10000000)
 					array_push($errors, "The image is too big!&nbsp; Please use one that's under 2 MB.");
 				else {
 					try {

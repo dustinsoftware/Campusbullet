@@ -73,7 +73,7 @@ function searchBoxBlur() {
 	<div id="header_right">
 		<div id="header_login">
 			<? if ($user) { ?>		
-			You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a><? if ($moderator) echo " or <a href=\"" . $url_base . "moderator\">moderate</a>"; ?>?
+			You&#39;re logged in as <?=$user?>.&nbsp; <a href="<?= $url_base ?>login/logout">Log out</a><? if ($moderator) echo " or <a href=\"" . $url_base . "admin\">admin</a>"; ?>?
 			<? } else { ?>
 			You're not logged in.  <a href="<?= $url_base ?>login">Login</a> or <a href="<?=$url_base?>register">register!</a>
 			<? } ?>
