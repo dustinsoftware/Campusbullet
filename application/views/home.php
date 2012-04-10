@@ -1,6 +1,4 @@
 <div id="newposts">
-<h1>iLETU</h1>
-<p style="text-align: center"><a href="http://itunes.apple.com/us/app/iletu/id478653258?mt=8"><img src="<?=URL::base()?>images/iletu.png" /></a><br /><br />We made an iPhone app for LeTourneau students!
 <h1><a href="<?=$url_base?>home/category/all">Newest Posts</a></h1>
 <? 
 if ($newposts): ?>
