@@ -31,7 +31,7 @@ class Controller_Register extends Controller_Layout {
 			$errors = array();
 			$email = @($_POST['email']);
 			
-			$verify_row = DB::select('id')->from('registration_keys')->where('email','=',$email)->execute()->current();
+			$verify_row = DB::select('id','key')->from('registration_keys')->where('email','=',$email)->execute()->current();
 			$email_row = DB::select('id')->from('users')->where('originalemail','=',$email)->or_where('email','=',$email)->execute()->current();
 			
 			$validate = Validate::factory(array('email' => $email));
@@ -42,16 +42,16 @@ class Controller_Register extends Controller_Layout {
 				array_push($errors, "Please enter a valid email address.");								
 			} elseif ($email_row) {
 				array_push($errors, "That email address has already been registered!");
-			} elseif ($verify_row) {
-				array_push($errors, "An email has already been sent to this email address.&nbsp; Please check your inbox, or send an email to dustin@campusbullet.net to have that address reset.");
 			} elseif ( ! strpos(strtolower($email), "@letu.edu")) {
 				array_push($errors, "Sorry, only @letu.edu address are accepted at this time.");			
 			} else {
-				//good email and no previous entry, put it in and give the confirmation.
-				$secretkey = sha1(rand(0,1000) . $email);
-				
-				DB::insert('registration_keys')->columns(array('email','key','ipaddress'))->values(array($email,$secretkey,$ipaddress))->execute();
-				
+				if ($verify_row) {
+					$secretkey = $verify_row['key'];
+				} else {
+					//good email and no previous entry, put it in and give the confirmation.
+					$secretkey = sha1(rand(0,1000) . $email);
+					DB::insert('registration_keys')->columns(array('email','key','ipaddress'))->values(array($email,$secretkey,$ipaddress))->execute();
+				}
 				$body = View::factory('email_thanks');				
 				$body->link_register = URL::base(true,true) . "confirm/register/$secretkey";
 				
